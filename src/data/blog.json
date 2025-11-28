@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "slug": "future-of-digital-transformation",
+    "title": "The Future of Digital Transformation in 2025",
+    "excerpt": "Explore the emerging trends and technologies shaping the digital transformation landscape.",
+    "author": "Geeemadhura Team",
+    "date": "2025-11-20",
+    "category": "Digital Transformation",
+    "thumbnail": "/blog-1.jpg",
+    "content": "Digital transformation continues to evolve at an unprecedented pace. As we move into 2025, businesses must adapt to new technologies and changing customer expectations.\n\nKey trends include AI integration, cloud-native architectures, and enhanced cybersecurity measures. Organizations that embrace these changes will gain significant competitive advantages.\n\nOur team has identified five critical areas for businesses to focus on: automation, data analytics, customer experience, security, and scalability."
+  },
+  {
+    "id": 2,
+    "slug": "ai-business-strategy",
+    "title": "Integrating AI into Your Business Strategy",
+    "excerpt": "Learn how artificial intelligence can drive business growth and operational efficiency.",
+    "author": "Geeemadhura Team",
+    "date": "2025-11-15",
+    "category": "Artificial Intelligence",
+    "thumbnail": "/blog-2.jpg",
+    "content": "Artificial intelligence is no longer a futuristic concept—it's a present-day necessity for businesses seeking competitive advantage.\n\nSuccessful AI integration requires careful planning, data preparation, and change management. Start with specific use cases that deliver measurable value.\n\nFrom predictive analytics to automated customer service, AI applications are transforming how businesses operate and serve their customers."
+  },
+  {
+    "id": 3,
+    "slug": "cybersecurity-best-practices",
+    "title": "Cybersecurity Best Practices for Modern Enterprises",
+    "excerpt": "Essential security measures every business should implement to protect against threats.",
+    "author": "Geeemadhura Team",
+    "date": "2025-11-10",
+    "category": "Cybersecurity",
+    "thumbnail": "/blog-3.jpg",
+    "content": "In an increasingly connected world, cybersecurity is paramount. Businesses face sophisticated threats that require comprehensive protection strategies.\n\nImplement multi-layered security approaches including employee training, regular audits, and advanced threat detection systems.\n\nStay ahead of threats with proactive monitoring and incident response planning."
+  },
+  {
+    "id": 4,
+    "slug": "cloud-migration-guide",
+    "title": "Complete Guide to Cloud Migration",
+    "excerpt": "Step-by-step approach to successfully migrate your infrastructure to the cloud.",
+    "author": "Geeemadhura Team",
+    "date": "2025-11-05",
+    "category": "Cloud Services",
+    "thumbnail": "/blog-4.jpg",
+    "content": "Cloud migration offers tremendous benefits including scalability, cost savings, and enhanced performance.\n\nSuccessful migration requires assessment, planning, execution, and optimization phases. Each phase is critical to ensuring minimal disruption.\n\nOur proven methodology has helped hundreds of businesses successfully transition to cloud infrastructure."
+  }
+]

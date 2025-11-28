@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "timestamp": "2025-11-25T10:30:00Z",
+    "title": "New AI Integration Services Launched",
+    "text": "We're excited to announce our latest AI-powered business solutions."
+  },
+  {
+    "id": 2,
+    "timestamp": "2025-11-20T14:15:00Z",
+    "title": "Strategic Partnership Announcement",
+    "text": "Partnering with leading tech innovators to enhance service delivery."
+  },
+  {
+    "id": 3,
+    "timestamp": "2025-11-15T09:00:00Z",
+    "title": "Industry Award Recognition",
+    "text": "Honored with Excellence in Corporate Innovation award."
+  },
+  {
+    "id": 4,
+    "timestamp": "2025-11-10T16:45:00Z",
+    "title": "Global Expansion Initiative",
+    "text": "Opening new offices in key international markets."
+  }
+]

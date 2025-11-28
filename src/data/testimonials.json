@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Sarah Johnson",
+    "role": "CEO, TechCorp Industries",
+    "image": "/testimonial-1.jpg",
+    "rating": 5,
+    "message": "Geeemadhura Innovations transformed our business operations. Their expertise and dedication are unmatched."
+  },
+  {
+    "id": 2,
+    "name": "Michael Chen",
+    "role": "CTO, Global Solutions Inc",
+    "image": "/testimonial-2.jpg",
+    "rating": 5,
+    "message": "Outstanding service and innovative solutions. They truly understand business technology."
+  },
+  {
+    "id": 3,
+    "name": "Emily Rodriguez",
+    "role": "Director, Innovation Labs",
+    "image": "/testimonial-3.jpg",
+    "rating": 5,
+    "message": "A strategic partner that delivers results. Highly recommended for digital transformation."
+  },
+  {
+    "id": 4,
+    "name": "David Kumar",
+    "role": "VP Operations, Enterprise Systems",
+    "image": "/testimonial-4.jpg",
+    "rating": 5,
+    "message": "Professional, reliable, and results-driven. They exceeded our expectations."
+  },
+  {
+    "id": 5,
+    "name": "Lisa Anderson",
+    "role": "Managing Director, Future Tech",
+    "image": "/testimonial-5.jpg",
+    "rating": 5,
+    "message": "Their consulting services helped us achieve 40% operational efficiency improvement."
+  },
+  {
+    "id": 6,
+    "name": "James Park",
+    "role": "Founder, StartUp Ventures",
+    "image": "/testimonial-6.jpg",
+    "rating": 5,
+    "message": "From concept to execution, they delivered a world-class solution for our business."
+  }
+]

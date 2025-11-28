@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "slug": "digital-transformation",
+    "title": "Digital Transformation",
+    "icon": "Zap",
+    "shortDescription": "Transform your business with cutting-edge digital solutions tailored to your needs. ",
+    "fullDescription": "Our digital transformation services help businesses modernize operations, optimize workflows, and leverage technology for competitive advantage. We provide end-to-end solutions from strategy to implementation.",
+    "features": [
+      "Cloud Migration & Infrastructure",
+      "Process Automation",
+      "Data Analytics & AI Integration",
+      "Legacy System Modernization"
+    ],
+    "image": "/service-digital.jpg"
+  },
+  {
+    "id": 2,
+    "slug": "business-consulting",
+    "title": "Business Consulting",
+    "icon": "Briefcase",
+    "shortDescription": "Strategic consulting to drive growth and operational excellence.",
+    "fullDescription": "Our expert consultants provide strategic guidance to optimize your business operations, improve efficiency, and achieve sustainable growth. We work closely with your team to identify opportunities and implement solutions.",
+    "features": [
+      "Strategic Planning",
+      "Operational Optimization",
+      "Market Analysis",
+      "Change Management"
+    ],
+    "image": "/service-consulting.jpg"
+  },
+  {
+    "id": 3,
+    "slug": "technology-solutions",
+    "title": "Technology Solutions",
+    "icon": "Code",
+    "shortDescription": "Custom software development and technology integration services.",
+    "fullDescription": "We develop robust, scalable technology solutions tailored to your business requirements. From custom applications to system integrations, we deliver quality software that drives results.",
+    "features": [
+      "Custom Software Development",
+      "API Integration",
+      "Mobile App Development",
+      "Quality Assurance & Testing"
+    ],
+    "image": "/service-tech.jpg"
+  },
+  {
+    "id": 4,
+    "slug": "data-analytics",
+    "title": "Data Analytics",
+    "icon": "BarChart3",
+    "shortDescription": "Turn data into actionable insights with advanced analytics.",
+    "fullDescription": "Unlock the power of your data with our comprehensive analytics services. We help you make data-driven decisions through advanced analytics, visualization, and predictive modeling.",
+    "features": [
+      "Business Intelligence",
+      "Predictive Analytics",
+      "Data Visualization",
+      "Real-time Reporting"
+    ],
+    "image": "/service-analytics.jpg"
+  },
+  {
+    "id": 5,
+    "slug": "cybersecurity",
+    "title": "Cybersecurity",
+    "icon": "Shield",
+    "shortDescription": "Protect your business with comprehensive security solutions.",
+    "fullDescription": "Safeguard your organization against evolving cyber threats with our comprehensive security solutions. We provide protection, monitoring, and incident response services.",
+    "features": [
+      "Security Audits",
+      "Threat Detection & Response",
+      "Compliance Management",
+      "Security Training"
+    ],
+    "image": "/service-security.jpg"
+  },
+  {
+    "id": 6,
+    "slug": "cloud-services",
+    "title": "Cloud Services",
+    "icon": "Cloud",
+    "shortDescription": "Scalable cloud infrastructure and migration services.",
+    "fullDescription": "Migrate to the cloud with confidence. We provide comprehensive cloud services including architecture design, migration, and ongoing management to ensure optimal performance.",
+    "features": [
+      "Cloud Strategy & Planning",
+      "Migration Services",
+      "Infrastructure Management",
+      "Cost Optimization"
+    ],
+    "image": "/service-cloud.jpg"
+  }
+]

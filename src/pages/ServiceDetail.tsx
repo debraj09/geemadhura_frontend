@@ -3,25 +3,25 @@ import { motion } from 'framer-motion';
 import { CheckCircle2, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState, useEffect } from 'react'; // <-- ADDED
+import { useState, useEffect } from 'react';
 
 // --- Configuration & Interfaces ---
-// Base URL for fetching details (assuming you route /api/services/by-slug/:slug)
 const API_BASE_URL = 'https://geemadhura.braventra.in/api/services'; 
+// --- ADDED BASE DOMAIN FOR IMAGE PREFIXING ---
+const IMAGE_BASE_URL = 'https://geemadhura.braventra.in'; 
+// ---------------------------------------------
 
 // This interface matches the 'SELECT *' result from the database
 interface FullBackendServiceData {
     id: number;
     name: string;
     slug: string;
-    description: string; // The short description
+    description: string;
     scope_title: string;
-    scope_content: string; // The main body content (like 'fullDescription')
-    image_url: string;
+    scope_content: string;
+    image_url: string; 
     banner_image_url: string;
-    // Add other fields from the DB if you use them (meta fields, etc.)
     is_active: 0 | 1;
-    // Assuming you will eventually add an icon_name column to the DB
     icon_name?: string; 
 }
 
@@ -32,18 +32,15 @@ interface ServiceDetailData {
     slug: string;
     icon: string;
     shortDescription: string;
-    fullDescription: string; // Mapped from scope_content
+    fullDescription: string;
     scopeTitle: string;
-    // NOTE: Your static JSON had a 'features' array. 
-    // Since the DB has 'scope_content' (a single string/longtext), we will use that 
-    // for the main content and assume features are hardcoded or must be parsed from scope_content.
-    // For now, we'll hardcode features for demonstration.
-    features: string[]; 
+    features: string[];
     bannerImageUrl: string;
+    mainImageUrl: string;
 }
 
 const ServiceDetail = () => {
-    const { slug } = useParams<{ slug: string }>(); // Explicitly type useParams
+    const { slug } = useParams<{ slug: string }>(); 
     
     // --- State Management ---
     const [service, setService] = useState<ServiceDetailData | null>(null);
@@ -58,11 +55,9 @@ const ServiceDetail = () => {
             setIsLoading(true);
             setError(null);
             try {
-                // Fetch using the new /by-slug route (or whichever you choose)
                 const response = await fetch(`${API_BASE_URL}/by-slug/${slug}`); 
 
                 if (response.status === 404) {
-                    // Service not found by slug
                     setService(null);
                     return;
                 }
@@ -74,6 +69,11 @@ const ServiceDetail = () => {
                 const result = await response.json();
                 const serviceData: FullBackendServiceData = result.data;
 
+                // --- IMAGE URL PREFIXING LOGIC APPLIED HERE ---
+                const fullBannerUrl = serviceData.banner_image_url ? `${IMAGE_BASE_URL}${serviceData.banner_image_url}` : '';
+                const fullMainImageUrl = serviceData.image_url ? `${IMAGE_BASE_URL}${serviceData.image_url}` : '';
+                // ----------------------------------------------
+
                 // --- DATA MAPPING ---
                 const mappedDetail: ServiceDetailData = {
                     id: serviceData.id,
@@ -81,16 +81,15 @@ const ServiceDetail = () => {
                     slug: serviceData.slug,
                     icon: serviceData.icon_name || 'Zap',
                     shortDescription: serviceData.description || 'No summary provided.',
-                    // Map the long content field ('scope_content') to 'fullDescription'
                     fullDescription: serviceData.scope_content || 'The detailed scope of work is not yet defined for this service.',
                     scopeTitle: serviceData.scope_title || 'Service Details',
-                    // Assuming features are hardcoded for now until a DB structure is added
                     features: [
                         'Consultation and Strategy', 
                         'Implementation and Integration', 
                         'Maintenance and Support'
                     ], 
-                    bannerImageUrl: serviceData.banner_image_url || ''
+                    bannerImageUrl: fullBannerUrl,
+                    mainImageUrl: fullMainImageUrl,
                 };
 
                 setService(mappedDetail);
@@ -104,9 +103,9 @@ const ServiceDetail = () => {
         };
 
         fetchServiceDetail();
-    }, [slug]); // Rerun when slug changes
+    }, [slug]);
 
-    // --- Conditional Rendering ---
+    // --- Conditional Rendering (Unchanged) ---
     if (isLoading) {
         return (
             <main className="min-h-screen pt-20 flex justify-center items-center">
@@ -128,11 +127,10 @@ const ServiceDetail = () => {
     }
 
     if (!service) {
-        // Navigate away if the service is not found
         return <Navigate to="/services" replace />;
     }
 
-    // Safely get the Icon Component
+    // Safely get the Icon Component (kept for fallback)
     const IconComponent = (LucideIcons as any)[service.icon] || LucideIcons.Zap;
 
     return (
@@ -147,12 +145,17 @@ const ServiceDetail = () => {
                 </Link>
             </div>
 
-            {/* Hero Section */}
+            {/* Hero Section - Banner Image */}
             <section className="relative py-16 md:py-20 bg-gradient-to-br from-background via-muted/20 to-background">
-                {/* Optional: Render banner image here */}
-                {/* {service.bannerImageUrl && (
-                    <img src={service.bannerImageUrl} alt={`${service.title} Banner`} className="absolute inset-0 w-full h-full object-cover opacity-20" />
-                )} */}
+                {/* --- BANNER IMAGE LOGIC --- */}
+                {service.bannerImageUrl && (
+                    <img 
+                        src={service.bannerImageUrl} 
+                        alt={`${service.title} Banner`} 
+                        className="absolute inset-0 w-full h-full object-cover opacity-30 lg:opacity-20" 
+                    />
+                )}
+                {/* -------------------------- */}
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -177,6 +180,21 @@ const ServiceDetail = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                         {/* Main Content */}
                         <div className="lg:col-span-2 space-y-8">
+                            
+                            {/* --- MAIN IMAGE (from image_url) --- */}
+                            {service.mainImageUrl && (
+                                <motion.img
+                                    src={service.mainImageUrl}
+                                    alt={`${service.title} Illustration`}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.7 }}
+                                    className="w-full h-auto object-cover rounded-xl shadow-xl mb-8"
+                                />
+                            )}
+                            {/* ----------------------------------- */}
+                            
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -185,7 +203,7 @@ const ServiceDetail = () => {
                             >
                                 <h2 className="text-2xl md:text-3xl font-bold mb-4">{service.scopeTitle}</h2>
                                 <p className="text-muted-foreground leading-relaxed text-lg whitespace-pre-wrap">
-                                    {service.fullDescription} {/* <-- NOW DYNAMIC (from scope_content) */}
+                                    {service.fullDescription}
                                 </p>
                             </motion.div>
 
@@ -196,9 +214,6 @@ const ServiceDetail = () => {
                                 transition={{ duration: 0.6, delay: 0.2 }}
                             >
                                 <h2 className="text-2xl md:text-3xl font-bold mb-6">Key Features</h2>
-                                {/* This section assumes features are an array. If your scope_content 
-                                    contains Markdown or structured text, you'd need a parser here. 
-                                    I am keeping the static 'features' array for structure demonstration. */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {service.features.map((feature, index) => (
                                         <motion.div

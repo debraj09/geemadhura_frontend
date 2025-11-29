@@ -1,21 +1,87 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
-import testimonials from '@/data/testimonials.json';
+import { ChevronLeft, ChevronRight, Star, Quote, Loader2, AlertTriangle } from 'lucide-react';
 
+// --- Configuration ---
+const API_URL = 'https://geemadhura.braventra.in/api/testimonials';
+const BASE_URL = 'https://geemadhura.braventra.in';
 export const Testimonials = () => {
+  const [testimonials, setTestimonials] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Exponential Backoff Configuration
+  const maxRetries = 3;
+  const initialDelay = 1000;
+
+  // Function to fetch testimonials with exponential backoff
+  const fetchTestimonials = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const response = await fetch(API_URL);
+        
+        if (!response.ok) {
+          const errorBody = await response.json().catch(() => ({}));
+          throw new Error(errorBody.message || `HTTP error! Status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.status === 200 && Array.isArray(result.data)) {
+          // Map API response to match your component's expected structure
+          const mappedTestimonials = result.data.map((item, index) => ({
+            id: index, // Use index as ID since API doesn't provide ID
+            name: item.client_name,
+            role: item.client_position || item.client_company || 'Client',
+            message: item.comment,
+            rating: item.review_stars || 5,
+imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
+            // Add timestamp for consistency
+            timestamp: new Date().toISOString()
+          }));
+          
+          setTestimonials(mappedTestimonials);
+          setLoading(false);
+          return;
+        } else {
+          throw new Error('Invalid data structure received from API.');
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'An unknown error occurred.';
+        
+        if (attempt < maxRetries - 1) {
+          const delay = initialDelay * Math.pow(2, attempt) + Math.random() * 500;
+          await new Promise(resolve => setTimeout(resolve, delay));
+        } else {
+          console.error("Failed to fetch testimonials after all retries:", message);
+          setError(`Failed to load testimonials: ${message}`);
+          setLoading(false);
+          return;
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, [fetchTestimonials]);
 
   // Auto-rotate testimonials
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || testimonials.length === 0) return;
+    
     const interval = setInterval(() => {
       paginate(1);
     }, 4000);
+    
     return () => clearInterval(interval);
-  }, [currentIndex, isAutoPlaying]);
+  }, [currentIndex, isAutoPlaying, testimonials.length]);
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -39,6 +105,8 @@ export const Testimonials = () => {
   };
 
   const paginate = (newDirection: number) => {
+    if (testimonials.length === 0) return;
+    
     setDirection(newDirection);
     setCurrentIndex((prevIndex) => {
       let newIndex = prevIndex + newDirection;
@@ -48,11 +116,74 @@ export const Testimonials = () => {
     });
   };
 
-  const testimonialsToShow = [
+  // Get testimonials to show (for desktop view)
+  const testimonialsToShow = testimonials.length > 0 ? [
     testimonials[currentIndex],
     testimonials[(currentIndex + 1) % testimonials.length],
     testimonials[(currentIndex + 2) % testimonials.length],
-  ];
+  ] : [];
+
+  // Loading State
+  if (loading) {
+    return (
+      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12">
+            <Quote className="text-accent-yellow mx-auto mb-4" size={48} />
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Hear what our clients say about our services
+            </p>
+          </div>
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <p className="ml-3 text-lg text-muted-foreground">Loading testimonials...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error State
+  if (error) {
+    return (
+      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12">
+            <Quote className="text-accent-yellow mx-auto mb-4" size={48} />
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
+          </div>
+          <div className="p-6 bg-red-100 border border-red-400 rounded-xl text-red-700 max-w-xl mx-auto flex items-center space-x-3">
+            <AlertTriangle size={24} />
+            <div>
+              <h3 className="font-semibold text-lg">Error Loading Testimonials</h3>
+              <p className="text-sm">{error}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Empty State
+  if (testimonials.length === 0) {
+    return (
+      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12">
+            <Quote className="text-accent-yellow mx-auto mb-4" size={48} />
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Hear what our clients say about our services
+            </p>
+          </div>
+          <div className="p-6 bg-yellow-100 border border-yellow-400 rounded-xl text-yellow-800 max-w-xl mx-auto text-center">
+            <p className="font-medium">No testimonials available at this time.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -171,13 +302,23 @@ export const Testimonials = () => {
                   className="flex items-center gap-4 relative z-10"
                   whileHover={{ x: 10 }}
                 >
-                  <motion.div
-                    className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold"
-                    whileHover={{ rotate: 360, scale: 1.2 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    {testimonial.name.charAt(0)}
-                  </motion.div>
+                  {testimonial.imageUrl ? (
+                    <motion.img
+                      src={testimonial.imageUrl}
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                      whileHover={{ rotate: 360, scale: 1.2 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                  ) : (
+                    <motion.div
+                      className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold"
+                      whileHover={{ rotate: 360, scale: 1.2 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {testimonial.name.charAt(0)}
+                    </motion.div>
+                  )}
                   <div>
                     <h4 className="font-semibold text-foreground">{testimonial.name}</h4>
                     <p className="text-sm text-muted-foreground">{testimonial.role}</p>
@@ -244,13 +385,23 @@ export const Testimonials = () => {
                   </p>
 
                   <div className="flex items-center gap-4 relative z-10">
-                    <motion.div
-                      className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold"
-                      animate={{ rotate: [0, 360] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                    >
-                      {testimonials[currentIndex].name.charAt(0)}
-                    </motion.div>
+                    {testimonials[currentIndex].imageUrl ? (
+                      <motion.img
+                        src={testimonials[currentIndex].imageUrl}
+                        alt={testimonials[currentIndex].name}
+                        className="w-12 h-12 rounded-full object-cover"
+                        animate={{ rotate: [0, 360] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                      />
+                    ) : (
+                      <motion.div
+                        className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold"
+                        animate={{ rotate: [0, 360] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                      >
+                        {testimonials[currentIndex].name.charAt(0)}
+                      </motion.div>
+                    )}
                     <div>
                       <h4 className="font-semibold text-foreground">
                         {testimonials[currentIndex].name}

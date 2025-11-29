@@ -1,5 +1,6 @@
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { HelpCircle, ChevronDown } from 'lucide-react';
+import { HelpCircle, ChevronDown, Loader2, AlertTriangle } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -7,40 +8,130 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
-const faqs = [
-  {
-    question: 'What services does Geeemadhura Innovations offer?',
-    answer:
-      'We offer a comprehensive range of services including Digital Transformation, Business Consulting, Technology Solutions, Data Analytics, Cybersecurity, and Cloud Services. Each service is tailored to meet your specific business needs.',
-  },
-  {
-    question: 'How long does a typical project take?',
-    answer:
-      'Project timelines vary based on scope and complexity. Small projects may take 4-8 weeks, while larger enterprise solutions can span 3-6 months. We provide detailed timelines during the initial consultation.',
-  },
-  {
-    question: 'Do you work with businesses of all sizes?',
-    answer:
-      'Yes, we work with businesses of all sizes, from startups to large enterprises. Our solutions are scalable and customized to fit your organization\'s size, budget, and goals.',
-  },
-  {
-    question: 'What makes your approach different?',
-    answer:
-      'We combine deep technical expertise with strategic business insight. Our approach is collaborative, transparent, and focused on delivering measurable results that drive real business value.',
-  },
-  {
-    question: 'How do you ensure project success?',
-    answer:
-      'We follow a proven methodology that includes thorough planning, regular communication, iterative development, and rigorous testing. We also provide ongoing support and optimization after project completion.',
-  },
-  {
-    question: 'Can you integrate with our existing systems?',
-    answer:
-      'Absolutely. We specialize in seamless integration with existing systems and technologies. Our team has extensive experience with various platforms, APIs, and enterprise systems.',
-  },
-];
+// --- Configuration ---
+const API_URL = 'https://geemadhura.braventra.in/api/faqs';
 
 export const FAQ = () => {
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Exponential Backoff Configuration
+  const maxRetries = 3;
+  const initialDelay = 1000;
+
+  // Function to fetch FAQs with exponential backoff
+  const fetchFaqs = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const response = await fetch(API_URL);
+        
+        if (!response.ok) {
+          const errorBody = await response.json().catch(() => ({}));
+          throw new Error(errorBody.message || `HTTP error! Status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.status === 200 && Array.isArray(result.data)) {
+          // Map API response to match your component's expected structure
+          const mappedFaqs = result.data.map((item) => ({
+            id: item.id,
+            question: item.qus,
+            answer: item.answers,
+          }));
+          
+          setFaqs(mappedFaqs);
+          setLoading(false);
+          return;
+        } else {
+          throw new Error('Invalid data structure received from API.');
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'An unknown error occurred.';
+        
+        if (attempt < maxRetries - 1) {
+          const delay = initialDelay * Math.pow(2, attempt) + Math.random() * 500;
+          await new Promise(resolve => setTimeout(resolve, delay));
+        } else {
+          console.error("Failed to fetch FAQs after all retries:", message);
+          setError(`Failed to load FAQs: ${message}`);
+          setLoading(false);
+          return;
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchFaqs();
+  }, [fetchFaqs]);
+
+  // Loading State
+  if (loading) {
+    return (
+      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12">
+            <HelpCircle className="text-accent-yellow mx-auto mb-4" size={48} />
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Find answers to common questions about our services
+            </p>
+          </div>
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <p className="ml-3 text-lg text-muted-foreground">Loading FAQs...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error State
+  if (error) {
+    return (
+      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12">
+            <HelpCircle className="text-accent-yellow mx-auto mb-4" size={48} />
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+          </div>
+          <div className="p-6 bg-red-100 border border-red-400 rounded-xl text-red-700 max-w-xl mx-auto flex items-center space-x-3">
+            <AlertTriangle size={24} />
+            <div>
+              <h3 className="font-semibold text-lg">Error Loading FAQs</h3>
+              <p className="text-sm">{error}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Empty State
+  if (faqs.length === 0) {
+    return (
+      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12">
+            <HelpCircle className="text-accent-yellow mx-auto mb-4" size={48} />
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Find answers to common questions about our services
+            </p>
+          </div>
+          <div className="p-6 bg-yellow-100 border border-yellow-400 rounded-xl text-yellow-800 max-w-xl mx-auto text-center">
+            <p className="font-medium">No FAQs available at this time.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-16 md:py-24 bg-background relative overflow-hidden">
       {/* Animated background grid */}
@@ -124,7 +215,7 @@ export const FAQ = () => {
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
               <motion.div
-                key={index}
+                key={faq.id}
                 initial={{ opacity: 0, x: -50, rotate: -5 }}
                 whileInView={{ opacity: 1, x: 0, rotate: 0 }}
                 viewport={{ once: true }}
@@ -140,7 +231,7 @@ export const FAQ = () => {
                 }}
               >
                 <AccordionItem
-                  value={`item-${index}`}
+                  value={`item-${faq.id}`}
                   className="bg-card border-2 border-border rounded-xl px-6 data-[state=open]:border-primary transition-all duration-300 relative overflow-hidden group"
                 >
                   {/* Animated background on open */}

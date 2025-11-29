@@ -64,7 +64,7 @@ const Services = () => {
             slug: service.slug,
             icon: service.icon_name || 'Zap',
             shortDescription: service.service_description_text || 'No detailed description available.',
-            imageUrl: `${IMAGE_BASE_URL}${service.image_url.replace('/public', '')}`,
+            imageUrl: `${IMAGE_BASE_URL}${service.image_url}`,
           };
         });
 

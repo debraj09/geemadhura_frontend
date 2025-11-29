@@ -1,6 +1,6 @@
 import { HeroSlider } from '@/components/HeroSlider';
 import { Marquee } from '@/components/Marquee';
-import { NewUpdates } from '@/components/NewUpdates';
+import NewUpdates  from '@/components/NewUpdates';
 import { ServicesGrid } from '@/components/ServicesGrid';
 import { Testimonials } from '@/components/Testimonials';
 import { Newsletter } from '@/components/Newsletter';

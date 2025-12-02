@@ -5,6 +5,7 @@ import { ServicesGrid } from '@/components/ServicesGrid';
 import { Testimonials } from '@/components/Testimonials';
 import { Newsletter } from '@/components/Newsletter';
 import { FAQ } from '@/components/FAQ';
+import  Box  from '@/pages/Box';
 
 const Home = () => {
   return (
@@ -12,6 +13,7 @@ const Home = () => {
       <HeroSlider />
       <Marquee />
       <NewUpdates />
+      <Box />
       <ServicesGrid />
       <Testimonials />
       <Newsletter />

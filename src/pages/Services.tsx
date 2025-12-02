@@ -1,14 +1,11 @@
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowRight, Loader2, AlertCircle, Calendar, User } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 // --- Configuration & Interfaces ---
 const API_BASE_URL = 'https://geemadhura.braventra.in/api/services';
-// --- ADDED BASE DOMAIN FOR IMAGE PREFIXING ---
 const IMAGE_BASE_URL = 'https://geemadhura.braventra.in';
-// ---------------------------------------------
 
 // Interface for the data coming directly from the backend API
 interface BackendServiceData {
@@ -30,6 +27,7 @@ interface DynamicGridService {
   icon: string;
   shortDescription: string;
   imageUrl: string;
+  date: string;
 }
 
 const Services = () => {
@@ -37,6 +35,26 @@ const Services = () => {
   const [dynamicServices, setDynamicServices] = useState<DynamicGridService[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Format date to "Month Day, Year"
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  // Truncate text to limit words
+  const truncateText = (text: string, wordLimit: number) => {
+    if (!text) return 'No description available';
+    const words = text.split(' ');
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(' ') + '...';
+    }
+    return text;
+  };
 
   // --- API Fetch Logic ---
   useEffect(() => {
@@ -55,9 +73,6 @@ const Services = () => {
 
         // Map backend data to frontend structure
         const mappedServices: DynamicGridService[] = serviceData.map(service => {
-          // --- IMAGE URL PREFIXING LOGIC APPLIED HERE ---
-          // const fullImageUrl = service.image_url ? `${IMAGE_BASE_URL}${service.image_url}` : '';
-
           return {
             id: service.id,
             title: service.name,
@@ -65,6 +80,7 @@ const Services = () => {
             icon: service.icon_name || 'Zap',
             shortDescription: service.service_description_text || 'No detailed description available.',
             imageUrl: `${IMAGE_BASE_URL}${service.image_url}`,
+            date: service.created_at ? formatDate(service.created_at) : 'November 20, 2025' // Fallback date
           };
         });
 
@@ -81,116 +97,297 @@ const Services = () => {
     fetchServices();
   }, []);
 
-  // --- Conditional Content Rendering (Unchanged) ---
+  // --- Conditional Content Rendering ---
   let content;
 
   if (isLoading) {
     content = (
-      <div className="flex justify-center items-center py-10 text-primary">
-        <Loader2 className="mr-2 h-8 w-8 animate-spin" />
-        <span className="text-xl">Loading Services...</span>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        padding: '40px 0',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+        <div style={{ 
+          width: '40px', 
+          height: '40px', 
+          border: '4px solid #f3f3f3', 
+          borderTop: '4px solid #1a73e8', 
+          borderRadius: '50%', 
+          animation: 'spin 1s linear infinite',
+          marginRight: '10px'
+        }}></div>
+        <span style={{ fontSize: '1.2em', color: '#1a73e8' }}>Loading Services...</span>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   } else if (error) {
     content = (
-      <div className="flex justify-center items-center p-4 text-red-700 bg-red-100 border border-red-300 rounded-lg max-w-lg mx-auto">
-        <AlertCircle className="mr-3 h-6 w-6 flex-shrink-0" />
-        <span className="font-medium">Error: {error}</span>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        padding: '20px',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+        <div style={{ 
+          padding: '20px', 
+          color: '#d32f2f', 
+          backgroundColor: '#ffebee', 
+          border: '1px solid #ffcdd2', 
+          borderRadius: '8px', 
+          maxWidth: '600px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+            <div style={{ 
+              width: '24px', 
+              height: '24px', 
+              borderRadius: '50%', 
+              backgroundColor: '#d32f2f', 
+              color: 'white', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              fontWeight: 'bold' 
+            }}>!</div>
+            <span style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Error</span>
+          </div>
+          <p style={{ margin: 0 }}>{error}</p>
+        </div>
       </div>
     );
   } else if (dynamicServices.length === 0) {
     content = (
-      <div className="text-center py-10 text-muted-foreground">
+      <div style={{ 
+        textAlign: 'center', 
+        padding: '40px 0', 
+        color: '#666',
+        fontFamily: 'Arial, sans-serif'
+      }}>
         No active services found. Please check your data or API connection.
       </div>
     );
   } else {
-    // --- Dynamic Grid Rendering (Unchanged structure) ---
+    // --- Box Card Grid Rendering ---
     content = (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {dynamicServices.map((service, index) => {
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
+        gap: '30px',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+        {dynamicServices.map((service) => {
           const IconComponent = (LucideIcons as any)[service.icon] || LucideIcons.Zap;
 
           return (
-            <motion.div
+            <div
               key={service.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              style={{
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                transition: 'all 0.3s ease',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: 'white',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(26, 115, 232, 0.15)';
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.borderColor = '#1a73e8';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = '#e0e0e0';
+              }}
             >
-              <Link to={`/services/${service.slug}`}>
-                <motion.div
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="bg-card border-2 border-border hover:border-primary rounded-2xl p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-300 group"
-                >
-
-                  {/* --- IMAGE DISPLAY --- */}
+              <Link 
+                to={`/services/${service.slug}`}
+                style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
+              >
+                {/* Image Section */}
+                <div style={{ 
+                  width: '100%', 
+                  height: '200px', 
+                  overflow: 'hidden',
+                  position: 'relative'
+                }}>
                   {service.imageUrl ? (
-                    <div className="w-16 h-16 rounded-xl flex items-center justify-center mb-6 overflow-hidden">
-                      <img
-                        src={service.imageUrl}
-                        alt={`${service.title} icon`}
-                        className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
+                    <img
+                      src={service.imageUrl}
+                      alt={service.title}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        transition: 'transform 0.3s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
+                    />
                   ) : (
-                    // Fallback to icon if imageUrl is missing
-                    <div className="bg-primary/10 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
-                      <IconComponent className="text-primary group-hover:text-primary-foreground transition-colors duration-300" size={32} />
+                    <div style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      backgroundColor: '#f5f5f5',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <IconComponent style={{ color: '#1a73e8', width: '60px', height: '60px' }} />
                     </div>
                   )}
-                  {/* ------------------------------- */}
+                  
+                  {/* Category/Tag Overlay */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '15px',
+                    left: '15px',
+                    backgroundColor: 'rgba(26, 115, 232, 0.9)',
+                    color: 'white',
+                    padding: '5px 15px',
+                    borderRadius: '20px',
+                    fontSize: '0.8em',
+                    fontWeight: 'bold'
+                  }}>
+                    Service
+                  </div>
+                </div>
 
-                  <h3 className="text-2xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors">
+                {/* Content Section */}
+                <div style={{ 
+                  padding: '25px', 
+                  flexGrow: 1,
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  {/* Date and Author */}
+                  {/* <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '15px',
+                    marginBottom: '15px',
+                    fontSize: '0.85em',
+                    color: '#666'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <Calendar size={14} />
+                      <span>{service.date}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <User size={14} />
+                      <span>Geemadhura Team</span>
+                    </div>
+                  </div> */}
+
+                  {/* Title */}
+                  <h3 style={{ 
+                    margin: '0 0 15px 0', 
+                    fontSize: '1.4em', 
+                    fontWeight: 'bold',
+                    color: '#333',
+                    lineHeight: '1.4'
+                  }}>
                     {service.title}
                   </h3>
 
-                  <p className="text-muted-foreground leading-relaxed mb-6">
-                    {service.shortDescription}
-                  </p>
-
-                  <div className="flex items-center text-primary group-hover:text-accent-yellow transition-colors font-semibold">
-                    <span>Learn More</span>
-                    <ArrowRight className="ml-2 group-hover:translate-x-2 transition-transform" size={20} />
+                  {/* Description with fixed height */}
+                  <div style={{ 
+                    flexGrow: 1,
+                    marginBottom: '20px',
+                    color: '#555',
+                    lineHeight: '1.6',
+                    fontSize: '0.95em',
+                    minHeight: '72px', // Fixed height for 3 lines of text
+                    overflow: 'hidden'
+                  }}>
+                    {truncateText(service.shortDescription, 20)}
                   </div>
-                </motion.div>
+
+                  {/* Learn More Button */}
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center',
+                    color: '#1a73e8',
+                    fontWeight: 'bold',
+                    fontSize: '0.95em',
+                    paddingTop: '10px',
+                    borderTop: '1px solid #f0f0f0'
+                  }}>
+                    <span>Read More</span>
+                    <ArrowRight style={{ marginLeft: '8px', transition: 'transform 0.3s ease' }} size={18} />
+                  </div>
+                </div>
               </Link>
-            </motion.div>
+            </div>
           );
         })}
       </div>
     );
   }
 
-  // --- Final Render (Unchanged) ---
+  // --- Final Render ---
   return (
-    <main className="min-h-screen pt-20">
+    <div style={{ fontFamily: 'Arial, sans-serif', minHeight: '100vh', paddingTop: '80px' }}>
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-br from-background via-muted/20 to-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-4xl mx-auto text-center"
-          >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Our Services</h1>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-              Comprehensive solutions tailored to transform your business and drive success in the
-              digital age
-            </p>
-          </motion.div>
+      <div style={{ 
+        backgroundColor: '#f8f9fa',
+        padding: '60px 0',
+        borderBottom: '1px solid #e0e0e0'
+      }}>
+        <div style={{ 
+          maxWidth: '1200px', 
+          margin: '0 auto', 
+          padding: '0 20px',
+          textAlign: 'center'
+        }}>
+          <h1 style={{ 
+            fontSize: '3em', 
+            fontWeight: 'bold', 
+            marginBottom: '20px',
+            color: '#333'
+          }}>
+            Our Services
+          </h1>
+          <p style={{ 
+            fontSize: '1.2em', 
+            color: '#666', 
+            maxWidth: '800px',
+            margin: '0 auto',
+            lineHeight: '1.6'
+          }}>
+            Comprehensive solutions tailored to transform your business and drive success in the digital age
+          </p>
         </div>
-      </section>
+      </div>
 
-      {/* Services Grid (Dynamic Content Area) */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Services Grid Section */}
+      <div style={{ 
+        padding: '60px 0',
+        backgroundColor: 'white'
+      }}>
+        <div style={{ 
+          maxWidth: '1200px', 
+          margin: '0 auto', 
+          padding: '0 20px'
+        }}>
           {content}
         </div>
-      </section>
-    </main>
+      </div>
+    </div>
   );
 };
 

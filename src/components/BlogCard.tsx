@@ -1,77 +1,125 @@
-import { motion } from 'framer-motion';
+// components/BlogCard.tsx
 import { Link } from 'react-router-dom';
-import { Calendar, User, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Calendar, User } from 'lucide-react';
 
 interface BlogCardProps {
-  slug: string;
+  id: number;
   title: string;
-  excerpt: string;
+  short_description: string;
+  banner_image: string;
+  publish_date: string;
   author: string;
-  date: string;
-  category: string;
-  thumbnail: string;
-  index?: number;
+  tags: string;
+  slug: string;
+  index: number;
 }
 
 export const BlogCard = ({
-  slug,
+  id,
   title,
-  excerpt,
+  short_description,
+  banner_image,
+  publish_date,
   author,
-  date,
-  category,
-  thumbnail,
-  index = 0,
+  tags,
+  slug,
+  index
 }: BlogCardProps) => {
+  // Format date properly
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return dateString; // Return original string if date is invalid
+      }
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return dateString; // Return original string on error
+    }
+  };
+
+  // Get first tag as category
+  const category = tags ? tags.split(',')[0].trim() : 'General';
+
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -8 }}
-      className="group"
+      className="group h-full"
     >
-      <Link to={`/blog/${slug}`}>
-        <article className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
-          {/* Thumbnail */}
-          <div className="relative h-48 bg-muted overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
-            <div className="absolute top-4 right-4 bg-primary px-3 py-1 rounded-full">
-              <span className="text-xs font-semibold text-primary-foreground">{category}</span>
+      <Link to={`/blog/${slug}`} className="block h-full">
+        <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-xl h-full flex flex-col">
+          {/* Blog Image */}
+          <div className="relative h-64 overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10 flex-shrink-0">
+            {banner_image ? (
+              <img
+                src={`https://geemadhura.braventra.in${banner_image}`}
+                alt={title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            ) : null}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10"></div>
+            <div className="absolute top-4 left-4">
+              <span className="inline-flex items-center gap-2 bg-primary/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                <span className="text-xs font-semibold text-primary-foreground">
+                  {category}
+                </span>
+              </span>
             </div>
           </div>
 
-          {/* Content */}
-          <div className="p-6 flex-1 flex flex-col">
-            <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors line-clamp-2">
+          {/* Blog Content */}
+          <div className="p-6 flex-grow flex flex-col">
+            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+              <div className="flex items-center gap-2">
+                <Calendar size={14} className="text-primary" />
+                <span>{formatDate(publish_date)}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <User size={14} className="text-primary" />
+                <span>{author || 'Admin'}</span>
+              </div>
+            </div>
+
+            <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2 flex-grow-0">
               {title}
             </h3>
-
-            <p className="text-muted-foreground mb-4 leading-relaxed line-clamp-3 flex-1">
-              {excerpt}
+            <p className="text-muted-foreground mb-4 line-clamp-3 flex-grow">
+              {short_description}
             </p>
-
-            {/* Meta */}
-            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-              <div className="flex items-center gap-1">
-                <Calendar size={14} />
-                <span>{new Date(date).toLocaleDateString()}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <User size={14} />
-                <span>{author}</span>
-              </div>
-            </div>
-
-            {/* Read More */}
-            <div className="flex items-center text-primary group-hover:text-accent-yellow transition-colors font-semibold">
-              <span>Read Article</span>
-              <ArrowRight className="ml-2 group-hover:translate-x-2 transition-transform" size={18} />
+            
+            <div className="mt-auto pt-4 border-t border-border/50">
+              <span className="inline-flex items-center text-primary font-medium group-hover:gap-2 transition-all">
+                Read More
+                <svg
+                  className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </span>
             </div>
           </div>
-        </article>
+        </div>
       </Link>
-    </motion.div>
+    </motion.article>
   );
 };

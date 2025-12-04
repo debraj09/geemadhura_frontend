@@ -6,14 +6,16 @@ import { Testimonials } from '@/components/Testimonials';
 import { Newsletter } from '@/components/Newsletter';
 import { FAQ } from '@/components/FAQ';
 import  Box  from '@/pages/Box';
+import OurStory from './OurStory';
 
 const Home = () => {
   return (
     <main className="min-h-screen">
       <HeroSlider />
       <Marquee />
-      <NewUpdates />
+      {/* <NewUpdates /> */}
       <Box />
+      <OurStory />
       <ServicesGrid />
       <Testimonials />
       <Newsletter />

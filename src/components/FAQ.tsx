@@ -205,127 +205,205 @@ export const FAQ = () => {
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="max-w-3xl mx-auto"
-        >
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
-              <motion.div
-                key={faq.id}
-                initial={{ opacity: 0, x: -50, rotate: -5 }}
-                whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.1,
-                  type: 'spring',
-                  bounce: 0.4,
-                }}
-                whileHover={{
-                  x: 10,
-                  scale: 1.02,
-                }}
-              >
-                <AccordionItem
-                  value={`item-${faq.id}`}
-                  className="bg-card border-2 border-border rounded-xl px-6 data-[state=open]:border-primary transition-all duration-300 relative overflow-hidden group"
-                >
-                  {/* Animated background on open */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent-yellow/5"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileHover={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-
-                  {/* Shine effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
-                    initial={{ x: '-100%', skewX: -20 }}
-                    whileHover={{ x: '200%' }}
-                    transition={{ duration: 0.8 }}
-                  />
-
-                  <AccordionTrigger className="text-left hover:text-primary transition-colors py-5 relative z-10">
-                    <div className="flex items-center gap-3">
-                      <motion.div
-                        className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0"
-                        whileHover={{ rotate: 360, scale: 1.2 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <span className="text-primary font-bold text-sm">{index + 1}</span>
-                      </motion.div>
-                      <span className="font-semibold text-base md:text-lg">
-                        {faq.question.split(' ').map((word, i) => (
-                          <motion.span
-                            key={i}
-                            className="inline-block mr-1"
-                            whileHover={{
-                              y: -3,
-                              color: 'hsl(var(--accent-yellow))',
-                            }}
-                            transition={{ type: 'spring', bounce: 0.6 }}
-                          >
-                            {word}
-                          </motion.span>
-                        ))}
-                      </span>
-                    </div>
-                  </AccordionTrigger>
-
-                  <AccordionContent className="text-muted-foreground leading-relaxed pb-5 relative z-10">
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {faq.answer}
-                    </motion.div>
-                  </AccordionContent>
-
-                  {/* Corner decoration */}
-                  <motion.div
-                    className="absolute top-0 right-0 w-16 h-16 bg-accent-yellow/5 rounded-bl-full"
-                    animate={{ rotate: [0, 90, 0] }}
-                    transition={{ duration: 4, repeat: Infinity }}
-                  />
-                </AccordionItem>
-              </motion.div>
-            ))}
-          </Accordion>
-        </motion.div>
-
-        {/* Floating help indicator */}
-        <motion.div
-          className="text-center mt-12"
-          initial={{ opacity: 0, scale: 0 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8, type: 'spring', bounce: 0.6 }}
-        >
+        {/* Two column layout */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+          {/* Left column - 40% width for custom content */}
           <motion.div
-            animate={{
-              y: [0, -10, 0],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{ duration: 3, repeat: Infinity }}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="w-full lg:w-2/5"
           >
-            <p className="text-muted-foreground">
-              Still have questions?{' '}
-              <motion.a
-                href="/contact"
-                className="text-primary hover:text-accent-yellow font-semibold underline"
-                whileHover={{ scale: 1.1 }}
+            <div className="sticky top-8">
+              {/* Placeholder for your custom content */}
+              <div className="bg-card border-2 border-border rounded-xl p-6 md:p-8 h-full min-h-[400px] flex flex-col items-center justify-center">
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 }}
+                  className="text-center"
+                >
+                 
+                  
+                  <h3 className="text-xl md:text-2xl font-bold mb-4">
+                    For content
+                  </h3>
+                  
+                  <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
+                    test para
+                  </p>
+                  
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="inline-block"
+                  >
+                    <button className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors">
+                      Add Content
+                    </button>
+                  </motion.div>
+                  
+                  {/* Decorative elements */}
+                  <motion.div
+                    className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-primary/30 rounded-tl-xl"
+                    animate={{ opacity: [0.3, 0.7, 0.3] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  />
+                  <motion.div
+                    className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-accent-yellow/30 rounded-br-xl"
+                    animate={{ opacity: [0.7, 0.3, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                  />
+                </motion.div>
+              </div>
+              
+              {/* Additional content can be added below */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6 }}
+                className="mt-6 p-4 bg-accent-yellow/5 border border-accent-yellow/20 rounded-lg"
               >
-                Contact us
-              </motion.a>
-            </p>
+                <p className="text-sm text-muted-foreground text-center">
+                  Customize this section to showcase additional information or features.
+                </p>
+              </motion.div>
+            </div>
           </motion.div>
-        </motion.div>
+
+          {/* Right column - 60% width for FAQs */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="w-full lg:w-3/5"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <Accordion type="single" collapsible className="space-y-4">
+                {faqs.map((faq, index) => (
+                  <motion.div
+                    key={faq.id}
+                    initial={{ opacity: 0, x: -50, rotate: -5 }}
+                    whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.5,
+                      delay: index * 0.1,
+                      type: 'spring',
+                      bounce: 0.4,
+                    }}
+                    whileHover={{
+                      x: 10,
+                      scale: 1.02,
+                    }}
+                  >
+                    <AccordionItem
+                      value={`item-${faq.id}`}
+                      className="bg-card border-2 border-border rounded-xl px-6 data-[state=open]:border-primary transition-all duration-300 relative overflow-hidden group"
+                    >
+                      {/* Animated background on open */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent-yellow/5"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileHover={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+
+                      {/* Shine effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
+                        initial={{ x: '-100%', skewX: -20 }}
+                        whileHover={{ x: '200%' }}
+                        transition={{ duration: 0.8 }}
+                      />
+
+                      <AccordionTrigger className="text-left hover:text-primary transition-colors py-5 relative z-10">
+                        <div className="flex items-center gap-3">
+                          <motion.div
+                            className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0"
+                            whileHover={{ rotate: 360, scale: 1.2 }}
+                            transition={{ duration: 0.5 }}
+                          >
+                            <span className="text-primary font-bold text-sm">{index + 1}</span>
+                          </motion.div>
+                          <span className="font-semibold text-base md:text-lg">
+                            {faq.question.split(' ').map((word, i) => (
+                              <motion.span
+                                key={i}
+                                className="inline-block mr-1"
+                                whileHover={{
+                                  y: -3,
+                                  color: 'hsl(var(--accent-yellow))',
+                                }}
+                                transition={{ type: 'spring', bounce: 0.6 }}
+                              >
+                                {word}
+                              </motion.span>
+                            ))}
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+
+                      <AccordionContent className="text-muted-foreground leading-relaxed pb-5 relative z-10">
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {faq.answer}
+                        </motion.div>
+                      </AccordionContent>
+
+                      {/* Corner decoration */}
+                      <motion.div
+                        className="absolute top-0 right-0 w-16 h-16 bg-accent-yellow/5 rounded-bl-full"
+                        animate={{ rotate: [0, 90, 0] }}
+                        transition={{ duration: 4, repeat: Infinity }}
+                      />
+                    </AccordionItem>
+                  </motion.div>
+                ))}
+              </Accordion>
+
+              {/* Floating help indicator */}
+              <motion.div
+                className="text-center mt-12"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.8, type: 'spring', bounce: 0.6 }}
+              >
+                <motion.div
+                  animate={{
+                    y: [0, -10, 0],
+                    rotate: [0, 5, -5, 0],
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  <p className="text-muted-foreground">
+                    Still have questions?{' '}
+                    <motion.a
+                      href="/contact"
+                      className="text-primary hover:text-accent-yellow font-semibold underline"
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      Contact us
+                    </motion.a>
+                  </p>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

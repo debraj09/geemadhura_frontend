@@ -15,6 +15,9 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import DetailsPage from "./pages/DetailsPage";
 import Box from "./pages/Box";
+import OurStory from "./pages/OurStory";
+import { FirstScrollbar } from "./components/FirstScrollbar";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -23,23 +26,35 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        {/* 🚀 Ensure the Header is truly fixed/sticky, typically using 'fixed top-0 w-full z-50' in its definition 🚀 */}
         <div className="flex flex-col min-h-screen">
+          
           <Header />
-          <div className="flex-1">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/services/:slug" element={<ServiceDetail />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/DetailsPage" element={<DetailsPage />} />
-              <Route path="/Box" element={<Box />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+          
+          {/* We create a container to apply margin/padding to the content below the fixed header */}
+          {/* *** MODIFIED: Applying mt-16 (top margin) to push the content down *** */}
+          <div  className="mt-16">
+             <FirstScrollbar /> 
+
+             {/* The routes wrapper should no longer need padding here */}
+             <div className="flex-1">
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/services/:slug" element={<ServiceDetail />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/blog/:slug" element={<BlogPost />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/DetailsPage" element={<DetailsPage />} />
+                    <Route path="/Box" element={<Box />} />
+                    <Route path="/OurStory" element={<OurStory />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+             </div>
           </div>
+          
           <Footer />
         </div>
       </BrowserRouter>

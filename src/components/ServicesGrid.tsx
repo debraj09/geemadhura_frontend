@@ -47,7 +47,7 @@ export const ServicesGrid = () => {
       setError(null);
       try {
         // Fetch only active services
-        const response = await fetch(`${API_BASE_URL}?active=true`); 
+        const response = await fetch(`${API_BASE_URL}?active=true`);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch services: ${response.statusText}`);
@@ -56,9 +56,9 @@ export const ServicesGrid = () => {
         const result = await response.json();
         // TypeScript ensures result.data matches ServiceData[]
         const serviceData: ServiceData[] = result.data || [];
-        
+
         // Console log to verify the field is present now
-        console.log("dadtata fetched:", serviceData); 
+        console.log("dadtata fetched:", serviceData);
 
         // Map backend data to frontend GridService interface
         const mappedServices: GridService[] = serviceData.map(service => {
@@ -66,9 +66,9 @@ export const ServicesGrid = () => {
             id: service.id,
             title: service.name,
             slug: service.slug,
-            icon: 'Zap', 
+            icon: 'Zap',
             // FIXED: Reading from the ALIASED field name
-            shortDescription: service.service_description_text || 'No description provided.', 
+            shortDescription: service.service_description_text || 'No description provided.',
           };
         });
 
@@ -86,6 +86,17 @@ export const ServicesGrid = () => {
     fetchServices();
   }, []); // Run only once on mount
 
+
+  const truncateToChars = (text: string | undefined, maxChars: number): string => {
+  if (!text) return '';
+  
+  if (text.length <= maxChars) {
+    return text;
+  }
+  
+  return text.substring(0, maxChars).trim() + '...';
+};
+
   // Memoize the rendered list for performance
   const servicesList = useMemo(() => {
     return services.map((service, index) => {
@@ -100,11 +111,11 @@ export const ServicesGrid = () => {
           animate={
             isInView
               ? {
-                  opacity: 1,
-                  y: 0,
-                  rotate: 0,
-                  scale: 1,
-                }
+                opacity: 1,
+                y: 0,
+                rotate: 0,
+                scale: 1,
+              }
               : {}
           }
           transition={{
@@ -175,7 +186,7 @@ export const ServicesGrid = () => {
                     whileHover={{
                       y: -5,
                       // Ensure you have an 'accent-yellow' color defined in your Tailwind config
-                      color: 'hsl(var(--accent-yellow))', 
+                      color: 'hsl(var(--accent-yellow))',
                       rotate: [0, -10, 10, 0],
                     }}
                     transition={{ type: 'spring', bounce: 0.7 }}
@@ -186,9 +197,9 @@ export const ServicesGrid = () => {
               </h3>
 
               {/* Dynamic Description */}
-              <p className="text-muted-foreground leading-relaxed mb-6 relative z-10">
-                {service.shortDescription}
-              </p>
+           <p className="text-muted-foreground leading-relaxed mb-6 relative z-10">
+  {truncateToChars(service.shortDescription, 100)}
+</p>
 
               {/* Learn More link with arrow animation */}
               <motion.div
@@ -223,20 +234,9 @@ export const ServicesGrid = () => {
   // --- Render Component ---
   return (
     <section ref={ref} className="py-16 md:py-24 bg-muted/20 relative overflow-hidden">
-      
+
       {/* Animated background grid */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)',
-          backgroundSize: '50px 50px',
-        }}>
-          <motion.div
-            className="w-full h-full"
-            animate={{ backgroundPosition: ['0px 0px', '50px 50px'] }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          />
-        </div>
-      </div>
+
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
@@ -257,7 +257,7 @@ export const ServicesGrid = () => {
         </motion.div>
 
         {/* --- Dynamic States --- */}
-        
+
         {/* Loading State */}
         {isLoading && (
           <div className="flex justify-center items-center py-10 text-primary">

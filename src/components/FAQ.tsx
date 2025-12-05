@@ -76,14 +76,14 @@ export const FAQ = () => {
       <section className="py-16 md:py-24 bg-background relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <HelpCircle className="text-accent-yellow mx-auto mb-4" size={48} />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+            <HelpCircle className="text-[#F2C445] mx-auto mb-4" size={48} />
+            <h2 style={{color: '#00283A'}} className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Find answers to common questions about our services
             </p>
           </div>
           <div className="flex justify-center items-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <Loader2 className="w-8 h-8 animate-spin" style={{color: '#00283A'}} />
             <p className="ml-3 text-lg text-muted-foreground">Loading FAQs...</p>
           </div>
         </div>
@@ -97,8 +97,8 @@ export const FAQ = () => {
       <section className="py-16 md:py-24 bg-background relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <HelpCircle className="text-accent-yellow mx-auto mb-4" size={48} />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+            <HelpCircle className="text-[#F2C445] mx-auto mb-4" size={48} />
+            <h2 style={{color: '#00283A'}} className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
           </div>
           <div className="p-6 bg-red-100 border border-red-400 rounded-xl text-red-700 max-w-xl mx-auto flex items-center space-x-3">
             <AlertTriangle size={24} />
@@ -118,8 +118,8 @@ export const FAQ = () => {
       <section className="py-16 md:py-24 bg-background relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <HelpCircle className="text-accent-yellow mx-auto mb-4" size={48} />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+            <HelpCircle className="text-[#F2C445] mx-auto mb-4" size={48} />
+            <h2 style={{color: '#00283A'}} className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Find answers to common questions about our services
             </p>
@@ -139,7 +139,7 @@ export const FAQ = () => {
         className="absolute inset-0 opacity-5"
         style={{
           backgroundImage:
-            'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
+            'radial-gradient(circle, #00283A 1px, transparent 1px)',
           backgroundSize: '30px 30px',
         }}
         animate={{
@@ -152,7 +152,7 @@ export const FAQ = () => {
       {[...Array(8)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute text-primary/10"
+          className="absolute text-[#00283A]/10"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
@@ -195,11 +195,11 @@ export const FAQ = () => {
               }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <HelpCircle className="text-accent-yellow" size={48} />
+              <HelpCircle className="text-[#F2C445]" size={48} />
             </motion.div>
           </motion.div>
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+          <h2 style={{color: '#00283A'}} className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Find answers to common questions about our services
           </p>
@@ -217,7 +217,7 @@ export const FAQ = () => {
           >
             <div className="sticky top-8">
               {/* Placeholder for your custom content */}
-              <div className="bg-card border-2 border-border rounded-xl p-6 md:p-8 h-full min-h-[400px] flex flex-col items-center justify-center">
+              <div className="bg-white/95 border-2 border-[#00283A]/20 rounded-xl p-6 md:p-8 h-full min-h-[400px] flex flex-col items-center justify-center backdrop-blur-sm">
                 <motion.div
                   initial={{ scale: 0.8, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
@@ -225,14 +225,22 @@ export const FAQ = () => {
                   transition={{ delay: 0.4 }}
                   className="text-center"
                 >
-                 
+                  <motion.div
+                    className="w-20 h-20 bg-[#00283A]/10 rounded-full flex items-center justify-center mb-6"
+                    animate={{
+                      rotate: [0, 360],
+                    }}
+                    transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+                  >
+                    <HelpCircle className="text-[#00283A]" size={40} />
+                  </motion.div>
                   
-                  <h3 className="text-xl md:text-2xl font-bold mb-4">
-                    For content
+                  <h3 style={{color: '#00283A'}} className="text-xl md:text-2xl font-bold mb-4">
+                    Need More Help?
                   </h3>
                   
                   <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
-                    test para
+                    Can't find what you're looking for? Our team is here to help you with any questions.
                   </p>
                   
                   <motion.div
@@ -240,19 +248,24 @@ export const FAQ = () => {
                     whileTap={{ scale: 0.95 }}
                     className="inline-block"
                   >
-                    <button className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors">
-                      Add Content
+                    <button className="px-6 py-3 rounded-lg font-medium transition-colors"
+                      style={{
+                        backgroundColor: '#00283A',
+                        color: '#F2C445'
+                      }}
+                    >
+                      Contact Support
                     </button>
                   </motion.div>
                   
                   {/* Decorative elements */}
                   <motion.div
-                    className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-primary/30 rounded-tl-xl"
+                    className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-[#00283A]/30 rounded-tl-xl"
                     animate={{ opacity: [0.3, 0.7, 0.3] }}
                     transition={{ duration: 3, repeat: Infinity }}
                   />
                   <motion.div
-                    className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-accent-yellow/30 rounded-br-xl"
+                    className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-[#F2C445]/30 rounded-br-xl"
                     animate={{ opacity: [0.7, 0.3, 0.7] }}
                     transition={{ duration: 3, repeat: Infinity, delay: 1 }}
                   />
@@ -265,7 +278,7 @@ export const FAQ = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.6 }}
-                className="mt-6 p-4 bg-accent-yellow/5 border border-accent-yellow/20 rounded-lg"
+                className="mt-6 p-4 bg-[#F2C445]/10 border border-[#F2C445]/20 rounded-lg"
               >
                 <p className="text-sm text-muted-foreground text-center">
                   Customize this section to showcase additional information or features.
@@ -308,11 +321,11 @@ export const FAQ = () => {
                   >
                     <AccordionItem
                       value={`item-${faq.id}`}
-                      className="bg-card border-2 border-border rounded-xl px-6 data-[state=open]:border-primary transition-all duration-300 relative overflow-hidden group"
+                      className="bg-white/95 border-2 border-[#00283A]/20 rounded-xl px-6 data-[state=open]:border-[#00283A] transition-all duration-300 relative overflow-hidden group backdrop-blur-sm"
                     >
                       {/* Animated background on open */}
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent-yellow/5"
+                        className="absolute inset-0 bg-gradient-to-r from-[#00283A]/5 to-[#F2C445]/5"
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileHover={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
@@ -326,14 +339,14 @@ export const FAQ = () => {
                         transition={{ duration: 0.8 }}
                       />
 
-                      <AccordionTrigger className="text-left hover:text-primary transition-colors py-5 relative z-10">
+                      <AccordionTrigger className="text-left hover:text-[#00283A] transition-colors py-5 relative z-10">
                         <div className="flex items-center gap-3">
                           <motion.div
-                            className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0"
+                            className="w-8 h-8 rounded-full bg-[#00283A]/10 flex items-center justify-center flex-shrink-0"
                             whileHover={{ rotate: 360, scale: 1.2 }}
                             transition={{ duration: 0.5 }}
                           >
-                            <span className="text-primary font-bold text-sm">{index + 1}</span>
+                            <span className="text-[#00283A] font-bold text-sm">{index + 1}</span>
                           </motion.div>
                           <span className="font-semibold text-base md:text-lg">
                             {faq.question.split(' ').map((word, i) => (
@@ -342,7 +355,7 @@ export const FAQ = () => {
                                 className="inline-block mr-1"
                                 whileHover={{
                                   y: -3,
-                                  color: 'hsl(var(--accent-yellow))',
+                                  color: '#F2C445',
                                 }}
                                 transition={{ type: 'spring', bounce: 0.6 }}
                               >
@@ -365,7 +378,7 @@ export const FAQ = () => {
 
                       {/* Corner decoration */}
                       <motion.div
-                        className="absolute top-0 right-0 w-16 h-16 bg-accent-yellow/5 rounded-bl-full"
+                        className="absolute top-0 right-0 w-16 h-16 bg-[#F2C445]/5 rounded-bl-full"
                         animate={{ rotate: [0, 90, 0] }}
                         transition={{ duration: 4, repeat: Infinity }}
                       />
@@ -393,8 +406,12 @@ export const FAQ = () => {
                     Still have questions?{' '}
                     <motion.a
                       href="/contact"
-                      className="text-primary hover:text-accent-yellow font-semibold underline"
-                      whileHover={{ scale: 1.1 }}
+                      className="font-semibold underline"
+                      style={{color: '#00283A'}}
+                      whileHover={{ 
+                        scale: 1.1,
+                        color: '#F2C445'
+                      }}
                     >
                       Contact us
                     </motion.a>

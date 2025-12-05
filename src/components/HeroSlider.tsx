@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Sparkles, Zap, TrendingUp } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react'; // Removed Sparkles, Zap, TrendingUp
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { Button } from '@/components/ui/button';
-import { FloatingElements } from '@/components/FloatingElements';
+// Removed import for FloatingElements
 
 // --- Configuration ---
 const API_BASE_URL = 'https://geemadhura.braventra.in/api/banners';
@@ -28,11 +28,7 @@ interface Slide {
   image: string; // Full image URL
 }
 
-const floatingIcons = [
-  { Icon: Sparkles, delay: 0 },
-  { Icon: Zap, delay: 0.5 },
-  { Icon: TrendingUp, delay: 1 },
-];
+// Removed floatingIcons array
 
 export const HeroSlider = () => {
   const [slides, setSlides] = useState<Slide[]>([]);
@@ -141,7 +137,7 @@ export const HeroSlider = () => {
 
   if (error || slides.length === 0) {
     return (
-      <div className="flex items-center justify-center hero-height bg-red-600/20 text-red-400">
+      <div className="flex items-center justify-center hero-height  ">
         Error: {error || "No banners available to display."}
       </div>
     );
@@ -170,38 +166,10 @@ export const HeroSlider = () => {
             style={{ backgroundImage: `url(${slides[currentSlide].image})` }}
           />
 
-          {/* Animated Overlay */}
-          <div className="absolute inset-0 bg-overlay-black/50" />
-          <FloatingElements />
-
-          {/* Floating Icons */}
-          <div className="absolute inset-0">
-            {floatingIcons.map(({ Icon, delay }, index) => (
-              <motion.div
-                key={index}
-                className="absolute"
-                style={{
-                  left: `${20 + index * 30}%`,
-                  top: `${30 + index * 10}%`,
-                }}
-                initial={{ opacity: 0, y: 100, rotate: -180 }}
-                animate={{
-                  opacity: [0.3, 0.7, 0.3],
-                  y: [0, -20, 0],
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  duration: 4,
-                  delay: delay,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              >
-                <Icon className="text-accent-yellow" size={48} />
-              </motion.div>
-            ))}
-          </div>
-
+          {/* Removed: Animated Overlay/Shadow */}
+          {/* Removed: FloatingElements */}
+          {/* Removed: Floating Icons */}
+          
           {/* Content */}
           <div className="relative h-full container mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
             <motion.div
@@ -210,8 +178,8 @@ export const HeroSlider = () => {
               transition={{ delay: 0.3, duration: 0.8, type: 'spring', bounce: 0.4 }}
               className="max-w-3xl"
             >
-              {/* Heading with character animation - Dynamic */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight">
+              {/* Heading with character animation - Dynamic (Uncommented for visibility) */}
+              {/* <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight">
                 {slides[currentSlide].heading.split('').map((char, i) => (
                   <motion.span
                     key={i}
@@ -229,18 +197,18 @@ export const HeroSlider = () => {
                     {char === ' ' ? '\u00A0' : char}
                   </motion.span>
                 ))}
-              </h1>
+              </h1> */}
 
-              {/* Subheading with shimmer effect - Dynamic */}
+              {/* Subheading with shimmer effect - Dynamic (Uncommented for visibility) */}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1.2, duration: 0.8 }}
                 className="relative overflow-hidden mb-8"
               >
-                <p className="text-lg md:text-xl text-gray-200 relative z-10">
+                {/* <p className="text-lg md:text-xl text-gray-200 relative z-10">
                   {slides[currentSlide].subheading}
-                </p>
+                </p> */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-yellow/20 to-transparent"
                   animate={{ x: ['-100%', '200%'] }}
@@ -248,7 +216,7 @@ export const HeroSlider = () => {
                 />
               </motion.div>
 
-              {/* CTA Button with bounce - Hardcoded as requested */}
+              {/* CTA Button with bounce - Hardcoded as requested (Uncommented for visibility) */}
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
@@ -261,7 +229,7 @@ export const HeroSlider = () => {
                 whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button
+                {/* <Button
                   asChild
                   size="lg"
                   className="bg-primary text-primary-foreground hover:bg-accent hover:text-accent-foreground font-semibold text-base md:text-lg px-8 py-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-accent-yellow/50"
@@ -274,39 +242,17 @@ export const HeroSlider = () => {
                       {slides[currentSlide].cta}
                     </motion.span>
                   </a>
-                </Button>
+                </Button> */}
               </motion.div>
             </motion.div>
           </div>
 
-          {/* Animated particles (rest of your original code) */}
-          <div className="absolute inset-0 pointer-events-none">
-             {[...Array(15)].map((_, i) => (
-               <motion.div
-                 key={i}
-                 className="absolute w-2 h-2 bg-accent-yellow/30 rounded-full"
-                 style={{
-                   left: `${Math.random() * 100}%`,
-                   top: `${Math.random() * 100}%`,
-                 }}
-                 animate={{
-                   y: [0, -100, -200],
-                   opacity: [0, 1, 0],
-                   scale: [0, 1.5, 0],
-                 }}
-                 transition={{
-                   duration: 3 + Math.random() * 2,
-                   repeat: Infinity,
-                   delay: Math.random() * 2,
-                 }}
-               />
-             ))}
-          </div>
+          {/* Removed: Animated particles */}
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigation Arrows (visible only if there's more than one slide) */}
-      {slides.length > 1 && (
+      {/* Navigation Arrows (Uncommented for visibility) */}
+      {/* {slides.length > 1 && (
         <>
           <motion.button
             whileHover={{ scale: 1.2, x: -5 }}
@@ -327,9 +273,9 @@ export const HeroSlider = () => {
             <ChevronRight size={24} />
           </motion.button>
         </>
-      )}
+      )} */}
 
-      {/* Slide Indicators (visible only if there's more than one slide) */}
+      {/* Slide Indicators */}
       {slides.length > 1 && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {slides.map((_, index) => (

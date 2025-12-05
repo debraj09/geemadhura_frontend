@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Circle } from 'lucide-react';
 import lightbg from "../assets/lightbg.jpeg";
 import ourstory from "../assets/ourstory.jpeg";
+import { hover, motion } from 'framer-motion';
 
 const OurStory: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -91,7 +92,7 @@ const OurStory: React.FC = () => {
 
     // Title style
     const titleStyle: React.CSSProperties = {
-        fontSize: '2.5rem',
+        fontSize: '2rem',
         fontWeight: 'bold',
         marginBottom: '25px',
         color: accentColor,
@@ -123,7 +124,7 @@ const OurStory: React.FC = () => {
         padding: '0',
         marginBottom: '30px',
         marginTop: '10px',
-        textAlign:'justify'
+        textAlign: 'justify'
     };
 
     const listItemStyle: React.CSSProperties = {
@@ -230,40 +231,53 @@ const OurStory: React.FC = () => {
                 </div>
 
                 {/* Right Side: 50% Title, Compliance List and Button */}
-                <div style={rightSectionStyle}>
-                    {/* "Our Story" Title */}
-                    <div style={{ position: 'relative', marginBottom: '10px' }}>
-                        <h2 style={titleStyle}>
-                            Our Story
-                            {/* Optional underline */}
-                            <span style={titleUnderlineStyle}></span>
-                        </h2>
+
+                <motion.div
+                    style={leftSectionStyle}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                >
+                    <div style={rightSectionStyle}>
+                        {/* "Our Story" Title */}
+                        <div style={{ position: 'relative', marginBottom: '10px' }}>
+                            <h2 style={titleStyle}>
+                                Our Journey: From Vision to 15,000+ Happy Clients                                {/* Optional underline */}
+                                <span style={titleUnderlineStyle}></span>
+                            </h2>
+                        </div>
+
+                        {/* Compliance Points List with staggered animations */}
+                        <ul style={complianceListStyle}>
+                            {compliancePoints.map((point, index) => (
+                                <li key={index} style={getListItemStyle(index)}>
+                                    {point}
+                                </li>
+                            ))}
+                        </ul>
+
+                        {/* Button with animation */}
+                        <a href="/about">
+                            <button
+
+                                style={buttonStyle}
+                                onMouseOver={(e) => e.currentTarget.style.backgroundColor = lightAccent}
+                                onMouseOut={(e) => e.currentTarget.style.backgroundColor = accentColor}
+                            >
+                                Learn More
+                                <ArrowRight size={20} />
+                            </button>
+                        </a>
                     </div>
 
-                    {/* Compliance Points List with staggered animations */}
-                    <ul style={complianceListStyle}>
-                        {compliancePoints.map((point, index) => (
-                            <li key={index} style={getListItemStyle(index)}>
-                                {point}
-                            </li>
-                        ))}
-                    </ul>
+                </motion.div>
 
-                    {/* Button with animation */}
-                    <a href="/about">
-                    <button
-                    
-                        style={buttonStyle}
-                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = lightAccent}
-                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = accentColor}
-                    >
-                        Learn More
-                        <ArrowRight size={20} />
-                    </button>
-                    </a>
-                </div>
+
             </div>
+
         </div>
+
     );
 };
 

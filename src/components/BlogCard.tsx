@@ -54,9 +54,9 @@ export const BlogCard = ({
       className="group h-full"
     >
       <Link to={`/blog/${slug}`} className="block h-full">
-        <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-xl h-full flex flex-col">
+        <div className="bg-white/95 rounded-xl overflow-hidden border-2 border-[#00283A]/20 hover:border-[#00283A] transition-all duration-300 hover:shadow-xl h-full flex flex-col backdrop-blur-sm">
           {/* Blog Image */}
-          <div className="relative h-64 overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10 flex-shrink-0">
+          <div className="relative h-64 overflow-hidden bg-gradient-to-br from-[#00283A]/10 to-[#F2C445]/10 flex-shrink-0">
             {banner_image ? (
               <img
                 src={`https://geemadhura.braventra.in${banner_image}`}
@@ -70,8 +70,8 @@ export const BlogCard = ({
             ) : null}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10"></div>
             <div className="absolute top-4 left-4">
-              <span className="inline-flex items-center gap-2 bg-primary/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                <span className="text-xs font-semibold text-primary-foreground">
+              <span className="inline-flex items-center gap-2 bg-[#F2C445] backdrop-blur-sm px-3 py-1.5 rounded-full">
+                <span className="text-xs font-semibold text-[#00283A]">
                   {category}
                 </span>
               </span>
@@ -82,24 +82,26 @@ export const BlogCard = ({
           <div className="p-6 flex-grow flex flex-col">
             <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
               <div className="flex items-center gap-2">
-                <Calendar size={14} className="text-primary" />
+                <Calendar size={14} className="text-[#00283A]" />
                 <span>{formatDate(publish_date)}</span>
               </div>
               <div className="flex items-center gap-2">
-                <User size={14} className="text-primary" />
+                <User size={14} className="text-[#00283A]" />
                 <span>{author || 'Admin'}</span>
               </div>
             </div>
 
-            <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2 flex-grow-0">
+            <h3 style={{color: '#00283A'}} className="text-xl font-bold mb-3 group-hover:text-[#00283A]/80 transition-colors line-clamp-2 flex-grow-0">
               {title}
             </h3>
             <p className="text-muted-foreground mb-4 line-clamp-3 flex-grow">
               {short_description}
             </p>
             
-            <div className="mt-auto pt-4 border-t border-border/50">
-              <span className="inline-flex items-center text-primary font-medium group-hover:gap-2 transition-all">
+            <div className="mt-auto pt-4 border-t border-[#00283A]/20">
+              <span className="inline-flex items-center font-medium group-hover:gap-2 transition-all"
+                style={{color: '#00283A'}}
+              >
                 Read More
                 <svg
                   className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"

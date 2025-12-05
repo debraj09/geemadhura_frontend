@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Star, Quote, Loader2, AlertTriangle } from 'lucide-react';
+import lightbg from "../assets/lightbg.jpeg";
 
 // --- Configuration ---
 const API_URL = 'https://geemadhura.braventra.in/api/testimonials';
@@ -41,7 +42,7 @@ export const Testimonials = () => {
             role: item.client_position || item.client_company || 'Client',
             message: item.comment,
             rating: item.review_stars || 5,
-imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
+            imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
             // Add timestamp for consistency
             timestamp: new Date().toISOString()
           }));
@@ -126,17 +127,26 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
   // Loading State
   if (loading) {
     return (
-      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+      <section 
+        className="py-16 md:py-24 bg-background relative overflow-hidden"
+        style={{
+          backgroundImage: `url(${lightbg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-white/90 dark:bg-black/80" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <Quote className="text-accent-yellow mx-auto mb-4" size={48} />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
+            <h2 style={{color:'#00283A'}} className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Hear what our clients say about our services
             </p>
           </div>
           <div className="flex justify-center items-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <Loader2 className="w-8 h-8 animate-spin" style={{color: '#00283A'}} />
             <p className="ml-3 text-lg text-muted-foreground">Loading testimonials...</p>
           </div>
         </div>
@@ -147,11 +157,20 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
   // Error State
   if (error) {
     return (
-      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+      <section 
+        className="py-16 md:py-24 bg-background relative overflow-hidden"
+        style={{
+          backgroundImage: `url(${lightbg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-white/90 dark:bg-black/80" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <Quote className="text-accent-yellow mx-auto mb-4" size={48} />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
+            <h2 style={{color:'#00283A'}} className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
           </div>
           <div className="p-6 bg-red-100 border border-red-400 rounded-xl text-red-700 max-w-xl mx-auto flex items-center space-x-3">
             <AlertTriangle size={24} />
@@ -168,11 +187,20 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
   // Empty State
   if (testimonials.length === 0) {
     return (
-      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+      <section 
+        className="py-16 md:py-24 bg-background relative overflow-hidden"
+        style={{
+          backgroundImage: `url(${lightbg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-white/90 dark:bg-black/80" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <Quote className="text-accent-yellow mx-auto mb-4" size={48} />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
+            <h2 style={{color:'#00283A'}} className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Hear what our clients say about our services
             </p>
@@ -190,15 +218,25 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
       className="py-16 md:py-24 bg-background relative overflow-hidden"
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
+      style={{
+        backgroundImage: `url(${lightbg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
+      }}
     >
-      {/* Animated background */}
+      {/* Semi-transparent overlay for better readability */}
+      <div className="absolute inset-0 bg-white/80 dark:bg-black/70" />
+      
+      {/* Animated gradient overlay */}
       <motion.div
-        className="absolute inset-0 opacity-5"
+        className="absolute inset-0 opacity-10"
         animate={{
           backgroundImage: [
-            'radial-gradient(circle at 20% 50%, hsl(var(--primary)) 0%, transparent 50%)',
-            'radial-gradient(circle at 80% 50%, hsl(var(--accent-yellow)) 0%, transparent 50%)',
-            'radial-gradient(circle at 50% 80%, hsl(var(--primary)) 0%, transparent 50%)',
+            'radial-gradient(circle at 20% 50%, #00283A 0%, transparent 50%)',
+            'radial-gradient(circle at 80% 50%, #F2C445 0%, transparent 50%)',
+            'radial-gradient(circle at 50% 80%, #00283A 0%, transparent 50%)',
           ],
         }}
         transition={{ duration: 10, repeat: Infinity }}
@@ -212,14 +250,7 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
           transition={{ duration: 0.8, type: 'spring', bounce: 0.4 }}
           className="text-center mb-12"
         >
-          <motion.div
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            className="inline-block mb-4"
-          >
-            <Quote className="text-accent-yellow" size={48} />
-          </motion.div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
+          <h2 style={{color:'#00283A'}} className="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Hear what our clients say about our services
           </p>
@@ -244,12 +275,12 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
                   rotateY: 5,
                   scale: 1.05,
                 }}
-                className="bg-card border-2 border-border hover:border-primary rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all relative overflow-hidden group"
+                className="bg-white/95 dark:bg-gray-900/95 border-2 border-border hover:border-[#00283A] rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all relative overflow-hidden group backdrop-blur-sm"
                 style={{ transformStyle: 'preserve-3d' }}
               >
                 {/* Animated gradient background */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent-yellow/5"
+                  className="absolute inset-0 bg-gradient-to-br from-[#00283A]/5 to-[#F2C445]/5"
                   animate={{
                     scale: [1, 1.2, 1],
                     rotate: [0, 90, 0],
@@ -259,7 +290,7 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
 
                 {/* Floating quote icon */}
                 <motion.div
-                  className="absolute -top-4 -right-4 text-accent-yellow/20"
+                  className="absolute -top-4 -right-4 text-[#F2C445]/20"
                   animate={{
                     rotate: [0, 360],
                     scale: [1, 1.2, 1],
@@ -289,7 +320,7 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
                         repeatDelay: 3,
                       }}
                     >
-                      <Star className="fill-accent-yellow text-accent-yellow" size={20} />
+                      <Star className="fill-[#F2C445] text-[#F2C445]" size={20} />
                     </motion.div>
                   ))}
                 </motion.div>
@@ -312,7 +343,7 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
                     />
                   ) : (
                     <motion.div
-                      className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold"
+                      className="w-12 h-12 bg-[#00283A]/20 rounded-full flex items-center justify-center text-[#00283A] font-bold"
                       whileHover={{ rotate: 360, scale: 1.2 }}
                       transition={{ duration: 0.5 }}
                     >
@@ -347,18 +378,18 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
                 style={{ transformStyle: 'preserve-3d' }}
               >
                 <motion.div
-                  className="bg-card border-2 border-primary rounded-2xl p-8 shadow-2xl max-w-lg mx-auto relative overflow-hidden"
+                  className="bg-white/95 dark:bg-gray-900/95 border-2 border-[#00283A] rounded-2xl p-8 shadow-2xl max-w-lg mx-auto relative overflow-hidden backdrop-blur-sm"
                   whileHover={{ scale: 1.02 }}
                 >
                   {/* Animated background */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent-yellow/10"
+                    className="absolute inset-0 bg-gradient-to-br from-[#00283A]/10 to-[#F2C445]/10"
                     animate={{ rotate: [0, 360] }}
                     transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
                   />
 
                   <motion.div
-                    className="absolute top-4 right-4 text-accent-yellow/30"
+                    className="absolute top-4 right-4 text-[#F2C445]/30"
                     animate={{ rotate: [0, 360] }}
                     transition={{ duration: 10, repeat: Infinity }}
                   >
@@ -375,7 +406,7 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
                         }}
                         transition={{ duration: 2, delay: i * 0.1, repeat: Infinity, repeatDelay: 3 }}
                       >
-                        <Star className="fill-accent-yellow text-accent-yellow" size={20} />
+                        <Star className="fill-[#F2C445] text-[#F2C445]" size={20} />
                       </motion.div>
                     ))}
                   </div>
@@ -395,7 +426,7 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
                       />
                     ) : (
                       <motion.div
-                        className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold"
+                        className="w-12 h-12 bg-[#00283A]/20 rounded-full flex items-center justify-center text-[#00283A] font-bold"
                         animate={{ rotate: [0, 360] }}
                         transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
                       >
@@ -422,7 +453,11 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
               onClick={() => paginate(-1)}
               whileHover={{ scale: 1.2, rotate: -90 }}
               whileTap={{ scale: 0.9 }}
-              className="bg-primary hover:bg-accent text-primary-foreground hover:text-accent-foreground p-3 rounded-full transition-all duration-300 shadow-lg"
+              className="p-3 rounded-full transition-all duration-300 shadow-lg backdrop-blur-sm"
+              style={{
+                backgroundColor: '#00283A',
+                color: '#F2C445'
+              }}
               aria-label="Previous testimonial"
             >
               <ChevronLeft size={24} />
@@ -431,7 +466,11 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
               onClick={() => paginate(1)}
               whileHover={{ scale: 1.2, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
-              className="bg-primary hover:bg-accent text-primary-foreground hover:text-accent-foreground p-3 rounded-full transition-all duration-300 shadow-lg"
+              className="p-3 rounded-full transition-all duration-300 shadow-lg backdrop-blur-sm"
+              style={{
+                backgroundColor: '#00283A',
+                color: '#F2C445'
+              }}
               aria-label="Next testimonial"
             >
               <ChevronRight size={24} />
@@ -447,9 +486,12 @@ imageUrl: item.image_url ? `${BASE_URL}${item.image_url}` : null,
                   setDirection(index > currentIndex ? 1 : -1);
                   setCurrentIndex(index);
                 }}
-                className={`h-2 rounded-full transition-all ${
-                  index === currentIndex ? 'w-8 bg-accent-yellow' : 'w-2 bg-muted-foreground/30'
+                className={`h-2 rounded-full transition-all backdrop-blur-sm ${
+                  index === currentIndex ? 'w-8' : 'w-2 bg-muted-foreground/30'
                 }`}
+                style={{
+                  backgroundColor: index === currentIndex ? '#F2C445' : ''
+                }}
                 animate={index === currentIndex ? { scale: [1, 1.2, 1] } : {}}
                 transition={{ duration: 0.5, repeat: Infinity }}
                 whileHover={{ scale: 1.3 }}

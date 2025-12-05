@@ -75,31 +75,31 @@ const Blog = () => {
 
   if (loading) {
     return (
-      <main className="min-h-screen pt-20">
-        <section className="relative py-20 md:py-32 bg-gradient-to-br from-background via-muted/20 to-background">
+      <main className="min-h-screen">
+        <section className="relative py-12 md:py-16 bg-gradient-to-br from-background via-muted/20 to-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <div className="animate-pulse">
-                <div className="h-12 bg-muted rounded-lg w-3/4 mx-auto mb-6"></div>
-                <div className="h-6 bg-muted rounded-lg w-full mb-4"></div>
-                <div className="h-6 bg-muted rounded-lg w-2/3 mx-auto"></div>
+                <div className="h-10 bg-muted rounded-lg w-3/4 mx-auto mb-4"></div>
+                <div className="h-5 bg-muted rounded-lg w-full mb-3"></div>
+                <div className="h-5 bg-muted rounded-lg w-2/3 mx-auto"></div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="py-16 md:py-24">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, index) => (
                 <div key={index} className="animate-pulse">
-                  <div className="bg-card rounded-xl overflow-hidden border border-border">
-                    <div className="h-64 bg-muted"></div>
-                    <div className="p-6">
-                      <div className="h-4 bg-muted rounded w-20 mb-4"></div>
-                      <div className="h-6 bg-muted rounded w-3/4 mb-3"></div>
-                      <div className="h-4 bg-muted rounded w-full mb-2"></div>
-                      <div className="h-4 bg-muted rounded w-2/3"></div>
+                  <div className="bg-white/95 rounded-xl overflow-hidden border border-[#00283A]/20">
+                    <div className="h-48 bg-muted"></div>
+                    <div className="p-5">
+                      <div className="h-3 bg-muted rounded w-16 mb-3"></div>
+                      <div className="h-5 bg-muted rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-muted rounded w-full mb-2"></div>
+                      <div className="h-3 bg-muted rounded w-2/3"></div>
                     </div>
                   </div>
                 </div>
@@ -113,16 +113,20 @@ const Blog = () => {
 
   if (error) {
     return (
-      <main className="min-h-screen pt-20">
-        <section className="relative py-20 md:py-32 bg-gradient-to-br from-background via-muted/20 to-background">
+      <main className="min-h-screen">
+        <section className="relative py-12 md:py-16 bg-gradient-to-br from-background via-muted/20 to-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Insights & Updates</h1>
-              <div className="bg-destructive/10 border border-destructive rounded-lg p-6">
-                <p className="text-destructive">{error}</p>
+              <h1 style={{color: '#00283A'}} className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Insights & Updates</h1>
+              <div className="bg-red-100 border border-red-400 rounded-lg p-5">
+                <p className="text-red-700">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="mt-4 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                  className="mt-3 px-5 py-2 rounded-lg font-medium transition-colors"
+                  style={{
+                    backgroundColor: '#00283A',
+                    color: '#F2C445'
+                  }}
                 >
                   Retry
                 </button>
@@ -135,9 +139,9 @@ const Blog = () => {
   }
 
   return (
-    <main className="min-h-screen pt-20">
-      {/* Hero Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-br from-background via-muted/20 to-background">
+    <main className="min-h-screen">
+      {/* Hero Section - Reduced padding */}
+      <section className="relative py-12 md:py-16 bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -145,8 +149,8 @@ const Blog = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Insights & Updates</h1>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+            <h1 style={{color: '#00283A'}} className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Insights & Updates</h1>
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
               Stay informed with the latest trends, insights, and best practices in digital
               transformation and business technology
             </p>
@@ -154,17 +158,17 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* Blog Grid */}
-      <section className="py-16 md:py-24">
+      {/* Blog Grid - Reduced padding */}
+      <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {blogs.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📝</div>
-              <h3 className="text-2xl font-semibold mb-2">No blog posts yet</h3>
+            <div className="text-center py-10">
+              <div className="text-5xl mb-3">📝</div>
+              <h3 style={{color: '#00283A'}} className="text-xl font-semibold mb-2">No blog posts yet</h3>
               <p className="text-muted-foreground">Check back soon for new insights and updates!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {blogs.map((post, index) => (
                 <BlogCard
                   key={post.id}

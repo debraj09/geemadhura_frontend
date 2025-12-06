@@ -16,8 +16,8 @@ const contactInfo = [
   {
     icon: Mail,
     title: 'Email',
-    value: 'info@geeemadhura.com',
-    link: 'mailto:info@geeemadhura.com',
+    value: 'info@geemadhurainnovations.com',
+    link: 'mailto:info@geemadhurainnovations.com'
   },
   {
     icon: Globe,

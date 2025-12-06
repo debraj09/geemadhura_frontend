@@ -2,6 +2,8 @@
 import { motion } from 'framer-motion';
 import { BlogCard } from '@/components/BlogCard';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 interface BlogPost {
   id: number;
@@ -105,6 +107,9 @@ const Blog = () => {
                 </div>
               ))}
             </div>
+            <div className="mt-8 text-center animate-pulse">
+              <div className="h-12 bg-muted rounded-lg w-48 mx-auto"></div>
+            </div>
           </div>
         </section>
       </main>
@@ -116,8 +121,8 @@ const Blog = () => {
       <main className="min-h-screen">
         <section className="relative py-12 md:py-16 bg-gradient-to-br from-background via-muted/20 to-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 style={{color: '#00283A'}} className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Insights & Updates</h1>
+            <div  className="max-w-4xl mx-auto text-center">
+              <h1 style={{color: '#00283A',marginTop:-30}} className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Recent Stories From Our Blog</h1>
               <div className="bg-red-100 border border-red-400 rounded-lg p-5">
                 <p className="text-red-700">{error}</p>
                 <button
@@ -138,6 +143,9 @@ const Blog = () => {
     );
   }
 
+  // Show only first 6 blogs on home page
+  const displayBlogs = blogs.slice(0, 6);
+
   return (
     <main className="min-h-screen">
       {/* Hero Section - Reduced padding */}
@@ -149,7 +157,7 @@ const Blog = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h1 style={{color: '#00283A'}} className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Insights & Updates</h1>
+            <h1 style={{color: '#00283A',marginTop:-50}} className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Recent Stories From Our Blog</h1>
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
               Stay informed with the latest trends, insights, and best practices in digital
               transformation and business technology
@@ -159,31 +167,55 @@ const Blog = () => {
       </section>
 
       {/* Blog Grid - Reduced padding */}
-      <section className="py-12 md:py-16">
+      <section className="py-8 md:py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          {blogs.length === 0 ? (
+          {displayBlogs.length === 0 ? (
             <div className="text-center py-10">
               <div className="text-5xl mb-3">📝</div>
               <h3 style={{color: '#00283A'}} className="text-xl font-semibold mb-2">No blog posts yet</h3>
               <p className="text-muted-foreground">Check back soon for new insights and updates!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {blogs.map((post, index) => (
-                <BlogCard
-                  key={post.id}
-                  id={post.id}
-                  title={post.title}
-                  short_description={post.short_description}
-                  banner_image={post.banner_image}
-                  publish_date={post.publish_date}
-                  author={post.author}
-                  tags={post.tags}
-                  slug={post.slug}
-                  index={index}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {displayBlogs.map((post, index) => (
+                  <BlogCard
+                    key={post.id}
+                    id={post.id}
+                    title={post.title}
+                    short_description={post.short_description}
+                    banner_image={post.banner_image}
+                    publish_date={post.publish_date}
+                    author={post.author}
+                    tags={post.tags}
+                    slug={post.slug}
+                    index={index}
+                  />
+                ))}
+              </div>
+              
+              {/* View All Blogs Button - Only show if there are more than 6 blogs */}
+              {blogs.length > 6 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="mt-12 text-center"
+                >
+                  <Link
+                    to="/blog"
+                    className="inline-flex items-center gap-2 px-8 py-3 rounded-lg font-semibold transition-all duration-300 hover:gap-3 hover:shadow-lg"
+                    style={{
+                      backgroundColor: '#00283A',
+                      color: '#F2C445'
+                    }}
+                  >
+                    View All Blogs
+                    <ArrowRight size={20} />
+                  </Link>
+                </motion.div>
+              )}
+            </>
           )}
         </div>
       </section>

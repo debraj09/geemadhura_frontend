@@ -1,8 +1,69 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Globe } from 'lucide-react';
 import logo from '@/assets/logo.png';
 
 export const Footer = () => {
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  const services = [
+    {
+      name: 'Homestay Registration',
+      path: '/services/homestay-registration'
+    },
+    {
+      name: 'Trade Licence',
+      path: '/services/trade-licence'
+    },
+    {
+      name: 'FoSTaC Trainings and Certification',
+      path: '/services/fostac-trainings-and-certification'
+    },
+    {
+      name: 'GST & Business Registration',
+      path: '/services/gst-business-registration'
+    },
+    {
+      name: 'ISO Certifications',
+      path: '/services/iso-certifications'
+    },
+    {
+      name: 'Pollution Certificate',
+      path: '/services/pollution-certificate'
+    },
+    {
+      name: 'Factory License',
+      path: '/services/factory-license'
+    },
+    {
+      name: 'Fire Safety NOC',
+      path: '/services/fire-safety-noc'
+    },
+    {
+      name: 'Bar License',
+      path: '/services/bar-license'
+    },
+    {
+      name: 'FSSAI License',
+      path: '/services/fssai-license'
+    }
+  ];
+
+  // Handler for Quick Links
+  const handleQuickLinkClick = (item: string) => {
+    scrollToTop();
+  };
+
+  // Handler for Service Links
+  const handleServiceClick = () => {
+    scrollToTop();
+  };
+
   return (
     <footer className="bg-brand-black border-t border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
@@ -24,6 +85,7 @@ export const Footer = () => {
                   <Link
                     to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
                     className="text-muted-foreground hover:text-accent-yellow transition-colors text-sm"
+                    onClick={() => handleQuickLinkClick(item)}
                   >
                     {item}
                   </Link>
@@ -36,15 +98,15 @@ export const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-foreground">Services</h3>
             <ul className="space-y-2">
-              {[
-                'Digital Transformation',
-                'Business Consulting',
-                'Technology Solutions',
-                'Data Analytics',
-                'Cybersecurity',
-              ].map((service) => (
-                <li key={service}>
-                  <span className="text-muted-foreground text-sm">{service}</span>
+              {services.map((service) => (
+                <li key={service.name}>
+                  <Link
+                    to={service.path}
+                    className="text-muted-foreground hover:text-accent-yellow transition-colors text-sm"
+                    onClick={handleServiceClick}
+                  >
+                    {service.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -56,20 +118,28 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <Mail size={18} className="text-accent-yellow mt-0.5 flex-shrink-0" />
-                <a href="mailto:info@geeemadhura.com" className="text-muted-foreground hover:text-accent-yellow transition-colors text-sm">
-                  info@geeemadhura.com
+                <a href="mailto:info@geemadhurainnovations.com
+" className="text-muted-foreground hover:text-accent-yellow transition-colors text-sm">
+                  info@geemadhurainnovations.com
+
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <Phone size={18} className="text-accent-yellow mt-0.5 flex-shrink-0" />
-                <a href="tel:+1234567890" className="text-muted-foreground hover:text-accent-yellow transition-colors text-sm">
-                  +1 (234) 567-890
+                <a href="tel:9609030792" className="text-muted-foreground hover:text-accent-yellow transition-colors text-sm">
+                  +91 96090 30792 | +91 96090 30832 | +91 96090 30833
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-accent-yellow mt-0.5 flex-shrink-0" />
                 <span className="text-muted-foreground text-sm">
-                  123 Innovation Street, Tech City, TC 12345
+                  Jalpaiguri - Raikat Para, Opposite Sports Complex 2nd Gate, Pin - 735101
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Globe size={18} className="text-accent-yellow mt-0.5 flex-shrink-0" />
+                <span className="text-muted-foreground text-sm">
+                  Pan-India Services Available
                 </span>
               </li>
             </ul>
@@ -83,10 +153,10 @@ export const Footer = () => {
           </p>
           <div className="flex items-center gap-4">
             {[
-              { icon: Facebook, href: '#' },
-              { icon: Twitter, href: '#' },
-              { icon: Linkedin, href: '#' },
-              { icon: Instagram, href: '#' },
+              { icon: Facebook, href: '#', label: 'Facebook' },
+              { icon: Twitter, href: '#', label: 'Twitter' },
+              { icon: Linkedin, href: '#', label: 'LinkedIn' },
+              { icon: Instagram, href: '#', label: 'Instagram' },
             ].map((social, index) => (
               <a
                 key={index}
@@ -94,7 +164,7 @@ export const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-accent-yellow transition-colors"
-                aria-label="Social media"
+                aria-label={social.label}
               >
                 <social.icon size={20} />
               </a>

@@ -7,6 +7,7 @@ import { Newsletter } from '@/components/Newsletter';
 import { FAQ } from '@/components/FAQ';
 import  Box  from '@/pages/Box';
 import OurStory from './OurStory';
+import Blog from './Blog';
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <Box />
       <OurStory />
       <ServicesGrid />
+      <Blog />
       <Testimonials />
       <Newsletter />
       <FAQ />

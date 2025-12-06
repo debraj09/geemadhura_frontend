@@ -193,4 +193,5 @@ Edit color variables in `src/index.css` and `tailwind.config.ts` to maintain des
 
 ## Support
 
-For questions or support, contact: info@geeemadhura.com
+For questions or support, contact: info@geemadhurainnovations.com
+

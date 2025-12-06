@@ -4,7 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Header } from "@/components/Header";
+import { SecondaryHeader } from "@/components/SecondaryHeader";
 import { Footer } from "@/components/Footer";
+import { Chatbot } from "@/components/Chatbot";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -17,6 +19,7 @@ import DetailsPage from "./pages/DetailsPage";
 import Box from "./pages/Box";
 import OurStory from "./pages/OurStory";
 import { FirstScrollbar } from "./components/FirstScrollbar";
+import { FAQ } from "./components/FAQ";
 
 const queryClient = new QueryClient();
 
@@ -26,33 +29,36 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        {/* 🚀 Ensure the Header is truly fixed/sticky, typically using 'fixed top-0 w-full z-50' in its definition 🚀 */}
+        <Chatbot />
+        
         <div className="flex flex-col min-h-screen">
+          {/* Secondary Header - Fixed at top */}
+          <SecondaryHeader />
           
+          {/* Main Header - Fixed below secondary header */}
           <Header />
           
-          {/* We create a container to apply margin/padding to the content below the fixed header */}
-          {/* *** MODIFIED: Applying mt-16 (top margin) to push the content down *** */}
-          <div  className="mt-16">
-             <FirstScrollbar /> 
-
-             {/* The routes wrapper should no longer need padding here */}
-             <div className="flex-1">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/services" element={<Services />} />
-                    <Route path="/services/:slug" element={<ServiceDetail />} />
-                    <Route path="/blog" element={<Blog />} />
-                    <Route path="/blog/:slug" element={<BlogPost />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/DetailsPage" element={<DetailsPage />} />
-                    <Route path="/Box" element={<Box />} />
-                    <Route path="/OurStory" element={<OurStory />} />
-                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-             </div>
+          {/* Main Content - Add padding to account for both headers */}
+          <div className="flex-1 pt-24"> {/* 40px secondary + 64px main header = 104px */}
+            <Routes>
+              <Route path="/" element={
+                <>
+                  <FirstScrollbar />
+                  <Home />
+                </>
+              } />
+              <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/services/:slug" element={<ServiceDetail />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/DetailsPage" element={<DetailsPage />} />
+              <Route path="/Box" element={<Box />} />
+              <Route path="/OurStory" element={<OurStory />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </div>
           
           <Footer />

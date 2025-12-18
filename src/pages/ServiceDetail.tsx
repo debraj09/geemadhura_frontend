@@ -7,12 +7,20 @@ import {
     Zap,
     CheckCircle,
     ArrowRight,
+    Upload,
+    FileText,
+    User,
+    Phone,
+    MapPin,
+    Building,
+    Briefcase
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 // --- Configuration & Interfaces ---
-const API_BASE_URL = 'https://geemadhura.braventra.in/api/services'; 
-const IMAGE_BASE_URL = 'https://geemadhura.braventra.in'; 
+const API_BASE_URL = 'https://geemadhura.braventra.in/api/services';
+const APPLICATIONS_API_URL = 'https://geemadhura.braventra.in/api/serviceApplications';
+const IMAGE_BASE_URL = 'https://geemadhura.braventra.in';
 
 interface FullBackendServiceData {
     id: number;
@@ -21,10 +29,10 @@ interface FullBackendServiceData {
     description: string;
     scope_title: string;
     scope_content: string;
-    image_url: string; 
+    image_url: string;
     banner_image_url: string;
     is_active: 0 | 1;
-    icon_name?: string; 
+    icon_name?: string;
 }
 
 interface ServiceDetailData {
@@ -46,7 +54,20 @@ interface OtherServiceItem {
     slug: string;
 }
 
-// Hardcoded Key Features (as requested)
+// Service-Specific Required Documents (can be moved to backend API call)
+const serviceDocuments = {
+    'Homestay Registration': ['Property Ownership Proof', 'Address Proof', 'ID Proof', 'Property Photos'],
+    'Trade License': ['Business Address Proof', 'Owner ID Proof', 'Property Tax Receipt', 'NOC from Property Owner'],
+    'FoSTaC Trainings and Certification': ['Applicant ID Proof', 'Educational Certificates', 'Passport Size Photos'],
+    'GST & Business Registration': ['PAN Card', 'Aadhaar Card', 'Business Address Proof', 'Bank Account Details'],
+    'ISO Certifications': ['Company Registration Certificate', 'PAN Card', 'Process Documentation', 'Quality Manual'],
+    'Pollution Certificate': ['Industry Registration', 'Layout Plan', 'Water & Air Consent Application'],
+    'Factory License': ['Building Plan Approval', 'Stability Certificate', 'Fire NOC', 'Machinery List'],
+    'Fire Safety NOC': ['Building Plan', 'Fire Fighting Equipment List', 'Emergency Exit Plan'],
+    'Bar License': ['Premises Ownership Proof', 'Police Verification', 'Health Department NOC'],
+    'FSSAI License': ['Form-B', 'Food Safety Management Plan', 'Proof of Possession of Premises']
+};
+
 const HARDCODED_KEY_FEATURES: string[] = [
     'Seamless integration with existing systems and platforms.',
     '24/7 priority customer support included with all plans.',
@@ -56,7 +77,7 @@ const HARDCODED_KEY_FEATURES: string[] = [
 ];
 
 const ServiceDetail = () => {
-    const { slug } = useParams<{ slug: string }>(); 
+    const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
     
     // --- State Management ---
@@ -66,6 +87,30 @@ const ServiceDetail = () => {
     const [isLoadingOtherServices, setIsLoadingOtherServices] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showAllServices, setShowAllServices] = useState(false);
+    
+    // --- Application Form States ---
+    const [showApplicationForm, setShowApplicationForm] = useState(false);
+    const [formData, setFormData] = useState({
+        service_id: 0,
+        service_name: '',
+        customer_name: '',
+        customer_email: '',
+        customer_phone: '',
+        customer_address: '',
+        customer_city: '',
+        customer_state: '',
+        customer_pincode: '',
+        business_name: '',
+        business_type: '',
+        application_details: {}
+    });
+    const [documents, setDocuments] = useState<File[]>([]);
+    const [requiredDocs, setRequiredDocs] = useState<string[]>([]);
+    const [additionalDetails, setAdditionalDetails] = useState<Record<string, string>>({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [applicationId, setApplicationId] = useState<string>('');
 
     // --- Fetch Service Detail ---
     useEffect(() => {
@@ -75,7 +120,7 @@ const ServiceDetail = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch(`${API_BASE_URL}/by-slug/${slug}`); 
+                const response = await fetch(`${API_BASE_URL}/by-slug/${slug}`);
 
                 if (response.status === 404) {
                     setService(null);
@@ -100,12 +145,23 @@ const ServiceDetail = () => {
                     shortDescription: serviceData.description || 'No summary provided.',
                     fullDescription: serviceData.scope_content || 'The detailed scope of work is not yet defined for this service.',
                     scopeTitle: serviceData.scope_title || 'Service Details',
-                    features: HARDCODED_KEY_FEATURES, // Using hardcoded features
+                    features: HARDCODED_KEY_FEATURES,
                     bannerImageUrl: fullBannerUrl,
                     mainImageUrl: fullMainImageUrl,
                 };
 
                 setService(mappedDetail);
+                
+                // Initialize form data with service info
+                setFormData(prev => ({
+                    ...prev,
+                    service_id: serviceData.id,
+                    service_name: serviceData.name
+                }));
+                
+                // Set required documents based on service name
+                const docs = serviceDocuments[serviceData.name as keyof typeof serviceDocuments] || [];
+                setRequiredDocs(docs);
 
             } catch (e) {
                 console.error('Error fetching service detail:', e);
@@ -136,14 +192,12 @@ const ServiceDetail = () => {
 
             const result = await response.json();
             
-            // Map API response to OtherServiceItem format
             const allServices: OtherServiceItem[] = result.data.map((serviceItem: any) => ({
                 id: serviceItem.id,
                 title: serviceItem.name,
                 slug: serviceItem.slug
             }));
 
-            // Filter out current service from the list
             const filteredServices = allServices.filter(otherService => 
                 service ? otherService.id !== service.id : true
             );
@@ -152,17 +206,126 @@ const ServiceDetail = () => {
 
         } catch (e) {
             console.error('Error fetching other services:', e);
-            // Don't show error for other services - just leave empty
         } finally {
             setIsLoadingOtherServices(false);
         }
+    };
+
+    // --- Form Handlers ---
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const newFiles = Array.from(e.target.files);
+            setDocuments(prev => [...prev, ...newFiles]);
+        }
+    };
+
+    const removeDocument = (index: number) => {
+        setDocuments(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const handleAdditionalDetailChange = (key: string, value: string) => {
+        setAdditionalDetails(prev => ({
+            ...prev,
+            [key]: value
+        }));
     };
 
     const handleServiceClick = (serviceSlug: string) => {
         navigate(`/services/${serviceSlug}`);
     };
 
-    // --- Conditional Rendering ---
+    // --- Form Submission with Fetch API ---
+    const handleSubmitApplication = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        // Basic validation
+        if (!formData.customer_name || !formData.customer_email || !formData.customer_phone) {
+            setSubmitError('Please fill in all required fields (Name, Email, Phone)');
+            return;
+        }
+
+        setIsSubmitting(true);
+        setSubmitError(null);
+
+        try {
+            // Prepare form data with application details
+            const completeFormData = {
+                ...formData,
+                application_details: {
+                    ...additionalDetails,
+                    documents_requested: requiredDocs,
+                    submitted_at: new Date().toISOString()
+                }
+            };
+
+            // Create FormData for file upload
+            const formDataToSend = new FormData();
+            formDataToSend.append('applicationData', JSON.stringify(completeFormData));
+            
+            // Append each document
+            documents.forEach((file, index) => {
+                formDataToSend.append(`documents[${index}]`, file);
+            });
+
+            // Submit to backend API using Fetch
+            const response = await fetch(`${APPLICATIONS_API_URL}/submit-application`, {
+                method: 'POST',
+                body: formDataToSend,
+                // Note: Don't set Content-Type header when using FormData
+                // The browser will set it automatically with boundary
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.status === 201) {
+                setSubmitSuccess(true);
+                setApplicationId(result.data.applicationId || result.data.applicationNumber || 'N/A');
+                
+                // Reset form after successful submission
+                setTimeout(() => {
+                    setShowApplicationForm(false);
+                    setFormData({
+                        service_id: service?.id || 0,
+                        service_name: service?.title || '',
+                        customer_name: '',
+                        customer_email: '',
+                        customer_phone: '',
+                        customer_address: '',
+                        customer_city: '',
+                        customer_state: '',
+                        customer_pincode: '',
+                        business_name: '',
+                        business_type: '',
+                        application_details: {}
+                    });
+                    setDocuments([]);
+                    setAdditionalDetails({});
+                    setSubmitSuccess(false);
+                }, 5000);
+            } else {
+                throw new Error(result.error || result.message || 'Failed to submit application');
+            }
+
+        } catch (error: any) {
+            console.error('Error submitting application:', error);
+            setSubmitError(
+                error.message || 
+                'Failed to submit application. Please try again.'
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // --- Render Loading State ---
     if (isLoading) {
         return (
             <main style={{ fontFamily: 'Arial, sans-serif', minHeight: '100vh', paddingTop: '80px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -270,10 +433,42 @@ const ServiceDetail = () => {
                                 {service.fullDescription}
                             </p>
                         </div>
+
+                        {/* Apply Now Button */}
+                        <div style={{ marginTop: '30px' }}>
+                            <button
+                                onClick={() => setShowApplicationForm(true)}
+                                style={{
+                                    padding: '12px 30px',
+                                    backgroundColor: '#1a73e8',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontWeight: 'bold',
+                                    fontSize: '1.1em',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#0d62d9';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#1a73e8';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                }}
+                            >
+                                <FileText size={20} />
+                                Apply Now for {service.title}
+                            </button>
+                        </div>
                     </section>
                 </div>
 
-                {/* Right Side: 30% - Other Services and Enquiry Form */}
+                {/* Right Side: 30% - Other Services and Application Form */}
                 <div style={{ flex: '3' }}>
                     {/* Other Services Section */}
                     <div
@@ -402,7 +597,7 @@ const ServiceDetail = () => {
                         )}
                     </div>
 
-                    {/* Enquiry Form Section */}
+                    {/* Application Form Section */}
                     <div
                         style={{
                             border: '1px solid #ddd',
@@ -422,67 +617,371 @@ const ServiceDetail = () => {
                                 color: '#333',
                             }}
                         >
-                            <Mail size={20} /> Enquiry Form
+                            <Mail size={20} /> Apply for {service.title}
                         </h3>
                         <p style={{ fontSize: '0.9em', color: '#666', marginBottom: '15px' }}>
-                            Have a question? Fill out the form below and we'll get back to you!
+                            Fill out the form below to apply for this service. Our team will contact you shortly.
                         </p>
-                        <form>
-                            <input
-                                type="text"
-                                placeholder="Your Name"
-                                style={{
-                                    width: 'calc(100% - 20px)',
-                                    padding: '10px',
-                                    marginBottom: '10px',
-                                    border: '1px solid #ccc',
-                                    borderRadius: '4px',
-                                    boxSizing: 'border-box',
-                                }}
-                                required
-                            />
-                            <input
-                                type="email"
-                                placeholder="Your Email"
-                                style={{
-                                    width: 'calc(100% - 20px)',
-                                    padding: '10px',
-                                    marginBottom: '10px',
-                                    border: '1px solid #ccc',
-                                    borderRadius: '4px',
-                                    boxSizing: 'border-box',
-                                }}
-                                required
-                            />
-                            <textarea
-                                placeholder="Your Message"
-                                rows={4}
-                                style={{
-                                    width: 'calc(100% - 20px)',
-                                    padding: '10px',
-                                    marginBottom: '10px',
-                                    border: '1px solid #ccc',
-                                    borderRadius: '4px',
-                                    boxSizing: 'border-box',
-                                }}
-                                required
-                            ></textarea>
-                            <button
-                                type="submit"
-                                style={{
-                                    padding: '10px 15px',
-                                    backgroundColor: '#1a73e8',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    width: '100%',
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                Submit Enquiry
-                            </button>
-                        </form>
+                        
+                        {/* Success Message */}
+                        {submitSuccess && (
+                            <div style={{
+                                padding: '15px',
+                                backgroundColor: '#d4edda',
+                                border: '1px solid #c3e6cb',
+                                borderRadius: '4px',
+                                color: '#155724',
+                                marginBottom: '15px'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px' }}>
+                                    <CheckCircle size={20} />
+                                    <strong>Application Submitted Successfully!</strong>
+                                </div>
+                                <p style={{ margin: 0, fontSize: '0.9em' }}>
+                                    Your application ID: <strong>{applicationId}</strong>
+                                </p>
+                                <p style={{ margin: '5px 0 0 0', fontSize: '0.85em' }}>
+                                    Our team will contact you within 24 hours.
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Error Message */}
+                        {submitError && (
+                            <div style={{
+                                padding: '15px',
+                                backgroundColor: '#f8d7da',
+                                border: '1px solid #f5c6cb',
+                                borderRadius: '4px',
+                                color: '#721c24',
+                                marginBottom: '15px'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#721c24', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>!</div>
+                                    <strong>Error</strong>
+                                </div>
+                                <p style={{ margin: '5px 0 0 0', fontSize: '0.9em' }}>{submitError}</p>
+                            </div>
+                        )}
+
+                        {/* Application Form */}
+                        {!submitSuccess && (
+                            <form onSubmit={handleSubmitApplication}>
+                                {/* Personal Information */}
+                                <div style={{ marginBottom: '20px' }}>
+                                    <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <User size={16} /> Personal Information
+                                    </h4>
+                                    
+                                    <input
+                                        type="text"
+                                        name="customer_name"
+                                        placeholder="Full Name *"
+                                        value={formData.customer_name}
+                                        onChange={handleInputChange}
+                                        required
+                                        style={{
+                                            width: 'calc(100% - 20px)',
+                                            padding: '10px',
+                                            marginBottom: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box',
+                                        }}
+                                    />
+                                    
+                                    <input
+                                        type="email"
+                                        name="customer_email"
+                                        placeholder="Email Address *"
+                                        value={formData.customer_email}
+                                        onChange={handleInputChange}
+                                        required
+                                        style={{
+                                            width: 'calc(100% - 20px)',
+                                            padding: '10px',
+                                            marginBottom: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box',
+                                        }}
+                                    />
+                                    
+                                    <input
+                                        type="tel"
+                                        name="customer_phone"
+                                        placeholder="Phone Number *"
+                                        value={formData.customer_phone}
+                                        onChange={handleInputChange}
+                                        required
+                                        style={{
+                                            width: 'calc(100% - 20px)',
+                                            padding: '10px',
+                                            marginBottom: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box',
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Address Information */}
+                                <div style={{ marginBottom: '20px' }}>
+                                    <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <MapPin size={16} /> Address Details
+                                    </h4>
+                                    
+                                    <textarea
+                                        name="customer_address"
+                                        placeholder="Full Address"
+                                        value={formData.customer_address}
+                                        onChange={handleInputChange}
+                                        rows={2}
+                                        style={{
+                                            width: 'calc(100% - 20px)',
+                                            padding: '10px',
+                                            marginBottom: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box',
+                                        }}
+                                    />
+                                    
+                                    <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                                        <input
+                                            type="text"
+                                            name="customer_city"
+                                            placeholder="City"
+                                            value={formData.customer_city}
+                                            onChange={handleInputChange}
+                                            style={{
+                                                flex: 1,
+                                                padding: '10px',
+                                                border: '1px solid #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        />
+                                        
+                                        <input
+                                            type="text"
+                                            name="customer_state"
+                                            placeholder="State"
+                                            value={formData.customer_state}
+                                            onChange={handleInputChange}
+                                            style={{
+                                                flex: 1,
+                                                padding: '10px',
+                                                border: '1px solid #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        />
+                                    </div>
+                                    
+                                    <input
+                                        type="text"
+                                        name="customer_pincode"
+                                        placeholder="Pincode"
+                                        value={formData.customer_pincode}
+                                        onChange={handleInputChange}
+                                        style={{
+                                            width: 'calc(100% - 20px)',
+                                            padding: '10px',
+                                            marginBottom: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box',
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Business Information */}
+                                <div style={{ marginBottom: '20px' }}>
+                                    <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <Building size={16} /> Business Details
+                                    </h4>
+                                    
+                                    <input
+                                        type="text"
+                                        name="business_name"
+                                        placeholder="Business/Company Name"
+                                        value={formData.business_name}
+                                        onChange={handleInputChange}
+                                        style={{
+                                            width: 'calc(100% - 20px)',
+                                            padding: '10px',
+                                            marginBottom: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box',
+                                        }}
+                                    />
+                                    
+                                    <select
+                                        name="business_type"
+                                        value={formData.business_type}
+                                        onChange={handleInputChange}
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            marginBottom: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box',
+                                            backgroundColor: 'white',
+                                        }}
+                                    >
+                                        <option value="">Select Business Type</option>
+                                        <option value="proprietorship">Proprietorship</option>
+                                        <option value="partnership">Partnership</option>
+                                        <option value="llp">LLP</option>
+                                        <option value="private_limited">Private Limited</option>
+                                        <option value="public_limited">Public Limited</option>
+                                        <option value="trust">Trust</option>
+                                        <option value="society">Society</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+
+                                {/* Service-Specific Additional Details */}
+                                {service.title === 'GST & Business Registration' && (
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <Briefcase size={16} /> GST Registration Details
+                                        </h4>
+                                        
+                                        <input
+                                            type="text"
+                                            placeholder="PAN Number"
+                                            onChange={(e) => handleAdditionalDetailChange('pan_number', e.target.value)}
+                                            style={{
+                                                width: 'calc(100% - 20px)',
+                                                padding: '10px',
+                                                marginBottom: '10px',
+                                                border: '1px solid #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        />
+                                        
+                                        <input
+                                            type="text"
+                                            placeholder="Expected Turnover (₹)"
+                                            onChange={(e) => handleAdditionalDetailChange('expected_turnover', e.target.value)}
+                                            style={{
+                                                width: 'calc(100% - 20px)',
+                                                padding: '10px',
+                                                marginBottom: '10px',
+                                                border: '1px solid #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Document Upload */}
+                                <div style={{ marginBottom: '20px' }}>
+                                    <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <Upload size={16} /> Required Documents
+                                    </h4>
+                                    
+                                    {requiredDocs.length > 0 && (
+                                        <div style={{ marginBottom: '10px', fontSize: '0.85em', color: '#666' }}>
+                                            <p style={{ margin: '0 0 5px 0' }}>Please upload:</p>
+                                            <ul style={{ margin: '0', paddingLeft: '20px' }}>
+                                                {requiredDocs.map((doc, index) => (
+                                                    <li key={index} style={{ marginBottom: '3px' }}>{doc}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    
+                                    <input
+                                        type="file"
+                                        multiple
+                                        onChange={handleDocumentChange}
+                                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp"
+                                        style={{
+                                            width: '100%',
+                                            padding: '8px',
+                                            marginBottom: '10px',
+                                            border: '1px dashed #ccc',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box',
+                                            backgroundColor: 'white',
+                                        }}
+                                    />
+                                    
+                                    {/* Uploaded Files List */}
+                                    {documents.length > 0 && (
+                                        <div style={{ fontSize: '0.85em', color: '#555' }}>
+                                            <p style={{ margin: '0 0 5px 0', fontWeight: 'bold' }}>Uploaded files:</p>
+                                            <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                                                {documents.map((file, index) => (
+                                                    <li key={index} style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                        padding: '5px',
+                                                        backgroundColor: '#f0f0f0',
+                                                        borderRadius: '3px',
+                                                        marginBottom: '3px'
+                                                    }}>
+                                                        <span style={{ fontSize: '0.8em' }}>{file.name}</span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeDocument(index)}
+                                                            style={{
+                                                                background: 'none',
+                                                                border: 'none',
+                                                                color: '#d32f2f',
+                                                                cursor: 'pointer',
+                                                                fontSize: '0.9em'
+                                                            }}
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Submit Button */}
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px',
+                                        backgroundColor: isSubmitting ? '#ccc' : '#1a73e8',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                        fontWeight: 'bold',
+                                        fontSize: '1em',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '10px',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                >
+                                    {isSubmitting ? (
+                                        <>
+                                            <div style={{ width: '16px', height: '16px', border: '2px solid #fff', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                                            Submitting...
+                                        </>
+                                    ) : (
+                                        'Submit Application'
+                                    )}
+                                </button>
+                            </form>
+                        )}
                     </div>
                 </div>
             </div>

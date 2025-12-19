@@ -243,46 +243,50 @@ const ServiceDetail = () => {
     };
 
     // --- Form Submission with Fetch API ---
-    const handleSubmitApplication = async (e: React.FormEvent) => {
-        e.preventDefault();
+  const handleSubmitApplication = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!formData.customer_name || !formData.customer_email || !formData.customer_phone) {
+        setSubmitError('Please fill in all required fields (Name, Email, Phone)');
+        return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+        // Prepare form data with application details
+        const completeFormData = {
+            ...formData,
+            application_details: {
+                ...additionalDetails,
+                documents_requested: requiredDocs,
+                submitted_at: new Date().toISOString()
+            }
+        };
+
+        // Create FormData for file upload
+        const formDataToSend = new FormData();
         
-        // Basic validation
-        if (!formData.customer_name || !formData.customer_email || !formData.customer_phone) {
-            setSubmitError('Please fill in all required fields (Name, Email, Phone)');
-            return;
-        }
+        // Append all text data as JSON
+        formDataToSend.append('applicationData', JSON.stringify(completeFormData));
+        
+        // FIXED: Append each document with field name 'documents' (Multer expects this)
+        // Changed from: formDataToSend.append(`documents[${index}]`, file);
+        documents.forEach((file) => {
+            formDataToSend.append('documents', file); // JUST 'documents', not 'documents[0]'
+        });
 
-        setIsSubmitting(true);
-        setSubmitError(null);
+        // Submit to backend API using Fetch
+        const response = await fetch(`${APPLICATIONS_API_URL}/submit-application`, {
+            method: 'POST',
+            body: formDataToSend,
+        });
 
-        try {
-            // Prepare form data with application details
-            const completeFormData = {
-                ...formData,
-                application_details: {
-                    ...additionalDetails,
-                    documents_requested: requiredDocs,
-                    submitted_at: new Date().toISOString()
-                }
-            };
-
-            // Create FormData for file upload
-            const formDataToSend = new FormData();
-            formDataToSend.append('applicationData', JSON.stringify(completeFormData));
-            
-            // Append each document
-            documents.forEach((file, index) => {
-                formDataToSend.append(`documents[${index}]`, file);
-            });
-
-            // Submit to backend API using Fetch
-            const response = await fetch(`${APPLICATIONS_API_URL}/submit-application`, {
-                method: 'POST',
-                body: formDataToSend,
-                // Note: Don't set Content-Type header when using FormData
-                // The browser will set it automatically with boundary
-            });
-
+        // Check if response is JSON
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
             const result = await response.json();
 
             if (response.ok && result.status === 201) {
@@ -313,17 +317,23 @@ const ServiceDetail = () => {
             } else {
                 throw new Error(result.error || result.message || 'Failed to submit application');
             }
-
-        } catch (error: any) {
-            console.error('Error submitting application:', error);
-            setSubmitError(
-                error.message || 
-                'Failed to submit application. Please try again.'
-            );
-        } finally {
-            setIsSubmitting(false);
+        } else {
+            // Server returned HTML error page instead of JSON
+            const text = await response.text();
+            console.error('Server returned HTML error:', text);
+            throw new Error('Server error occurred. Please try again.');
         }
-    };
+
+    } catch (error: any) {
+        console.error('Error submitting application:', error);
+        setSubmitError(
+            error.message || 
+            'Failed to submit application. Please try again.'
+        );
+    } finally {
+        setIsSubmitting(false);
+    }
+};
 
     // --- Render Loading State ---
     if (isLoading) {

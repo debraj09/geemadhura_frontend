@@ -144,6 +144,22 @@ export const Footer = () => {
               </li>
             </ul>
           </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-foreground">Verify Certificate</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3">
+                <a href="/verify-certificate"
+                  className="text-muted-foreground hover:text-accent-yellow transition-colors text-sm">
+                  Verify Certificate
+                </a>
+              </li>
+            </ul>
+          </div>
+
+
+
+
         </div>
 
         {/* Social Links & Copyright */}

@@ -20,7 +20,7 @@ import Box from "./pages/Box";
 import OurStory from "./pages/OurStory";
 import { FirstScrollbar } from "./components/FirstScrollbar";
 import { FAQ } from "./components/FAQ";
-
+import VerifyCertificate from "./pages/VerifyCertificate";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -49,6 +49,7 @@ const App = () => (
               } />
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/verify-certificate" element={<VerifyCertificate />} />
               <Route path="/services/:slug" element={<ServiceDetail />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />

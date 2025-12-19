@@ -86,28 +86,22 @@ export const SecondaryHeader = () => {
           {/* Social Icons */}
           <div className="hidden md:flex items-center gap-3 mr-2">
             <a 
-              href="#" 
+              href="https://www.facebook.com/share/17ywBfsNNb/" 
               className="hover:scale-110 transition-transform"
               style={{ color: 'white' }}
             >
               <Facebook size={14} />
             </a>
+            
             <a 
-              href="#" 
-              className="hover:scale-110 transition-transform"
-              style={{ color: 'white' }}
-            >
-              <Twitter size={14} />
-            </a>
-            <a 
-              href="#" 
+              href="https://www.linkedin.com/in/gourab-sanyal-6809b0135?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" 
               className="hover:scale-110 transition-transform"
               style={{ color: 'white' }}
             >
               <Linkedin size={14} />
             </a>
             <a 
-              href="#" 
+              href=" https://www.instagram.com/geemadhurainnovations?igsh=MWh6d2EyYWgwZWc0ZQ==" 
               className="hover:scale-110 transition-transform"
               style={{ color: 'white' }}
             >

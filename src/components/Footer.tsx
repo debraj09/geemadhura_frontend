@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Globe } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Globe, Youtube } from 'lucide-react';
 import logo from '@/assets/logo.png';
 
 export const Footer = () => {
@@ -132,8 +132,13 @@ export const Footer = () => {
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-accent-yellow mt-0.5 flex-shrink-0" />
-                <span className="text-muted-foreground text-sm">
-                  Jalpaiguri - Raikat Para, Opposite Sports Complex 2nd Gate, Pin - 735101
+                <span className="text-muted-foreground text-sm">\
+                  <a href={" https://maps.app.goo.gl/diKY3LyH8Zmi1ua79"} >
+
+
+                    Jalpaiguri - Raikat Para, Opposite Sports Complex 2nd Gate, Pin - 735101
+                  </a>
+
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -149,10 +154,14 @@ export const Footer = () => {
             <h3 className="text-lg font-semibold mb-4 text-foreground">Verify Certificate</h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
-                <a href="/verify-certificate"
-                  className="text-muted-foreground hover:text-accent-yellow transition-colors text-sm">
+                <Link
+                  to={'/verify-certificate'}
+                >
                   Verify Certificate
-                </a>
+                </Link>
+                {/* <a href="/verify-certificate"
+                  className="text-muted-foreground hover:text-accent-yellow transition-colors text-sm">
+                </a> */}
               </li>
             </ul>
           </div>
@@ -169,10 +178,10 @@ export const Footer = () => {
           </p>
           <div className="flex items-center gap-4">
             {[
-              { icon: Facebook, href: '#', label: 'Facebook' },
-              { icon: Twitter, href: '#', label: 'Twitter' },
-              { icon: Linkedin, href: '#', label: 'LinkedIn' },
-              { icon: Instagram, href: '#', label: 'Instagram' },
+              { icon: Facebook, href: 'https://www.facebook.com/share/17ywBfsNNb/', label: 'Facebook' },
+              { icon: Youtube, href: ' www.youtube.com/@GeemadhuraInnovations', label: 'Youtube' },
+              { icon: Linkedin, href: 'https://www.linkedin.com/in/gourab-sanyal-6809b0135?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app', label: 'LinkedIn' },
+              { icon: Instagram, href: ' https://www.instagram.com/geemadhurainnovations?igsh=MWh6d2EyYWgwZWc0ZQ==', label: 'Instagram' },
             ].map((social, index) => (
               <a
                 key={index}

@@ -427,7 +427,7 @@ const VerifyCertificate: React.FC = () => {
                             <Shield size={40} className="text-blue-600" />
                         </div>
                         <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-                            Verify Your Certificate Status
+                            Verify Your Application Status
                         </h1>
                         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                             Enter your Application ID below to check the status of your certification application.
@@ -497,7 +497,7 @@ const VerifyCertificate: React.FC = () => {
                                             ) : (
                                                 <>
                                                     <Shield size={22} className="mr-3" />
-                                                    Verify Certificate Status
+                                                    Application Management Status
                                                 </>
                                             )}
                                         </button>

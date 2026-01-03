@@ -26,6 +26,18 @@ interface ContactFormData {
   message: string;
 }
 
+interface Location {
+  icon: any;
+  title: string;
+  address: string;
+  pin: string;
+  region: string;
+  coordinates: string;
+  googleMapsUrl: string;
+  mapIframeUrl: string;
+  isHeadquarters?: boolean;
+}
+
 const contactInfo = [
   {
     icon: Phone,
@@ -53,30 +65,28 @@ const contactInfo = [
   },
 ];
 
-const locations = [
-  {
-    icon: Building,
-    title: 'North Bengal Headquarters',
-    address: 'Jalpaiguri - Raikat Para, Opposite Sports Complex 2nd Gate',
-    pin: 'Pin - 735101',
-    region: 'West Bengal',
-    coordinates: '26.5167° N, 88.7333° E'
-  },
+// Google Maps URLs and iframe URLs for each location
+const locations: Location[] = [
   {
     icon: Compass,
     title: 'North East Service',
     address: 'Siliguri',
     pin: 'Serving North East region with expert services',
     region: 'North East',
-    coordinates: '26.7271° N, 88.3953° E'
+    coordinates: '26.7271° N, 88.3953° E',
+    googleMapsUrl: 'https://maps.google.com/?q=Siliguri,West+Bengal',
+    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28566.11106948786!2d88.3953!3d26.7271!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e4414e9c0f2c7b%3A0x8c2a2b5d5b5b5b5b!2sSiliguri!5e0!3m2!1sen!2sin!4v1634021234567!5m2!1sen!2sin'
   },
   {
     icon: Building,
-    title: 'Eastern India Expansion',
-    address: 'Kolkata',
-    pin: 'Our newest branch catering to Eastern India region',
-    region: 'Eastern India',
-    coordinates: '22.5726° N, 88.3639° E'
+    title: 'Headquarters',
+    address: 'Jalpaiguri - Raikat Para, Opposite Sports Complex 2nd Gate',
+    pin: 'Pin - 735101',
+    region: 'West Bengal',
+    coordinates: '26.5167° N, 88.7333° E',
+    googleMapsUrl: 'https://maps.app.goo.gl/diKY3LyH8Zmi1ua79',
+    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3569.854330628611!2d88.7333!3d26.5167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e4414e9c0f2c7b%3A0x8c2a2b5d5b5b5b!2sJalpaiguri%20-%20Raikat%20Para%2C%20Opposite%20Sports%20Complex%202nd%20Gate!5e0!3m2!1sen!2sin!4v1634021234567!5m2!1sen!2sin',
+    isHeadquarters: true
   },
   {
     icon: Compass,
@@ -84,17 +94,13 @@ const locations = [
     address: 'Coochbeher',
     pin: 'Serving Western Bengal with expert food safety solutions',
     region: 'West Bengal',
-    coordinates: '26.3167° N, 89.4333° E'
+    coordinates: '26.3167° N, 89.4333° E',
+    googleMapsUrl: 'https://maps.google.com/?q=Coochbehar,West+Bengal',
+    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28438.85632151554!2d89.4333!3d26.3167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e3d8b9b9b9b9b9%3A0x9b9b9b9b9b9b9b9b!2sCoochbehar!5e0!3m2!1sen!2sin!4v1634021234567!5m2!1sen!2sin'
   }
 ];
 
 const BASE_URL = 'https://geemadhura.braventra.in';
-
-// Static map image URL (Google Maps Static API)
-const STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?center=26.5167,88.7333&zoom=15&size=600x400&scale=2&markers=color:red%7Clabel:H%7C26.5167,88.7333&key=YOUR_API_KEY';
-
-// Google Maps link
-const GOOGLE_MAPS_LINK = 'https://maps.app.goo.gl/diKY3LyH8Zmi1ua79';
 
 const Contact = () => {
   const [formData, setFormData] = useState<ContactFormData>({
@@ -108,7 +114,7 @@ const Contact = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [isLoadingServices, setIsLoadingServices] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState<Record<number, boolean>>({});
   const { toast } = useToast();
 
   // Fetch active services
@@ -228,8 +234,12 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const openGoogleMaps = () => {
-    window.open(GOOGLE_MAPS_LINK, '_blank');
+  const openGoogleMaps = (url: string) => {
+    window.open(url, '_blank');
+  };
+
+  const handleMapLoad = (index: number) => {
+    setMapLoaded(prev => ({ ...prev, [index]: true }));
   };
 
   return (
@@ -268,7 +278,7 @@ const Contact = () => {
       <section className="py-12 md:py-20 relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Left Column - Contact Info & Map */}
+            {/* Left Column - Contact Info & Headquarters Map */}
             <div className="lg:col-span-1 space-y-8">
               {/* Contact Info Cards */}
               <motion.div
@@ -319,57 +329,62 @@ const Contact = () => {
                 </div>
               </motion.div>
 
-              {/* Google Map Section */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.2 }}
-                className="bg-white rounded-3xl border-2 border-[#00283A]/10 overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 group cursor-pointer"
-                onClick={openGoogleMaps}
-              >
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold flex items-center gap-2" style={{ color: '#00283A' }}>
-                      <Navigation className="text-[#F2C445]" size={20} />
-                      Visit Our Headquarters
-                    </h3>
-                    <ExternalLink className="text-[#00283A]/40 group-hover:text-[#F2C445] transition-colors" size={18} />
-                  </div>
-                  
-                  <div className="relative overflow-hidden rounded-2xl border-2 border-[#00283A]/10 aspect-video">
-                    {/* Fallback map image */}
-                    <div className={`absolute inset-0 bg-gradient-to-br from-[#00283A]/5 to-[#F2C445]/5 flex items-center justify-center transition-opacity duration-500 ${isMapLoaded ? 'opacity-0' : 'opacity-100'}`}>
-                      <div className="text-center">
-                        <MapPin className="h-12 w-12 text-[#00283A]/30 mx-auto mb-3" />
-                        <p className="text-[#00283A]/50 font-medium">Loading map...</p>
+              {/* Headquarters Map Section */}
+              {locations.find(loc => loc.isHeadquarters) && (() => {
+                const headquarters = locations.find(loc => loc.isHeadquarters)!;
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7, delay: 0.2 }}
+                    className="bg-white rounded-3xl border-2 border-[#00283A]/10 overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 group cursor-pointer"
+                    onClick={() => openGoogleMaps(headquarters.googleMapsUrl)}
+                  >
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xl font-bold flex items-center gap-2" style={{ color: '#00283A' }}>
+                          <Navigation className="text-[#F2C445]" size={20} />
+                          Visit Our Headquarters
+                        </h3>
+                        <ExternalLink className="text-[#00283A]/40 group-hover:text-[#F2C445] transition-colors" size={18} />
+                      </div>
+                      
+                      <div className="relative overflow-hidden rounded-2xl border-2 border-[#00283A]/10 aspect-video">
+                        {/* Fallback map image */}
+                        <div className={`absolute inset-0 bg-gradient-to-br from-[#00283A]/5 to-[#F2C445]/5 flex items-center justify-center transition-opacity duration-500 ${mapLoaded[1] ? 'opacity-0' : 'opacity-100'}`}>
+                          <div className="text-center">
+                            <MapPin className="h-12 w-12 text-[#00283A]/30 mx-auto mb-3" />
+                            <p className="text-[#00283A]/50 font-medium">Loading map...</p>
+                          </div>
+                        </div>
+                        
+                        {/* Interactive Map Frame */}
+                        <iframe
+                          src={headquarters.mapIframeUrl}
+                          className="absolute inset-0 w-full h-full border-0"
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                          onLoad={() => handleMapLoad(1)}
+                          title="Google Maps - Geemadhura Headquarters"
+                        />
+                      </div>
+                      
+                      <div className="mt-4 space-y-2">
+                        <p className="text-[#00283A] font-medium">
+                          {headquarters.address}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-[#00283A]/60">{headquarters.pin}</span>
+                          <span className="text-sm font-medium text-[#F2C445] bg-[#00283A]/10 px-3 py-1 rounded-full">
+                            Headquarters
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    
-                    {/* Interactive Map Frame */}
-                    <iframe
-                      src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3569.854330628611!2d88.7333!3d26.5167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e4414e9c0f2c7b%3A0x8c2a2b5d5b5b5b5b!2sJalpaiguri%20-%20Raikat%20Para%2C%20Opposite%20Sports%20Complex%202nd%20Gate!5e0!3m2!1sen!2sin!4v1634021234567!5m2!1sen!2sin`}
-                      className="absolute inset-0 w-full h-full border-0"
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      onLoad={() => setIsMapLoaded(true)}
-                      title="Google Maps - Geemadhura Headquarters"
-                    />
-                  </div>
-                  
-                  <div className="mt-4 space-y-2">
-                    <p className="text-[#00283A] font-medium">
-                      Jalpaiguri - Raikat Para, Opposite Sports Complex 2nd Gate
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-[#00283A]/60">Pin - 735101</span>
-                      <span className="text-sm font-medium text-[#F2C445] bg-[#00283A]/10 px-3 py-1 rounded-full">
-                        Headquarters
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+                  </motion.div>
+                );
+              })()}
             </div>
 
             {/* Right Column - Contact Form */}
@@ -533,18 +548,18 @@ const Contact = () => {
                             color: '#F2C445',
                             border: 'none'
                           }}
-                         
+                          
                           
                           disabled={isSubmitting}
                         >
                           {isSubmitting ? (
                             <>
-                              <Loader2 className="" />
+                              <Loader2 className="animate-spin" />
                               <span className="text-lg font-bold">Sending Your Message...</span>
                             </>
                           ) : (
                             <>
-                              <Send  style={{color: 'black'}} className="mr-3 h-6 w-6 " />
+                              <Send style={{color: 'black'}} className="mr-3 h-6 w-6" />
                               <p style={{color: 'black'}} className="text-lg font-bold">Send Message Now</p>
                             </>
                           )}
@@ -554,46 +569,116 @@ const Contact = () => {
                   </div>
                 </div>
               </motion.div>
+            </div>
+          </div>
 
-              {/* Locations Grid */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
-              >
+          {/* Full Width Location Cards Section with Maps */}
+          <div className="mt-12 md:mt-16">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              {/* Section Header */}
+              <div className="text-center mb-10">
+                <div className="inline-block mb-4">
+                  <div className="w-20 h-1 bg-gradient-to-r from-[#00283A] to-[#F2C445] rounded-full mx-auto" />
+                  <div className="w-12 h-1 bg-gradient-to-r from-[#F2C445] to-[#00283A] rounded-full mx-auto mt-1" />
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold" style={{ color: '#00283A' }}>
+                  Our <span className="text-[#F2C445]">Service</span> Locations
+                </h2>
+                <p className="text-[#00283A]/60 mt-3 max-w-2xl mx-auto">
+                  Serving across multiple regions with dedicated service centers
+                </p>
+              </div>
+
+              {/* Full Width Cards Grid with Maps */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {locations.map((location, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#00283A]/10 p-5 hover:border-[#F2C445]/50 hover:shadow-xl transition-all duration-300 group"
+                    className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#00283A]/10 overflow-hidden hover:border-[#F2C445]/50 hover:shadow-xl transition-all duration-300 group"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-xl bg-gradient-to-br from-[#00283A]/10 to-[#F2C445]/10 group-hover:from-[#00283A]/20 group-hover:to-[#F2C445]/20 transition-all duration-300">
-                        <location.icon className="text-[#00283A]" size={22} />
+                    <div className="flex flex-col h-full">
+                      {/* Map Section */}
+                      <div className="relative aspect-video overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#00283A]/5 to-[#F2C445]/5 flex items-center justify-center transition-opacity duration-500" />
+                        
+                        <iframe
+                          src={location.mapIframeUrl}
+                          className="absolute inset-0 w-full h-full border-0"
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                          title={`Google Maps - ${location.title}`}
+                          style={{ filter: 'grayscale(0.3)' }}
+                        />
+                        
+                        {/* Map Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-bold text-[#00283A] text-lg">{location.title}</h4>
-                          <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#00283A]/10 text-[#00283A]">
-                            {location.region}
-                          </span>
+
+                      {/* Location Info */}
+                      <div className="p-5 flex-1">
+                        <div className="flex items-start gap-3 mb-4">
+                          <div className="p-3 rounded-xl bg-gradient-to-br from-[#00283A]/10 to-[#F2C445]/10 group-hover:from-[#00283A]/20 group-hover:to-[#F2C445]/20 transition-all duration-300">
+                            <location.icon className="text-[#00283A]" size={22} />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-2">
+                              <h4 className="font-bold text-[#00283A] text-lg">{location.title}</h4>
+                              {location.isHeadquarters ? (
+                                <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#F2C445] text-[#00283A]">
+                                  Headquarters
+                                </span>
+                              ) : (
+                                <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#00283A]/10 text-[#00283A]">
+                                  {location.region}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-[#00283A]/70 text-sm font-medium mb-1">{location.address}</p>
+                          </div>
                         </div>
-                        <p className="text-[#00283A]/70 text-sm mb-2">{location.address}</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-[#00283A]/50">{location.pin}</span>
-                          <span className="text-xs text-[#F2C445] font-medium">{location.coordinates}</span>
+                        
+                        <div className="mb-3">
+                          <p className="text-[#00283A]/60 text-xs mb-2">{location.pin}</p>
+                          <p className="text-[#00283A]/50 text-xs font-mono">{location.coordinates}</p>
+                        </div>
+                        
+                        <div className="mt-auto pt-3 border-t border-[#00283A]/10">
+                          <button
+                            onClick={() => openGoogleMaps(location.googleMapsUrl)}
+                            className="w-full flex items-center justify-center gap-2 text-sm font-medium text-[#00283A] hover:text-[#F2C445] transition-colors duration-300 group/view-map"
+                          >
+                            <Navigation size={16} />
+                            <span>View on Google Maps</span>
+                            <ExternalLink size={14} className="opacity-0 group-hover/view-map:opacity-100 transition-opacity" />
+                          </button>
                         </div>
                       </div>
                     </div>
                   </motion.div>
                 ))}
-              </motion.div>
-            </div>
+              </div>
+
+              {/* Map Legend */}
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm text-[#00283A]/60">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-[#F2C445] rounded-full"></div>
+                  <span>Headquarters</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-[#00283A]/20 rounded-full"></div>
+                  <span>Service Centers</span>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -609,7 +694,7 @@ const Contact = () => {
             className="relative rounded-3xl overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-[#00283A] to-[#00283A]/90" />
-<div className="absolute inset-0 bg-[radial-gradient(#F2C445_1px,transparent_1px)] [background-size:20px_20px] opacity-5" />            
+            <div className="absolute inset-0 bg-[radial-gradient(#F2C445_1px,transparent_1px)] [background-size:20px_20px] opacity-5" />            
             <div className="relative py-12 px-8 text-center">
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
                 Ready to Start Your Project?
@@ -621,7 +706,7 @@ const Contact = () => {
                 <Button
                   size="lg"
                   className="bg-white text-[#00283A] hover:bg-[#F2C445] hover:text-[#00283A] px-8 py-6 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105"
-                  onClick={openGoogleMaps}
+                  onClick={() => openGoogleMaps(locations.find(l => l.isHeadquarters)?.googleMapsUrl || '#')}
                 >
                   <Navigation className="mr-2" size={20} />
                   Visit Our Office

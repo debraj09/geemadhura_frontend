@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import Gourab from "@/assets/Gourab.jpeg";
 import Mousumi from "@/assets/Mousumi.jpeg";
 import ourstory from "../assets/ourstory.jpeg";
-
+import { useEffect } from 'react';
 const stats = [
   { label: 'Years of Excellence', value: '7+' },
   { label: 'Compliance Experts', value: '15+' },
@@ -64,7 +64,12 @@ const teamExpertise = [
   }
 ];
 
+
+
 const About = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <main className="min-h-screen">
       {/* Hero Section */}

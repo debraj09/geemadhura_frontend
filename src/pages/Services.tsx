@@ -35,7 +35,9 @@ const Services = () => {
   const [dynamicServices, setDynamicServices] = useState<DynamicGridService[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Format date to "Month Day, Year"
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

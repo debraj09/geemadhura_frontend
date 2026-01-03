@@ -21,6 +21,8 @@ import OurStory from "./pages/OurStory";
 import { FirstScrollbar } from "./components/FirstScrollbar";
 import { FAQ } from "./components/FAQ";
 import VerifyCertificate from "./pages/VerifyCertificate";
+import Images from "./pages/Images";
+import Videos from "./pages/Videos";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -58,6 +60,8 @@ const App = () => (
               <Route path="/Box" element={<Box />} />
               <Route path="/OurStory" element={<OurStory />} />
               <Route path="/faq" element={<FAQ />} />
+              <Route path="/gallery/images" element={<Images />} />
+              <Route path="/gallery/videos" element={<Videos />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

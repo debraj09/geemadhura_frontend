@@ -1,9 +1,10 @@
 // Box.tsx
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import { ArrowRight, Circle, CheckSquare } from 'lucide-react';
 import { LuCheck } from 'react-icons/lu';
 import { hover, motion } from 'framer-motion';   // ⭐ ADDED motion here
+import { Link } from 'react-router-dom';
 
 const Box: React.FC = () => {
   const leftText1 = "Compliance isn't optional—it's your competitive advantage.";
@@ -138,32 +139,36 @@ const Box: React.FC = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
         >
-        <div style={rightSectionStyle}>
-          <ul style={complianceListStyle}>
-            {compliancePoints.map((point, index) => (
-              <li key={index} style={listItemStyle}>
-                <LuCheck size={24} className="text-white-700" />
-                &nbsp; &nbsp;{point}
-              </li>
-            ))}
-          </ul>
+          <div style={rightSectionStyle}>
+            <ul style={complianceListStyle}>
+              {compliancePoints.map((point, index) => (
+                <li key={index} style={listItemStyle}>
+                  <LuCheck size={24} className="text-white-700" />
+                  &nbsp; &nbsp;{point}
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/services"
+            >
 
-          <button
-            style={buttonStyle}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#003a52';
-              e.currentTarget.style.color = '#F2C445';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#F2C445';
-              e.currentTarget.style.color = 'white';
-            }}
-          >
-            Learn More
-            <ArrowRight size={20} />
-          </button>
 
-        </div>
+              <button
+                style={buttonStyle}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = '#003a52';
+                  e.currentTarget.style.color = '#F2C445';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F2C445';
+                  e.currentTarget.style.color = 'white';
+                }}
+              >
+                Learn More
+                <ArrowRight size={20} />
+              </button>
+            </Link>
+          </div>
         </motion.div>
 
 

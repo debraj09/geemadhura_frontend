@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, Image as ImageIcon, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '@/assets/logo.png';
 
@@ -17,7 +17,16 @@ const navigation = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
   { name: 'Services', href: '/services' },
-  { name: 'Courses', href: '/courses' },
+  // New Gallery Dropdown structure
+  { 
+    name: 'Gallery', 
+    href: '#', 
+    isDropdown: true,
+    subItems: [
+      { name: 'Images', href: '/gallery/images', icon: <ImageIcon size={16} /> },
+      { name: 'Videos', href: '/gallery/videos', icon: <Video size={16} /> }
+    ] 
+  },
   { name: 'Blog', href: '/blog' },
   { name: 'Contact', href: '/contact' },
 ];
@@ -28,6 +37,7 @@ export const Header = () => {
   const [topPosition, setTopPosition] = useState('40px');
   const [services, setServices] = useState<Service[]>([]);
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
+  const [isGalleryDropdownOpen, setIsGalleryDropdownOpen] = useState(false); // New State
   const [isLoadingServices, setIsLoadingServices] = useState(true);
   
   const location = useLocation();
@@ -58,7 +68,6 @@ export const Header = () => {
     fetchServices();
   }, []);
 
-  // Handle Scroll logic for Top Bar offset
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -74,13 +83,10 @@ export const Header = () => {
     setIsOpen(false);
   }, [location]);
 
-  // Handle service click
   const handleServiceClick = (service: Service) => {
     navigate(`/services/${service.id}`);
     setIsServicesDropdownOpen(false);
   };
-
-  const isServicePage = location.pathname.startsWith('/services/');
 
   return (
     <header
@@ -105,6 +111,7 @@ export const Header = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => {
+              // --- SERVICES DROPDOWN ---
               if (item.name === 'Services') {
                 return (
                   <div 
@@ -125,7 +132,6 @@ export const Header = () => {
                       />
                     </button>
 
-                    {/* Services Dropdown - VERTICAL POPUP STYLE */}
                     <AnimatePresence>
                       {isServicesDropdownOpen && (
                         <motion.div
@@ -140,7 +146,6 @@ export const Header = () => {
                               <div className="p-4 text-center"><div className="animate-spin h-4 w-4 border-2 border-[#00283A] border-t-transparent rounded-full inline-block" /></div>
                             ) : services.length > 0 ? (
                               <>
-                                {/* Show only top 5 services */}
                                 {services.slice(0, 5).map((service) => (
                                   <button
                                     key={service.id}
@@ -152,7 +157,6 @@ export const Header = () => {
                                     {service.name}
                                   </button>
                                 ))}
-                                {/* View All Section */}
                                 <Link
                                   to="/services"
                                   className="block px-5 py-3 text-sm font-bold border-t border-[#00283A]/10 bg-[#00283A]/5 text-[#00283A] hover:text-[#F2C445] transition-colors"
@@ -164,6 +168,58 @@ export const Header = () => {
                             ) : (
                               <div className="px-5 py-3 text-sm text-gray-500">No services found</div>
                             )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              }
+
+              // --- GALLERY DROPDOWN (Added) ---
+              if (item.name === 'Gallery') {
+                return (
+                  <div 
+                    key={item.name}
+                    className="relative"
+                    onMouseEnter={() => setIsGalleryDropdownOpen(true)}
+                    onMouseLeave={() => setIsGalleryDropdownOpen(false)}
+                  >
+                    <button
+                      className={`flex items-center text-sm lg:text-base font-bold transition-colors hover:text-[#F2C445] group ${
+                        location.pathname.startsWith('/gallery') ? 'text-[#F2C445]' : 'text-[#00283A]'
+                      }`}
+                    >
+                      {item.name}
+                      <ChevronDown 
+                        size={16} 
+                        className={`ml-1 transition-transform duration-300 ${isGalleryDropdownOpen ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+
+                    <AnimatePresence>
+                      {isGalleryDropdownOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          className="absolute left-0 mt-2 w-48 rounded-xl shadow-2xl overflow-hidden border border-[#00283A]/10"
+                          style={{ backgroundColor: '#FFFFF7' }}
+                        >
+                          <div className="py-1">
+                            {item.subItems?.map((sub) => (
+                              <Link
+                                key={sub.name}
+                                to={sub.href}
+                                onClick={() => setIsGalleryDropdownOpen(false)}
+                                className={`flex items-center gap-3 px-5 py-3 text-sm transition-all hover:bg-[#00283A]/5 hover:pl-6 ${
+                                  location.pathname === sub.href ? 'text-[#F2C445] bg-[#00283A]/5' : 'text-[#00283A]'
+                                }`}
+                              >
+                                {sub.icon}
+                                {sub.name}
+                              </Link>
+                            ))}
                           </div>
                         </motion.div>
                       )}
@@ -212,14 +268,31 @@ export const Header = () => {
           >
             <div className="p-4 space-y-2">
               {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block px-4 py-3 font-bold text-[#00283A] hover:bg-[#00283A]/5 rounded-lg"
-                >
-                  {item.name}
-                </Link>
+                <div key={item.name}>
+                  {item.isDropdown ? (
+                    <>
+                      <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-widest">{item.name}</div>
+                      {item.subItems?.map((sub) => (
+                        <Link
+                          key={sub.name}
+                          to={sub.href}
+                          onClick={() => setIsOpen(false)}
+                          className="block px-8 py-2 font-bold text-[#00283A] hover:bg-[#00283A]/5 rounded-lg text-sm"
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="block px-4 py-3 font-bold text-[#00283A] hover:bg-[#00283A]/5 rounded-lg"
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+                </div>
               ))}
               <Link to="/contact" className="block pt-2" onClick={() => setIsOpen(false)}>
                 <button className="w-full py-4 rounded-xl font-bold bg-[#00283A] text-[#F2C445]">Get Started</button>

@@ -5,6 +5,7 @@ import { ArrowRight, Circle } from 'lucide-react';
 import lightbg from "../assets/lightbg.jpeg";
 import ourstory from "../assets/ourstory.jpeg";
 import { hover, motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const OurStory: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -14,7 +15,9 @@ const OurStory: React.FC = () => {
         "In 2018, Geemadhura Innovations was founded with a simple but powerful vision:Make business compliance simple, fast, and affordable for every entrepreneur in India",
         "Our founder, Mr. Gourab Sanyal, and co-founder, Mrs. Mousumi Sanyal, recognized a critical problem in the Indian business ecosystem. Thousands of talented entrepreneurs had  amazing ideas, amazing products, and amazing businesses—but they were held back by one thing: complicated, time-consuming, expensive compliance processes."
     ];
-
+useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
     const darkBackground = '#FFFFFF';
     const lightText = 'black';
     const accentColor = '#00283A';
@@ -258,7 +261,9 @@ const OurStory: React.FC = () => {
                         </ul>
 
                         {/* Button with animation */}
-                        <a href="/about">
+                        <Link
+                        to ="/about"
+                        >
                             <button
 
                                 style={buttonStyle}
@@ -268,7 +273,7 @@ const OurStory: React.FC = () => {
                                 Learn More
                                 <ArrowRight size={20} />
                             </button>
-                        </a>
+                            </Link>
                     </div>
 
                 </motion.div>

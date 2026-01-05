@@ -31,14 +31,14 @@ const navigation = [
   { name: 'About', href: '/about' },
   { name: 'Services', href: '/services' },
   // New Gallery Dropdown structure
-  { 
-    name: 'Gallery', 
-    href: '#', 
+  {
+    name: 'Gallery',
+    href: '#',
     isDropdown: true,
     subItems: [
       { name: 'Images', href: '/gallery/images', icon: <ImageIcon size={16} /> },
       { name: 'Videos', href: '/gallery/videos', icon: <Video size={16} /> }
-    ] 
+    ]
   },
   { name: 'Blog', href: '/blog' },
   { name: 'Contact', href: '/contact' },
@@ -55,7 +55,7 @@ export const Header = () => {
   const [showContactPopup, setShowContactPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -75,12 +75,12 @@ export const Header = () => {
         setIsLoadingServices(true);
         const response = await fetch('https://geemadhura.braventra.in/api/services');
         const data = await response.json();
-        
+
         if (data.status === 200 && data.data) {
           const activeServices = data.data
             .filter((service: Service) => service.is_active)
             .sort((a: Service, b: Service) => a.display_order - b.display_order);
-          
+
           setServices(activeServices);
         }
       } catch (error) {
@@ -99,7 +99,7 @@ export const Header = () => {
       setScrolled(currentScrollY > 20);
       setTopPosition(currentScrollY > 100 ? '0px' : '40px');
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -227,6 +227,10 @@ export const Header = () => {
     });
   };
 
+
+  const navigateHandler = () => {
+    window.location.href = '/tracking-application';
+  }
   return (
     <>
       <header
@@ -254,20 +258,19 @@ export const Header = () => {
                 // --- SERVICES DROPDOWN ---
                 if (item.name === 'Services') {
                   return (
-                    <div 
+                    <div
                       key={item.name}
                       className="relative"
                       onMouseEnter={() => setIsServicesDropdownOpen(true)}
                       onMouseLeave={() => setIsServicesDropdownOpen(false)}
                     >
                       <button
-                        className={`flex items-center text-sm lg:text-base font-bold transition-colors hover:text-[#F2C445] group ${
-                          location.pathname.startsWith('/services') ? 'text-[#F2C445]' : 'text-[#00283A]'
-                        }`}
+                        className={`flex items-center text-sm lg:text-base font-bold transition-colors hover:text-[#F2C445] group ${location.pathname.startsWith('/services') ? 'text-[#F2C445]' : 'text-[#00283A]'
+                          }`}
                       >
                         {item.name}
-                        <ChevronDown 
-                          size={16} 
+                        <ChevronDown
+                          size={16}
                           className={`ml-1 transition-transform duration-300 ${isServicesDropdownOpen ? 'rotate-180' : ''}`}
                         />
                       </button>
@@ -290,9 +293,8 @@ export const Header = () => {
                                     <button
                                       key={service.id}
                                       onClick={() => handleServiceClick(service)}
-                                      className={`w-full text-left px-5 py-2.5 text-sm transition-all hover:bg-[#00283A]/5 hover:pl-6 ${
-                                        location.pathname === `/services/${service.id}` ? 'text-[#F2C445] bg-[#00283A]/5' : 'text-[#00283A]'
-                                      }`}
+                                      className={`w-full text-left px-5 py-2.5 text-sm transition-all hover:bg-[#00283A]/5 hover:pl-6 ${location.pathname === `/services/${service.id}` ? 'text-[#F2C445] bg-[#00283A]/5' : 'text-[#00283A]'
+                                        }`}
                                     >
                                       {service.name}
                                     </button>
@@ -319,20 +321,19 @@ export const Header = () => {
                 // --- GALLERY DROPDOWN ---
                 if (item.name === 'Gallery') {
                   return (
-                    <div 
+                    <div
                       key={item.name}
                       className="relative"
                       onMouseEnter={() => setIsGalleryDropdownOpen(true)}
                       onMouseLeave={() => setIsGalleryDropdownOpen(false)}
                     >
                       <button
-                        className={`flex items-center text-sm lg:text-base font-bold transition-colors hover:text-[#F2C445] group ${
-                          location.pathname.startsWith('/gallery') ? 'text-[#F2C445]' : 'text-[#00283A]'
-                        }`}
+                        className={`flex items-center text-sm lg:text-base font-bold transition-colors hover:text-[#F2C445] group ${location.pathname.startsWith('/gallery') ? 'text-[#F2C445]' : 'text-[#00283A]'
+                          }`}
                       >
                         {item.name}
-                        <ChevronDown 
-                          size={16} 
+                        <ChevronDown
+                          size={16}
                           className={`ml-1 transition-transform duration-300 ${isGalleryDropdownOpen ? 'rotate-180' : ''}`}
                         />
                       </button>
@@ -352,9 +353,8 @@ export const Header = () => {
                                   key={sub.name}
                                   to={sub.href}
                                   onClick={() => setIsGalleryDropdownOpen(false)}
-                                  className={`flex items-center gap-3 px-5 py-3 text-sm transition-all hover:bg-[#00283A]/5 hover:pl-6 ${
-                                    location.pathname === sub.href ? 'text-[#F2C445] bg-[#00283A]/5' : 'text-[#00283A]'
-                                  }`}
+                                  className={`flex items-center gap-3 px-5 py-3 text-sm transition-all hover:bg-[#00283A]/5 hover:pl-6 ${location.pathname === sub.href ? 'text-[#F2C445] bg-[#00283A]/5' : 'text-[#00283A]'
+                                    }`}
                                 >
                                   {sub.icon}
                                   {sub.name}
@@ -372,9 +372,8 @@ export const Header = () => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`text-sm lg:text-base font-bold transition-colors hover:text-[#F2C445] relative group ${
-                      location.pathname === item.href ? 'text-[#F2C445]' : 'text-[#00283A]'
-                    }`}
+                    className={`text-sm lg:text-base font-bold transition-colors hover:text-[#F2C445] relative group ${location.pathname === item.href ? 'text-[#F2C445]' : 'text-[#00283A]'
+                      }`}
                   >
                     {item.name}
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#F2C445] transition-all duration-300 group-hover:w-full"></span>
@@ -384,13 +383,25 @@ export const Header = () => {
             </div>
 
             {/* CTA + Mobile Toggle */}
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={openContactPopup} 
+            {/* Change space-x-4 to space-x-2 */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={openContactPopup}
                 className="hidden md:block px-6 py-2.5 rounded-full font-bold text-sm bg-[#00283A] text-[#F2C445] hover:scale-105 transition-transform active:scale-95"
               >
                 Get Started
               </button>
+
+              {/* I noticed your second button was outside the div in your snippet. 
+      Move it inside the div so the space-x property applies to it. */}
+              <button
+              onClick={navigateHandler}
+                className="hidden md:block px-6 py-2.5 rounded-full font-bold text-sm bg-[#00283A] text-[#F2C445] hover:scale-105 transition-transform active:scale-95"
+              >
+                Tracking Application
+              </button>
+
+              {/* Mobile Menu Toggle */}
               <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 text-[#00283A]">
                 {isOpen ? <X size={26} /> : <Menu size={26} />}
               </button>
@@ -435,7 +446,7 @@ export const Header = () => {
                     )}
                   </div>
                 ))}
-                <button 
+                <button
                   onClick={openContactPopup}
                   className="w-full py-4 rounded-xl font-bold bg-[#00283A] text-[#F2C445] mt-2"
                 >
@@ -459,7 +470,7 @@ export const Header = () => {
               onClick={closeContactPopup}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-9999"
             />
-            
+
             {/* Popup Content */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -629,14 +640,14 @@ export const Header = () => {
                           </>
                         ) : (
                           <>
-                            <Send style={{color: 'black'}} className="mr-3 h-6 w-6" />
-                            <p style={{color: 'black'}} className="text-lg font-bold">Send Message Now</p>
+                            <Send style={{ color: 'black' }} className="mr-3 h-6 w-6" />
+                            <p style={{ color: 'black' }} className="text-lg font-bold">Send Message Now</p>
                           </>
                         )}
                       </Button>
                     </div>
 
-                   
+
                   </form>
                 </div>
               </div>

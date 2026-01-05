@@ -184,9 +184,9 @@ export const Marquee = () => {
                 <span className="text-dark-teal font-bold text-xs md:text-sm">
                   {item.title}
                 </span>
-                <span className="text-dark-teal/70 text-2xs md:text-xs">
+                {/* <span className="text-dark-teal/70 text-2xs md:text-xs">
                   • {new Date(item.update_date).toLocaleDateString()}
-                </span>
+                </span> */}
               </motion.div>
             ))}
           </motion.div>

@@ -407,7 +407,7 @@ const VerifyCertificate: React.FC = () => {
                             <div className="flex items-center text-sm text-gray-600 mt-1">
                                 <Link to="/" className="hover:text-blue-600">Home</Link>
                                 <ChevronRight size={12} className="mx-2" />
-                                <span className="font-medium text-gray-700">Certificate Verification</span>
+                                <span className="font-medium text-gray-700">Tracking Application</span>
                             </div>
                         </div>
                         <div className="flex items-center space-x-4">

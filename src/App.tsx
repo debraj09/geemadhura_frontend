@@ -51,7 +51,7 @@ const App = () => (
               } />
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
-              <Route path="/verify-certificate" element={<VerifyCertificate />} />
+              <Route path="/tracking-application" element={<VerifyCertificate />} />
               <Route path="/services/:slug" element={<ServiceDetail />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />

@@ -1,6 +1,6 @@
 // components/SecondaryHeader.tsx
 import { useState, useEffect } from 'react';
-import { Phone, Mail, X, Facebook, Twitter, Linkedin, Instagram, Clock, Globe } from 'lucide-react';
+import { Phone, Mail, X, Facebook, Twitter, Linkedin, Instagram, Clock, Globe, Youtube } from 'lucide-react';
 
 export const SecondaryHeader = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -72,13 +72,6 @@ export const SecondaryHeader = () => {
         {/* Right Side - Social Icons & Close */}
         <div className="flex items-center gap-3">
           {/* Online Services */}
-          <div 
-            className="hidden md:flex items-center gap-2 text-sm mr-2"
-            style={{ color: 'white' }}
-          >
-            <Globe size={14} />
-            <span className="font-medium">🌐 Online Services</span>
-          </div>
           
           {/* Separator */}
           <span className="text-[white]/40 hidden md:inline mr-2">|</span>
@@ -107,17 +100,24 @@ export const SecondaryHeader = () => {
             >
               <Instagram size={14} />
             </a>
+            <a 
+              href="https://www.youtube.com/@GeemadhuraInnovations" 
+              className="hover:scale-110 transition-transform"
+              style={{ color: 'white' }}
+            >
+              <Youtube size={14} />
+            </a>
           </div>
           
           {/* Close Button */}
-          <button
+          {/* <button
             onClick={() => setIsOpen(false)}
             className="p-1 hover:bg-[white]/10 rounded transition-colors"
             aria-label="Close notification bar"
             style={{ color: 'white' }}
           >
             <X size={16} />
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

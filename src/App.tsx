@@ -24,6 +24,7 @@ import VerifyCertificate from "./pages/VerifyCertificate";
 import Images from "./pages/Images";
 import Videos from "./pages/Videos";
 const queryClient = new QueryClient();
+import { UpdatesListingPage, UpdateDetailsPage } from './components/Marquee';
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -50,6 +51,8 @@ const App = () => (
                 </>
               } />
               <Route path="/about" element={<About />} />
+               <Route path="/latest-updates" element={<UpdatesListingPage />} />
+  <Route path="/latest-updates/:id" element={<UpdateDetailsPage />} />
               <Route path="/services" element={<Services />} />
               <Route path="/tracking-application" element={<VerifyCertificate />} />
               <Route path="/services/:slug" element={<ServiceDetail />} />

@@ -30,6 +30,8 @@ interface Location {
   icon: any;
   title: string;
   address: string;
+  contact: string;
+  email: string;
   pin: string;
   region: string;
   coordinates: string;
@@ -65,38 +67,56 @@ const contactInfo = [
   },
 ];
 
-// Google Maps URLs and iframe URLs for each location
+// Updated locations with actual data
 const locations: Location[] = [
   {
     icon: Compass,
-    title: 'North East Service',
-    address: 'Siliguri',
-    pin: 'Serving North East region with expert services',
-    region: 'North East',
-    coordinates: '26.7271° N, 88.3953° E',
-    googleMapsUrl: 'https://maps.google.com/?q=Siliguri,West+Bengal',
-    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28566.11106948786!2d88.3953!3d26.7271!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e4414e9c0f2c7b%3A0x8c2a2b5d5b5b5b5b!2sSiliguri!5e0!3m2!1sen!2sin!4v1634021234567!5m2!1sen!2sin'
+    title: 'Siliguri Branch',
+    address: 'Venus More, Niladri Sekhar Building First Floor, Siliguri',
+    contact: '9609160838',
+    email: '',
+    pin: '734003',
+    region: 'North Bengal',
+    coordinates: '26.7125° N, 88.4256° E',
+    googleMapsUrl: 'https://www.google.com/maps?q=26.7125392,88.4255698&z=17&hl=en',
+    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3568.345624498782!2d88.42337277596015!3d26.712530400000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e4414e9c0f2c7b%3A0x8c2a2b5d5b5b5b5b!2sSiliguri!5e0!3m2!1sen!2sin!4v1712500000000!5m2!1sen!2sin',
   },
   {
     icon: Building,
     title: 'Headquarters',
     address: 'Jalpaiguri - Raikat Para, Opposite Sports Complex 2nd Gate',
-    pin: 'Pin - 735101',
+    contact: '9609030792 | 9609030832 | 9609030833',
+    email: 'info@geemadhurainnovations.com',
+    pin: '735101',
     region: 'West Bengal',
     coordinates: '26.5167° N, 88.7333° E',
     googleMapsUrl: 'https://maps.app.goo.gl/diKY3LyH8Zmi1ua79',
-    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3569.854330628611!2d88.7333!3d26.5167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e4414e9c0f2c7b%3A0x8c2a2b5d5b5b5b!2sJalpaiguri%20-%20Raikat%20Para%2C%20Opposite%20Sports%20Complex%202nd%20Gate!5e0!3m2!1sen!2sin!4v1634021234567!5m2!1sen!2sin',
+    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3569.854330628611!2d88.73112527595817!3d26.516700000000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e4414e9c0f2c7b%3A0x8c2a2b5d5b5b5b!2sJalpaiguri%20-%20Raikat%20Para%2C%20Opposite%20Sports%20Complex%202nd%20Gate!5e0!3m2!1sen!2sin!4v1712500000000!5m2!1sen!2sin',
     isHeadquarters: true
   },
   {
+    icon: Building,
+    title: 'Kolkata Branch',
+    address: 'Siddha Esplanade, 3rd Floor, Near Metro Inox Esplanade',
+    contact: '9609030926 | 9609030952',
+    email: 'geemadhurakolkata25@gmail.com',
+    pin: '700013',
+    region: 'Kolkata',
+    coordinates: '22.5639° N, 88.3523° E',
+    googleMapsUrl: 'https://www.google.com/maps?q=22.563949584960938,88.35232543945312&z=17&hl=en',
+    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.447414183541!2d88.35015077594729!3d22.563949600000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0277b7f3f3f3f3%3A0x9b9b9b9b9b9b9b9b!2sSiddha%20Esplanade%2C%203rd%20Floor%2C%20Near%20Metro%20Inox%20Esplanade%2C%20Kolkata!5e0!3m2!1sen!2sin!4v1712500000000!5m2!1sen!2sin'
+  },
+  {
     icon: Compass,
-    title: 'Western Bengal Services',
-    address: 'Coochbeher',
-    pin: 'Serving Western Bengal with expert food safety solutions',
-    region: 'West Bengal',
-    coordinates: '26.3167° N, 89.4333° E',
-    googleMapsUrl: 'https://maps.google.com/?q=Coochbehar,West+Bengal',
-    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28438.85632151554!2d89.4333!3d26.3167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e3d8b9b9b9b9b9%3A0x9b9b9b9b9b9b9b9b!2sCoochbehar!5e0!3m2!1sen!2sin!4v1634021234567!5m2!1sen!2sin'
+    title: 'Coochbehar Branch',
+    address: 'Morapora Chowpothi, Bang Chatra Road, Opposite Shree Krishna Sweet, Mio Amore 2nd Floor',
+    contact: '7477788993 | 7477788994 | 7477788995',
+    email: 'geemadhuracoochbehar@gmail.com',
+    pin: '736101',
+    region: 'North Bengal',
+    coordinates: '26.3238° N, 89.4502° E',
+    googleMapsUrl: 'https://www.google.com/maps/dir/26.3147067,89.450325/Morapora/@26.3193322,89.4450825,16z/data=!4m10!4m9!1m1!4e1!1m5!1m1!1s0x39e2fe9df62c6f8b:0xd5d0d5a903294c28!2m2!1d89.4501906!2d26.3237579!3e2?entry=ttu',
+    mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3566.224712345678!2d89.44801247596223!3d26.3237579!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e2fe9df62c6f8b%3A0xd5d0d5a903294c28!2sMorapora%20Chowpothi%2C%20Bang%20Chatra%20Road%2C%20Cooch%20Behar!5e0!3m2!1sen!2sin!4v1712500000000!5m2!1sen!2sin'
   }
 ];
 
@@ -375,10 +395,23 @@ const Contact = () => {
                           {headquarters.address}
                         </p>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-[#00283A]/60">{headquarters.pin}</span>
+                          <span className="text-sm text-[#00283A]/60">PIN: {headquarters.pin}</span>
                           <span className="text-sm font-medium text-[#F2C445] bg-[#00283A]/10 px-3 py-1 rounded-full">
                             Headquarters
                           </span>
+                        </div>
+                        <div className="pt-2 border-t border-[#00283A]/10">
+                          <p className="text-sm text-[#00283A] font-medium">
+                            Contact: {headquarters.contact}
+                          </p>
+                          {headquarters.email && (
+                            <a 
+                              href={`mailto:${headquarters.email}`}
+                              className="text-sm text-[#00283A]/70 hover:text-[#F2C445] transition-colors"
+                            >
+                              Email: {headquarters.email}
+                            </a>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -595,7 +628,7 @@ const Contact = () => {
               </div>
 
               {/* Full Width Cards Grid with Maps */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {locations.map((location, index) => (
                   <motion.div
                     key={index}
@@ -603,7 +636,7 @@ const Contact = () => {
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#00283A]/10 overflow-hidden hover:border-[#F2C445]/50 hover:shadow-xl transition-all duration-300 group"
+                    className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#00283A]/10 overflow-hidden hover:border-[#F2C445]/50 hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
                   >
                     <div className="flex flex-col h-full">
                       {/* Map Section */}
@@ -624,9 +657,9 @@ const Contact = () => {
                       </div>
 
                       {/* Location Info */}
-                      <div className="p-5 flex-1">
-                        <div className="flex items-start gap-3 mb-4">
-                          <div className="p-3 rounded-xl bg-gradient-to-br from-[#00283A]/10 to-[#F2C445]/10 group-hover:from-[#00283A]/20 group-hover:to-[#F2C445]/20 transition-all duration-300">
+                      <div className="p-5 flex-1 flex flex-col">
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="p-3 rounded-xl bg-gradient-to-br from-[#00283A]/10 to-[#F2C445]/10 group-hover:from-[#00283A]/20 group-hover:to-[#F2C445]/20 transition-all duration-300 flex-shrink-0">
                             <location.icon className="text-[#00283A]" size={22} />
                           </div>
                           <div className="flex-1">
@@ -634,7 +667,7 @@ const Contact = () => {
                               <h4 className="font-bold text-[#00283A] text-lg">{location.title}</h4>
                               {location.isHeadquarters ? (
                                 <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#F2C445] text-[#00283A]">
-                                  Headquarters
+                                  HQ
                                 </span>
                               ) : (
                                 <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#00283A]/10 text-[#00283A]">
@@ -642,22 +675,47 @@ const Contact = () => {
                                 </span>
                               )}
                             </div>
-                            <p className="text-[#00283A]/70 text-sm font-medium mb-1">{location.address}</p>
                           </div>
                         </div>
                         
-                        <div className="mb-3">
-                          <p className="text-[#00283A]/60 text-xs mb-2">{location.pin}</p>
+                        <div className="space-y-2 mb-4 flex-1">
+                          <p className="text-[#00283A]/70 text-sm font-medium">{location.address}</p>
+                          <p className="text-[#00283A]/60 text-xs">PIN: {location.pin}</p>
                           <p className="text-[#00283A]/50 text-xs font-mono">{location.coordinates}</p>
                         </div>
                         
+                        {/* Contact Information */}
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center gap-2">
+                            <Phone size={14} className="text-[#00283A]/60" />
+                            <a 
+                              href={`tel:${location.contact.split(' | ')[0]}`}
+                              className="text-sm text-[#00283A] hover:text-[#F2C445] transition-colors font-medium"
+                            >
+                              {location.contact}
+                            </a>
+                          </div>
+                          {location.email && (
+                            <div className="flex items-center gap-2">
+                              <Mail size={14} className="text-[#00283A]/60" />
+                              <a 
+                                href={`mailto:${location.email}`}
+                                className="text-sm text-[#00283A]/70 hover:text-[#F2C445] transition-colors break-all"
+                              >
+                                {location.email}
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Action Button */}
                         <div className="mt-auto pt-3 border-t border-[#00283A]/10">
                           <button
                             onClick={() => openGoogleMaps(location.googleMapsUrl)}
                             className="w-full flex items-center justify-center gap-2 text-sm font-medium text-[#00283A] hover:text-[#F2C445] transition-colors duration-300 group/view-map"
                           >
                             <Navigation size={16} />
-                            <span>View on Google Maps</span>
+                            <span>View on Maps</span>
                             <ExternalLink size={14} className="opacity-0 group-hover/view-map:opacity-100 transition-opacity" />
                           </button>
                         </div>

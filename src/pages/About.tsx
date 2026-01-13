@@ -5,7 +5,7 @@ import Gourab from "@/assets/Gourab.jpeg";
 import Mousumi from "@/assets/Mousumi.jpeg";
 import ourstory from "../assets/ourstory.jpeg";
 import aboutus from '@/assets/aboutus.png';
-import aboutusbanner from '@/assets/aboutusbanner.png';
+import aboutusbanner from '@/assets/overlay.png';
 import { useEffect } from 'react';
 
 const stats = [
@@ -75,10 +75,11 @@ const About = () => {
   return (
     <main className="min-h-screen">
       {/* Top Banner Image Section */}
-      <section className="w-full h-[300px] md:h-[450px] lg:h-[550px] overflow-hidden relative">
+      <section className="w-full h-[400px] md:h-[400px] lg:h-[400px] overflow-hidden relative">
         <img 
           src={aboutusbanner} 
           alt="About Us Banner" 
+          style={{height:'400px'}}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
@@ -87,49 +88,12 @@ const About = () => {
       </section>
 
       {/* Hero Section */}
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-background via-muted/20 to-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-4xl mx-auto text-center"
-          >
-            <h2 style={{ color: '#00283A' }} className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              About Geeemadhura Innovations
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-              Your trusted partner for comprehensive compliance solutions and regulatory expertise across India.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+    
 
-      {/* Stats Section */}
-      <section className="py-16" style={{ backgroundColor: '#00283A' }}>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
-              >
-                <div style={{ color: '#F2C445' }} className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-base md:text-lg text-white/80">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+    
 
       {/* Story Section */}
-      <section className="py-20 md:py-24">
+      <section  className="py-20 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -205,6 +169,29 @@ const About = () => {
                 </a>
               </motion.div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+        {/* Stats Section */}
+      <section className="py-16" style={{ backgroundColor: '#00283A' }}>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="text-center"
+              >
+                <div style={{ color: '#F2C445' }} className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-base md:text-lg text-white/80">{stat.label}</div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

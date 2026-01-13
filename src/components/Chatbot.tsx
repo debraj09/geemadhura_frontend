@@ -124,6 +124,8 @@ export const ConversationalLeadForm = () => {
     
     return () => clearInterval(interval);
   }, []);
+
+  
   
   // Initialize conversation
   useEffect(() => {

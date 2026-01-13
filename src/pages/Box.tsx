@@ -86,12 +86,15 @@ const Box: React.FC = () => {
     alignItems: 'center',
     marginTop: '10px',
     flexWrap: 'wrap',
+    borderRadius:'10px'
   };
 
   const logoStyle: React.CSSProperties = {
     height: '70px', // Adjust height as needed
     width: 'auto',
     objectFit: 'contain',
+        borderRadius:'6px'
+,
     filter: 'brightness(1.1)', // Optional: makes logos pop against dark bg
   };
 

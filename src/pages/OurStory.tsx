@@ -6,7 +6,7 @@ import lightbg from "../assets/lightbg.jpeg";
 import ourstory from "../assets/ourstory.jpeg";
 import { hover, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import aboutus from '@/assets/aboutus.png';
+import aboutus from '@/assets/page.png';
 
 const OurStory: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -68,7 +68,7 @@ useEffect(() => {
     // Image container style
     const imageContainerStyle: React.CSSProperties = {
         width: '100%',
-        height: '400px',
+        height: '330px',
         borderRadius: '20px',
         overflow: 'hidden',
         boxShadow: '10px 10px 30px rgba(0, 0, 0, 0.25), -5px -5px 15px rgba(0, 0, 0, 0.33)',

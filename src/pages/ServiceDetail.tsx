@@ -117,6 +117,12 @@ const ServiceDetail = () => {
         setIsHideSection(false);
     }
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+
+
     // --- Fetch Service Detail ---
     useEffect(() => {
         if (!slug) return;
@@ -449,37 +455,7 @@ const ServiceDetail = () => {
                             </p> */}
                         </div>
 
-                        {/* Apply Now Button */}
-                        <div style={{ marginTop: '30px' }}>
-                            <button
-                                onClick={clickFunction}
-                                style={{
-                                    padding: '12px 30px',
-                                    backgroundColor: '#00283A',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    fontWeight: 'bold',
-                                    fontSize: '1.1em',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '10px',
-                                    transition: 'all 0.3s ease'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#0c455fff';
-                                    e.currentTarget.style.transform = 'translateY(-2px)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#00283A';
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                }}
-                            >
-                                <FileText size={20} />
-                                Apply Now for {service.title}
-                            </button>
-                        </div>
+                        
                     </section>
                 </div>
 
@@ -611,6 +587,38 @@ const ServiceDetail = () => {
                             </div>
                         )}
                     </div>
+
+                    {/* Apply Now Button */}
+                        <div style={{ marginTop: '30px' }}>
+                            <button
+                                onClick={clickFunction}
+                                style={{
+                                    padding: '12px 30px',
+                                    backgroundColor: '#00283A',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontWeight: 'bold',
+                                    fontSize: '1rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#0c455fff';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#00283A';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                }}
+                            >
+                                <FileText size={20} />
+                                Apply Now for {service.title}
+                            </button>
+                        </div>
 
                     {isHideSection ? null
                         :

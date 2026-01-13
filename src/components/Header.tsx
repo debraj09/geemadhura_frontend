@@ -82,6 +82,7 @@ export const Header = () => {
             .sort((a: Service, b: Service) => a.display_order - b.display_order);
 
           setServices(activeServices);
+          console.log('Fetched services:', activeServices);
         }
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -109,7 +110,7 @@ export const Header = () => {
   }, [location]);
 
   const handleServiceClick = (service: Service) => {
-    navigate(`/services/${service.id}`);
+    navigate(`/services/${service.slug}`);
     setIsServicesDropdownOpen(false);
   };
 

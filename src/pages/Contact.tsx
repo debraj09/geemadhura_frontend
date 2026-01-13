@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Mail, Phone, MapPin, Send, Globe, Building, Compass, 
+import {
+  Mail, Phone, MapPin, Send, Globe, Building, Compass,
   CheckCircle, AlertCircle, Loader2, ExternalLink, Navigation
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -144,12 +144,12 @@ const Contact = () => {
         setIsLoadingServices(true);
         const response = await fetch(`${BASE_URL}/api/services`);
         const data = await response.json();
-        
+
         if (data.status === 200 && Array.isArray(data.data)) {
           const activeServices = data.data
             .filter((service: Service) => service.is_active)
             .sort((a: Service, b: Service) => a.display_order - b.display_order);
-          
+
           setServices(activeServices);
         } else {
           setServices([]);
@@ -269,7 +269,7 @@ const Contact = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-[#00283A]/5 via-transparent to-[#F2C445]/5" />
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#F2C445]/10 rounded-full -translate-y-32 translate-x-32 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#00283A]/10 rounded-full translate-y-64 -translate-x-64 blur-3xl" />
-        
+
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -281,12 +281,12 @@ const Contact = () => {
               <div className="w-24 h-1 bg-gradient-to-r from-[#00283A] to-[#F2C445] rounded-full mx-auto" />
               <div className="w-16 h-1 bg-gradient-to-r from-[#F2C445] to-[#00283A] rounded-full mx-auto mt-1" />
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight">
               <span style={{ color: '#00283A' }}>GET IN </span>
               <span className="text-[#F2C445]">TOUCH</span>
             </h1>
-            
+
             <p className="text-lg md:text-xl text-[#00283A]/70 max-w-2xl mx-auto leading-relaxed">
               Ready to transform your digital journey? Reach out and let's create something amazing together.
             </p>
@@ -312,7 +312,7 @@ const Contact = () => {
                   <h2 className="text-2xl font-bold mb-6 pb-4 border-b border-[#00283A]/10" style={{ color: '#00283A' }}>
                     Quick Connect
                   </h2>
-                  
+
                   <div className="space-y-4">
                     {contactInfo.map((info, index) => (
                       <motion.div
@@ -369,7 +369,7 @@ const Contact = () => {
                         </h3>
                         <ExternalLink className="text-[#00283A]/40 group-hover:text-[#F2C445] transition-colors" size={18} />
                       </div>
-                      
+
                       <div className="relative overflow-hidden rounded-2xl border-2 border-[#00283A]/10 aspect-video">
                         {/* Fallback map image */}
                         <div className={`absolute inset-0 bg-gradient-to-br from-[#00283A]/5 to-[#F2C445]/5 flex items-center justify-center transition-opacity duration-500 ${mapLoaded[1] ? 'opacity-0' : 'opacity-100'}`}>
@@ -378,7 +378,7 @@ const Contact = () => {
                             <p className="text-[#00283A]/50 font-medium">Loading map...</p>
                           </div>
                         </div>
-                        
+
                         {/* Interactive Map Frame */}
                         <iframe
                           src={headquarters.mapIframeUrl}
@@ -389,7 +389,7 @@ const Contact = () => {
                           title="Google Maps - Geemadhura Headquarters"
                         />
                       </div>
-                      
+
                       <div className="mt-4 space-y-2">
                         <p className="text-[#00283A] font-medium">
                           {headquarters.address}
@@ -405,7 +405,7 @@ const Contact = () => {
                             Contact: {headquarters.contact}
                           </p>
                           {headquarters.email && (
-                            <a 
+                            <a
                               href={`mailto:${headquarters.email}`}
                               className="text-sm text-[#00283A]/70 hover:text-[#F2C445] transition-colors"
                             >
@@ -432,11 +432,11 @@ const Contact = () => {
                 {/* Decorative Elements */}
                 <div className="absolute -top-4 -right-4 w-24 h-24 bg-[#F2C445]/10 rounded-full blur-xl" />
                 <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#00283A]/10 rounded-full blur-xl" />
-                
+
                 <div className="bg-gradient-to-br from-white via-white to-[#FFFFF7] rounded-3xl border-2 border-[#00283A]/10 p-8 lg:p-10 shadow-2xl relative overflow-hidden">
                   {/* Pattern Background */}
                   <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#00283A]/[0.02] to-transparent rounded-full -translate-y-32 translate-x-32" />
-                  
+
                   <div className="relative">
                     <div className="flex items-center gap-3 mb-8">
                       <div className="p-3 rounded-2xl bg-gradient-to-br from-[#00283A] to-[#00283A]/80">
@@ -581,8 +581,8 @@ const Contact = () => {
                             color: '#F2C445',
                             border: 'none'
                           }}
-                          
-                          
+
+
                           disabled={isSubmitting}
                         >
                           {isSubmitting ? (
@@ -592,8 +592,8 @@ const Contact = () => {
                             </>
                           ) : (
                             <>
-                              <Send style={{color: 'black'}} className="mr-3 h-6 w-6" />
-                              <p style={{color: 'black'}} className="text-lg font-bold">Send Message Now</p>
+                              <Send style={{ color: 'black' }} className="mr-3 h-6 w-6" />
+                              <p style={{ color: 'black' }} className="text-lg font-bold">Send Message Now</p>
                             </>
                           )}
                         </Button>
@@ -628,114 +628,116 @@ const Contact = () => {
               </div>
 
               {/* Full Width Cards Grid with Maps */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {locations.map((location, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#00283A]/10 overflow-hidden hover:border-[#F2C445]/50 hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
-                  >
-                    <div className="flex flex-col h-full">
-                      {/* Map Section */}
-                      <div className="relative aspect-video overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#00283A]/5 to-[#F2C445]/5 flex items-center justify-center transition-opacity duration-500" />
-                        
-                        <iframe
-                          src={location.mapIframeUrl}
-                          className="absolute inset-0 w-full h-full border-0"
-                          loading="lazy"
-                          referrerPolicy="no-referrer-when-downgrade"
-                          title={`Google Maps - ${location.title}`}
-                          style={{ filter: 'grayscale(0.3)' }}
-                        />
-                        
-                        {/* Map Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-                      </div>
 
-                      {/* Location Info */}
-                      <div className="p-5 flex-1 flex flex-col">
-                        <div className="flex items-start gap-3 mb-3">
-                          <div className="p-3 rounded-xl bg-gradient-to-br from-[#00283A]/10 to-[#F2C445]/10 group-hover:from-[#00283A]/20 group-hover:to-[#F2C445]/20 transition-all duration-300 flex-shrink-0">
-                            <location.icon className="text-[#00283A]" size={22} />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-start justify-between mb-2">
-                              <h4 className="font-bold text-[#00283A] text-lg">{location.title}</h4>
-                              {location.isHeadquarters ? (
-                                <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#F2C445] text-[#00283A]">
-                                  HQ
-                                </span>
-                              ) : (
-                                <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#00283A]/10 text-[#00283A]">
-                                  {location.region}
-                                </span>
-                              )}
+
+                  location.title != "Headquarters" ?
+
+
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#00283A]/10 overflow-hidden hover:border-[#F2C445]/50 hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
+                    >
+
+
+
+                      <div className="flex flex-col h-full">
+                        {/* Map Section */}
+                        <div className="relative aspect-video overflow-hidden">
+                          <div className="absolute inset-0 bg-gradient-to-br from-[#00283A]/5 to-[#F2C445]/5 flex items-center justify-center transition-opacity duration-500" />
+
+                          <iframe
+                            src={location.mapIframeUrl}
+                            className="absolute inset-0 w-full h-full border-0"
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            title={`Google Maps - ${location.title}`}
+                            style={{ filter: 'grayscale(0.3)' }}
+                          />
+
+                          {/* Map Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                        </div>
+
+                        {/* Location Info */}
+                        <div className="p-5 flex-1 flex flex-col">
+                          <div className="flex items-start gap-3 mb-3">
+                            <div className="p-3 rounded-xl bg-gradient-to-br from-[#00283A]/10 to-[#F2C445]/10 group-hover:from-[#00283A]/20 group-hover:to-[#F2C445]/20 transition-all duration-300 flex-shrink-0">
+                              <location.icon className="text-[#00283A]" size={22} />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-start justify-between mb-2">
+                                <h4 className="font-bold text-[#00283A] text-lg">{location.title}</h4>
+                                {location.isHeadquarters ? (
+                                  <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#F2C445] text-[#00283A]">
+                                    HQ
+                                  </span>
+                                ) : (
+                                  <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#00283A]/10 text-[#00283A]">
+                                    {location.region}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        
-                        <div className="space-y-2 mb-4 flex-1">
-                          <p className="text-[#00283A]/70 text-sm font-medium">{location.address}</p>
-                          <p className="text-[#00283A]/60 text-xs">PIN: {location.pin}</p>
-                          <p className="text-[#00283A]/50 text-xs font-mono">{location.coordinates}</p>
-                        </div>
-                        
-                        {/* Contact Information */}
-                        <div className="space-y-2 mb-4">
-                          <div className="flex items-center gap-2">
-                            <Phone size={14} className="text-[#00283A]/60" />
-                            <a 
-                              href={`tel:${location.contact.split(' | ')[0]}`}
-                              className="text-sm text-[#00283A] hover:text-[#F2C445] transition-colors font-medium"
-                            >
-                              {location.contact}
-                            </a>
+
+                          <div className="space-y-2 mb-4 flex-1">
+                            <p className="text-[#00283A]/70 text-sm font-medium">{location.address}</p>
+                            <p className="text-[#00283A]/60 text-xs">PIN: {location.pin}</p>
+                            <p className="text-[#00283A]/50 text-xs font-mono">{location.coordinates}</p>
                           </div>
-                          {location.email && (
+
+                          {/* Contact Information */}
+                          <div className="space-y-2 mb-4">
                             <div className="flex items-center gap-2">
-                              <Mail size={14} className="text-[#00283A]/60" />
-                              <a 
-                                href={`mailto:${location.email}`}
-                                className="text-sm text-[#00283A]/70 hover:text-[#F2C445] transition-colors break-all"
+                              <Phone size={14} className="text-[#00283A]/60" />
+                              <a
+                                href={`tel:${location.contact.split(' | ')[0]}`}
+                                className="text-sm text-[#00283A] hover:text-[#F2C445] transition-colors font-medium"
                               >
-                                {location.email}
+                                {location.contact}
                               </a>
                             </div>
-                          )}
+                            {location.email && (
+                              <div className="flex items-center gap-2">
+                                <Mail size={14} className="text-[#00283A]/60" />
+                                <a
+                                  href={`mailto:${location.email}`}
+                                  className="text-sm text-[#00283A]/70 hover:text-[#F2C445] transition-colors break-all"
+                                >
+                                  {location.email}
+                                </a>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Action Button */}
+                          <div className="mt-auto pt-3 border-t border-[#00283A]/10">
+                            <button
+                              onClick={() => openGoogleMaps(location.googleMapsUrl)}
+                              className="w-full flex items-center justify-center gap-2 text-sm font-medium text-[#00283A] hover:text-[#F2C445] transition-colors duration-300 group/view-map"
+                            >
+                              <Navigation size={16} />
+                              <span>View on Maps</span>
+                              <ExternalLink size={14} className="opacity-0 group-hover/view-map:opacity-100 transition-opacity" />
+                            </button>
+                          </div>
                         </div>
-                        
-                        {/* Action Button */}
-                        <div className="mt-auto pt-3 border-t border-[#00283A]/10">
-                          <button
-                            onClick={() => openGoogleMaps(location.googleMapsUrl)}
-                            className="w-full flex items-center justify-center gap-2 text-sm font-medium text-[#00283A] hover:text-[#F2C445] transition-colors duration-300 group/view-map"
-                          >
-                            <Navigation size={16} />
-                            <span>View on Maps</span>
-                            <ExternalLink size={14} className="opacity-0 group-hover/view-map:opacity-100 transition-opacity" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
+                      </div> :
+
+
+                    </motion.div>
+
+                    : null
+
                 ))}
               </div>
 
-              {/* Map Legend */}
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm text-[#00283A]/60">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-[#F2C445] rounded-full"></div>
-                  <span>Headquarters</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-[#00283A]/20 rounded-full"></div>
-                  <span>Service Centers</span>
-                </div>
-              </div>
             </motion.div>
           </div>
         </div>
@@ -752,7 +754,7 @@ const Contact = () => {
             className="relative rounded-3xl overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-[#00283A] to-[#00283A]/90" />
-            <div className="absolute inset-0 bg-[radial-gradient(#F2C445_1px,transparent_1px)] [background-size:20px_20px] opacity-5" />            
+            <div className="absolute inset-0 bg-[radial-gradient(#F2C445_1px,transparent_1px)] [background-size:20px_20px] opacity-5" />
             <div className="relative py-12 px-8 text-center">
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
                 Ready to Start Your Project?

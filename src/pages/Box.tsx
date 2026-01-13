@@ -1,10 +1,16 @@
 // Box.tsx
 
-import React, {useEffect} from 'react';
-import { ArrowRight, Circle, CheckSquare } from 'lucide-react';
+import React from 'react';
+import { ArrowRight } from 'lucide-react';
 import { LuCheck } from 'react-icons/lu';
-import { hover, motion } from 'framer-motion';   // ⭐ ADDED motion here
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+
+// Image Imports
+import Fostac from '@/assets/Fostac.png';
+import ISO from '@/assets/ISO.png';
+import MITRA from '@/assets/MITRA.png';
+import MSME from '@/assets/MSME.png';
 
 const Box: React.FC = () => {
   const leftText1 = "Compliance isn't optional—it's your competitive advantage.";
@@ -21,13 +27,12 @@ const Box: React.FC = () => {
   const darkBackground = '#324E5E';
   const lightText = 'white';
   const accentColor = '#F2C445';
-  const lightAccent = '#003a52';
 
   const containerStyle: React.CSSProperties = {
     backgroundColor: darkBackground,
     minHeight: '50vh',
     width: '100%',
-    padding: '30px',
+    padding: '60px 30px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -37,71 +42,79 @@ const Box: React.FC = () => {
     borderRadius: '8px',
     maxWidth: '1200px',
     width: '100%',
-    padding: '30px',
     display: 'flex',
-    gap: '30px',
+    gap: '50px',
+    flexWrap: 'wrap', // Better for mobile responsiveness
   };
 
   const leftSectionStyle: React.CSSProperties = {
-    flex: '1',
-    minHeight: '300px',
-    borderRadius: '4px',
-    padding: '30px',
+    flex: '1.2',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',
     color: lightText,
     textAlign: 'left',
-    marginTop: '-30px'
-  };
-
-  const leftTitleStyle: React.CSSProperties = {
-    fontSize: '2rem',
-    fontWeight: 'bold',
-    marginBottom: '10px',
-  };
-
-  const leftSubtitleStyle: React.CSSProperties = {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    marginBottom: '20px',
   };
 
   const rightSectionStyle: React.CSSProperties = {
     flex: '1',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     color: lightText,
+  };
+
+  const leftTitleStyle: React.CSSProperties = {
+    fontSize: '2.2rem',
+    fontWeight: 'bold',
+    marginBottom: '15px',
+    lineHeight: '1.2',
+  };
+
+  const leftSubtitleStyle: React.CSSProperties = {
+    fontSize: '1.1rem',
+    fontWeight: '500',
+    marginBottom: '25px',
+    opacity: 0.9,
+  };
+
+  // --- NEW STYLES FOR IMAGES ---
+  const imageRowStyle: React.CSSProperties = {
+    display: 'flex',
+    gap: '20px',
+    alignItems: 'center',
+    marginTop: '10px',
+    flexWrap: 'wrap',
+  };
+
+  const logoStyle: React.CSSProperties = {
+    height: '70px', // Adjust height as needed
+    width: 'auto',
+    objectFit: 'contain',
+    filter: 'brightness(1.1)', // Optional: makes logos pop against dark bg
   };
 
   const complianceListStyle: React.CSSProperties = {
     listStyleType: 'none',
     padding: '0',
-    marginTop: '30px',
-    marginBottom: '30px'
+    marginBottom: '30px',
   };
 
   const listItemStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: '10px',
+    marginBottom: '12px',
     fontSize: '1.1rem',
     fontWeight: '400',
   };
 
-  const checkIconStyle: React.CSSProperties = {
-    marginRight: '15px',
-    color: lightText,
-  };
-
   const buttonStyle: React.CSSProperties = {
     alignSelf: 'flex-start',
-    backgroundColor: '#F2C445',
+    backgroundColor: accentColor,
     color: '#00283A',
     border: 'none',
-    padding: '12px 25px',
+    padding: '14px 28px',
     borderRadius: '4px',
     cursor: 'pointer',
     fontSize: '1rem',
@@ -109,14 +122,14 @@ const Box: React.FC = () => {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    transition: 'background-color 0.2s, color 0.2s',
+    transition: 'all 0.3s ease',
   };
 
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
-
-        {/* ⭐ FADE-UP ANIMATED TEXT SECTION */}
+        
+        {/* LEFT SECTION WITH TEXT AND IMAGES */}
         <motion.div
           style={leftSectionStyle}
           initial={{ opacity: 0, y: 30 }}
@@ -126,53 +139,50 @@ const Box: React.FC = () => {
         >
           <div style={leftTitleStyle}>{leftText1}</div>
           <div style={leftSubtitleStyle}>{leftText2}</div>
-        </motion.div>
-
-
-
-
-        {/* Right Section */}
-        <motion.div
-          style={leftSectionStyle}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: true }}
-        >
-          <div style={rightSectionStyle}>
-            <ul style={complianceListStyle}>
-              {compliancePoints.map((point, index) => (
-                <li key={index} style={listItemStyle}>
-                  <LuCheck size={24} className="text-white-700" />
-                  &nbsp; &nbsp;{point}
-                </li>
-              ))}
-            </ul>
-            <Link
-              to="/services"
-            >
-
-
-              <button
-                style={buttonStyle}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = '#003a52';
-                  e.currentTarget.style.color = '#F2C445';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F2C445';
-                  e.currentTarget.style.color = 'white';
-                }}
-              >
-                Learn More
-                <ArrowRight size={20} />
-              </button>
-            </Link>
+          
+          {/* ⭐ IMAGES PLACED HERE */}
+          <div style={imageRowStyle}>
+            <img src={Fostac} alt="Fostac Logo" style={logoStyle} />
+            <img src={ISO} alt="ISO Logo" style={logoStyle} />
+            <img src={MITRA} alt="MITRA Logo" style={logoStyle} />
+            <img src={MSME} alt="MSME Logo" style={logoStyle} />
           </div>
         </motion.div>
 
-
-
+        {/* RIGHT SECTION WITH LIST AND BUTTON */}
+        <motion.div
+          style={rightSectionStyle}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          viewport={{ once: true }}
+        >
+          <ul style={complianceListStyle}>
+            {compliancePoints.map((point, index) => (
+              <li key={index} style={listItemStyle}>
+                <LuCheck size={24} style={{ marginRight: '15px', color: accentColor }} />
+                {point}
+              </li>
+            ))}
+          </ul>
+          
+          <Link to="/services" style={{ textDecoration: 'none' }}>
+            <button
+              style={buttonStyle}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#003a52';
+                e.currentTarget.style.color = accentColor;
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = accentColor;
+                e.currentTarget.style.color = '#00283A';
+              }}
+            >
+              Learn More
+              <ArrowRight size={20} />
+            </button>
+          </Link>
+        </motion.div>
 
       </div>
     </div>

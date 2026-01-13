@@ -6,6 +6,7 @@ import lightbg from "../assets/lightbg.jpeg";
 import ourstory from "../assets/ourstory.jpeg";
 import { hover, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import aboutus from '@/assets/aboutus.png';
 
 const OurStory: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -224,7 +225,7 @@ useEffect(() => {
                 <div style={leftSectionStyle}>
                     <div style={imageContainerStyle}>
                         <img
-                            src={ourstory}
+                            src={aboutus}
                             alt="Our Story"
                             style={imageStyle}
                             onMouseEnter={handleImageHover}

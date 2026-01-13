@@ -69,7 +69,7 @@ export const ConversationalLeadForm = () => {
       id: 'service',
       question: "Which service are you interested in?",
       type: 'choice',
-      options: ['FSSAI License', 'Fire Safety NOC', 'Factory License', 'Homestay Registration', 'GST Registration', 'ISO Certification', 'Other'],
+      options: ['FSSAI Registration', 'License & Renewal', 'Fire NOC & License', 'Water Test & Product Test', 'BAR license', 'FactoryLicense', 'Pollution  License ( CTE+ CTO)', 'Trademark', 'GST', 'MSME',  'ISO certification', 'Other'],
       field: 'serviceNeeded',
       icon: <Briefcase size={16} />
     },
@@ -136,14 +136,17 @@ export const ConversationalLeadForm = () => {
       };
       setConversation([welcomeMessage]);
       
+      // Directly show service options instead of "Quick Start" message
       setTimeout(() => {
-        setConversation(prev => [...prev, {
-          id: 'quick-replies',
-          text: "Quick Start: Select a service to begin",
-          sender: 'bot',
+        const serviceOptionsMessage = {
+          id: 'service-options',
+          text: "Which service are you interested in?",
+          sender: 'bot' as const,
           timestamp: new Date(),
           isOption: true
-        }]);
+        };
+        setConversation(prev => [...prev, serviceOptionsMessage]);
+        setCurrentStep(1); // Set to service step
       }, 500);
     }
   }, [isOpen, isMinimized]);
@@ -317,14 +320,14 @@ export const ConversationalLeadForm = () => {
     setTimeout(() => {
       const botMessage = {
         id: (Date.now() + 1).toString(),
-        text: conversationSteps[1].question, // Go to next question
+        text: conversationSteps[2].question, // Skip to business type question
         sender: 'bot' as const,
         timestamp: new Date(),
         isOption: true
       };
       
       setConversation(prev => [...prev, botMessage]);
-      setCurrentStep(1);
+      setCurrentStep(2);
     }, 500);
   };
   
@@ -414,7 +417,7 @@ export const ConversationalLeadForm = () => {
   };
   
   const phoneNumbers = ['+91 96090 30792', '+91 96090 30832', '+91 96090 30833'];
-  const whatsappNumber = '+919609030792';
+  const whatsappNumber = '+919609030832';
   
   const handleCall = (number: string) => {
     window.location.href = `tel:${number.replace(/\s/g, '')}`;
@@ -614,58 +617,8 @@ export const ConversationalLeadForm = () => {
                           <div className="space-y-2">
                             <p className="text-sm mb-2">{message.text}</p>
                             
-                            {/* Quick Start Buttons */}
-                            {message.id === 'quick-replies' && (
-                              <div className="grid grid-cols-2 gap-2">
-                                {['FSSAI License', 'Fire Safety NOC', 'Factory License', 'Talk to Expert'].map((option, idx) => (
-                                  <motion.button
-                                    key={idx}
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={() => {
-                                      if (option === 'Talk to Expert') {
-                                        setLeadData(prev => ({ ...prev, serviceNeeded: 'Expert Consultation' }));
-                                        const userMsg = {
-                                          id: Date.now().toString(),
-                                          text: option,
-                                          sender: 'user' as const,
-                                          timestamp: new Date()
-                                        };
-                                        setConversation(prev => [...prev, userMsg]);
-                                        setTimeout(() => {
-                                          const botMsg = {
-                                            id: (Date.now() + 1).toString(),
-                                            text: "I see you'd like to talk to an expert. Let me collect some details first:",
-                                            sender: 'bot' as const,
-                                            timestamp: new Date(),
-                                            isOption: true
-                                          };
-                                          setConversation(prev => [...prev, botMsg]);
-                                          setCurrentStep(1);
-                                        }, 500);
-                                      } else {
-                                        handleQuickStart(option);
-                                      }
-                                    }}
-                                    className="px-3 py-2 text-sm rounded-lg transition-colors flex items-center gap-2 justify-center"
-                                    style={{
-                                      backgroundColor: '#F2C445',
-                                      color: '#00283A'
-                                    }}
-                                  >
-                                    {option === 'Talk to Expert' ? (
-                                      <Phone size={14} />
-                                    ) : (
-                                      <Briefcase size={14} />
-                                    )}
-                                    {option}
-                                  </motion.button>
-                                ))}
-                              </div>
-                            )}
-                            
                             {/* Regular Choice Buttons */}
-                            {currentStepData?.type === 'choice' && currentStepData.options && message.id !== 'quick-replies' && (
+                            {currentStepData?.type === 'choice' && currentStepData.options && (
                               <div className="grid grid-cols-2 gap-2">
                                 {currentStepData.options.map((option, idx) => (
                                   <motion.button

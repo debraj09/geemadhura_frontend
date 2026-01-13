@@ -115,12 +115,12 @@ useEffect(() => {
           width: '40px', 
           height: '40px', 
           border: '4px solid #f3f3f3', 
-          borderTop: '4px solid #1a73e8', 
+          borderTop: '4px solid #00283A',
           borderRadius: '50%', 
           animation: 'spin 1s linear infinite',
           marginRight: '10px'
         }}></div>
-        <span style={{ fontSize: '1.2em', color: '#1a73e8' }}>Loading Services...</span>
+        <span style={{ fontSize: '1.2em', color: '#00283A' }}>Loading Services...</span>
         <style>{`
           @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -204,7 +204,7 @@ useEffect(() => {
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow = '0 8px 25px rgba(26, 115, 232, 0.15)';
                 e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.borderColor = '#1a73e8';
+                e.currentTarget.style.borderColor = '#00283A';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
@@ -249,7 +249,7 @@ useEffect(() => {
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
-                      <IconComponent style={{ color: '#1a73e8', width: '60px', height: '60px' }} />
+                      <IconComponent style={{ color: '#00283A', width: '60px', height: '60px' }} />
                     </div>
                   )}
                   
@@ -258,7 +258,7 @@ useEffect(() => {
                     position: 'absolute',
                     top: '15px',
                     left: '15px',
-                    backgroundColor: 'rgba(26, 115, 232, 0.9)',
+                    backgroundColor: '#00283A',
                     color: 'white',
                     padding: '5px 15px',
                     borderRadius: '20px',
@@ -323,7 +323,7 @@ useEffect(() => {
                   <div style={{ 
                     display: 'flex', 
                     alignItems: 'center',
-                    color: '#1a73e8',
+                    color: '#00283A',
                     fontWeight: 'bold',
                     fontSize: '0.95em',
                     paddingTop: '10px',

@@ -79,7 +79,7 @@ const HARDCODED_KEY_FEATURES: string[] = [
 const ServiceDetail = () => {
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
-    
+
     // --- State Management ---
     const [service, setService] = useState<ServiceDetailData | null>(null);
     const [otherServices, setOtherServices] = useState<OtherServiceItem[]>([]);
@@ -87,7 +87,8 @@ const ServiceDetail = () => {
     const [isLoadingOtherServices, setIsLoadingOtherServices] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showAllServices, setShowAllServices] = useState(false);
-    
+    const [isHideSection, setIsHideSection] = useState(true);
+
     // --- Application Form States ---
     const [showApplicationForm, setShowApplicationForm] = useState(false);
     const [formData, setFormData] = useState({
@@ -111,6 +112,10 @@ const ServiceDetail = () => {
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [applicationId, setApplicationId] = useState<string>('');
+
+    const clickFunction = () => {
+        setIsHideSection(false);
+    }
 
     // --- Fetch Service Detail ---
     useEffect(() => {
@@ -151,14 +156,14 @@ const ServiceDetail = () => {
                 };
 
                 setService(mappedDetail);
-                
+
                 // Initialize form data with service info
                 setFormData(prev => ({
                     ...prev,
                     service_id: serviceData.id,
                     service_name: serviceData.name
                 }));
-                
+
                 // Set required documents based on service name
                 const docs = serviceDocuments[serviceData.name as keyof typeof serviceDocuments] || [];
                 setRequiredDocs(docs);
@@ -185,20 +190,20 @@ const ServiceDetail = () => {
         setIsLoadingOtherServices(true);
         try {
             const response = await fetch(`${API_BASE_URL}`);
-            
+
             if (!response.ok) {
                 throw new Error(`Failed to fetch other services: ${response.statusText}`);
             }
 
             const result = await response.json();
-            
+
             const allServices: OtherServiceItem[] = result.data.map((serviceItem: any) => ({
                 id: serviceItem.id,
                 title: serviceItem.name,
                 slug: serviceItem.slug
             }));
 
-            const filteredServices = allServices.filter(otherService => 
+            const filteredServices = allServices.filter(otherService =>
                 service ? otherService.id !== service.id : true
             );
 
@@ -243,105 +248,105 @@ const ServiceDetail = () => {
     };
 
     // --- Form Submission with Fetch API ---
-  const handleSubmitApplication = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (!formData.customer_name || !formData.customer_email || !formData.customer_phone) {
-        setSubmitError('Please fill in all required fields (Name, Email, Phone)');
-        return;
-    }
+    const handleSubmitApplication = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-    setIsSubmitting(true);
-    setSubmitError(null);
-
-    try {
-        // Prepare form data with application details
-        const completeFormData = {
-            ...formData,
-            application_details: {
-                ...additionalDetails,
-                documents_requested: requiredDocs,
-                submitted_at: new Date().toISOString()
-            }
-        };
-
-        // Create FormData for file upload
-        const formDataToSend = new FormData();
-        
-        // Append all text data as JSON
-        formDataToSend.append('applicationData', JSON.stringify(completeFormData));
-        
-        // FIXED: Append each document with field name 'documents' (Multer expects this)
-        // Changed from: formDataToSend.append(`documents[${index}]`, file);
-        documents.forEach((file) => {
-            formDataToSend.append('documents', file); // JUST 'documents', not 'documents[0]'
-        });
-
-        // Submit to backend API using Fetch
-        const response = await fetch(`${APPLICATIONS_API_URL}/submit-application`, {
-            method: 'POST',
-            body: formDataToSend,
-        });
-
-        // Check if response is JSON
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-            const result = await response.json();
-
-            if (response.ok && result.status === 201) {
-                setSubmitSuccess(true);
-                setApplicationId(result.data.applicationId || result.data.applicationNumber || 'N/A');
-                
-                // Reset form after successful submission
-                setTimeout(() => {
-                    setShowApplicationForm(false);
-                    setFormData({
-                        service_id: service?.id || 0,
-                        service_name: service?.title || '',
-                        customer_name: '',
-                        customer_email: '',
-                        customer_phone: '',
-                        customer_address: '',
-                        customer_city: '',
-                        customer_state: '',
-                        customer_pincode: '',
-                        business_name: '',
-                        business_type: '',
-                        application_details: {}
-                    });
-                    setDocuments([]);
-                    setAdditionalDetails({});
-                    setSubmitSuccess(false);
-                }, 5000);
-            } else {
-                throw new Error(result.error || result.message || 'Failed to submit application');
-            }
-        } else {
-            // Server returned HTML error page instead of JSON
-            const text = await response.text();
-            console.error('Server returned HTML error:', text);
-            throw new Error('Server error occurred. Please try again.');
+        // Basic validation
+        if (!formData.customer_name || !formData.customer_email || !formData.customer_phone) {
+            setSubmitError('Please fill in all required fields (Name, Email, Phone)');
+            return;
         }
 
-    } catch (error: any) {
-        console.error('Error submitting application:', error);
-        setSubmitError(
-            error.message || 
-            'Failed to submit application. Please try again.'
-        );
-    } finally {
-        setIsSubmitting(false);
-    }
-};
+        setIsSubmitting(true);
+        setSubmitError(null);
+
+        try {
+            // Prepare form data with application details
+            const completeFormData = {
+                ...formData,
+                application_details: {
+                    ...additionalDetails,
+                    documents_requested: requiredDocs,
+                    submitted_at: new Date().toISOString()
+                }
+            };
+
+            // Create FormData for file upload
+            const formDataToSend = new FormData();
+
+            // Append all text data as JSON
+            formDataToSend.append('applicationData', JSON.stringify(completeFormData));
+
+            // FIXED: Append each document with field name 'documents' (Multer expects this)
+            // Changed from: formDataToSend.append(`documents[${index}]`, file);
+            documents.forEach((file) => {
+                formDataToSend.append('documents', file); // JUST 'documents', not 'documents[0]'
+            });
+
+            // Submit to backend API using Fetch
+            const response = await fetch(`${APPLICATIONS_API_URL}/submit-application`, {
+                method: 'POST',
+                body: formDataToSend,
+            });
+
+            // Check if response is JSON
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                const result = await response.json();
+
+                if (response.ok && result.status === 201) {
+                    setSubmitSuccess(true);
+                    setApplicationId(result.data.applicationId || result.data.applicationNumber || 'N/A');
+
+                    // Reset form after successful submission
+                    setTimeout(() => {
+                        setShowApplicationForm(false);
+                        setFormData({
+                            service_id: service?.id || 0,
+                            service_name: service?.title || '',
+                            customer_name: '',
+                            customer_email: '',
+                            customer_phone: '',
+                            customer_address: '',
+                            customer_city: '',
+                            customer_state: '',
+                            customer_pincode: '',
+                            business_name: '',
+                            business_type: '',
+                            application_details: {}
+                        });
+                        setDocuments([]);
+                        setAdditionalDetails({});
+                        setSubmitSuccess(false);
+                    }, 5000);
+                } else {
+                    throw new Error(result.error || result.message || 'Failed to submit application');
+                }
+            } else {
+                // Server returned HTML error page instead of JSON
+                const text = await response.text();
+                console.error('Server returned HTML error:', text);
+                throw new Error('Server error occurred. Please try again.');
+            }
+
+        } catch (error: any) {
+            console.error('Error submitting application:', error);
+            setSubmitError(
+                error.message ||
+                'Failed to submit application. Please try again.'
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     // --- Render Loading State ---
     if (isLoading) {
         return (
             <main style={{ fontFamily: 'Arial, sans-serif', minHeight: '100vh', paddingTop: '80px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #1a73e8', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-                    <span style={{ fontSize: '1.2em', color: '#1a73e8' }}>Loading Service Details...</span>
+                    <div style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #00283A', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                    <span style={{ fontSize: '1.2em', color: '#00283A' }}>Loading Service Details...</span>
                 </div>
                 <style>{`
                     @keyframes spin {
@@ -434,23 +439,23 @@ const ServiceDetail = () => {
 
                         <div style={{ lineHeight: '1.6', color: '#333', textAlign: 'justify', justifyContent: "center" }}>
                             <p>{service.shortDescription}</p>
-                            
-                            
-                            <h2 style={{ fontSize: '1.8em', margin: '30px 0 15px 0', color: '#333', fontWeight: 'bold' }}>
+
+
+                            {/* <h2 style={{ fontSize: '1.8em', margin: '30px 0 15px 0', color: '#333', fontWeight: 'bold' }}>
                                 {service.scopeTitle}
                             </h2>
                             <p style={{ whiteSpace: 'pre-wrap' }}>
                                 {service.fullDescription}
-                            </p>
+                            </p> */}
                         </div>
 
                         {/* Apply Now Button */}
                         <div style={{ marginTop: '30px' }}>
                             <button
-                                onClick={() => setShowApplicationForm(true)}
+                                onClick={clickFunction}
                                 style={{
                                     padding: '12px 30px',
-                                    backgroundColor: '#1a73e8',
+                                    backgroundColor: '#00283A',
                                     color: 'white',
                                     border: 'none',
                                     borderRadius: '4px',
@@ -463,11 +468,11 @@ const ServiceDetail = () => {
                                     transition: 'all 0.3s ease'
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#0d62d9';
+                                    e.currentTarget.style.backgroundColor = '#0c455fff';
                                     e.currentTarget.style.transform = 'translateY(-2px)';
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#1a73e8';
+                                    e.currentTarget.style.backgroundColor = '#00283A';
                                     e.currentTarget.style.transform = 'translateY(0)';
                                 }}
                             >
@@ -511,7 +516,7 @@ const ServiceDetail = () => {
                                 Other Services
                             </h3>
                         </div>
-                        
+
                         {/* List of service items */}
                         <div>
                             {isLoadingOtherServices ? (
@@ -536,7 +541,7 @@ const ServiceDetail = () => {
                                             cursor: 'pointer',
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.backgroundColor = '#1a73e8';
+                                            e.currentTarget.style.backgroundColor = '#00283A';
                                             e.currentTarget.style.color = 'white';
                                             e.currentTarget.style.paddingLeft = '25px';
                                         }}
@@ -546,15 +551,15 @@ const ServiceDetail = () => {
                                             e.currentTarget.style.paddingLeft = '20px';
                                         }}
                                     >
-                                        <span style={{ 
+                                        <span style={{
                                             fontSize: '0.95em',
                                             transition: 'color 0.3s ease',
                                             fontWeight: '500'
                                         }}>
                                             {item.title}
                                         </span>
-                                        <ArrowRight 
-                                            size={16} 
+                                        <ArrowRight
+                                            size={16}
                                             color="#666"
                                             style={{
                                                 transition: 'all 0.3s ease',
@@ -568,11 +573,11 @@ const ServiceDetail = () => {
                                 </div>
                             )}
                         </div>
-                        
+
                         {/* Show All Services Button */}
                         {otherServices.length > 5 && (
-                            <div style={{ 
-                                padding: '15px', 
+                            <div style={{
+                                padding: '15px',
                                 textAlign: 'center',
                                 backgroundColor: '#f5f5f5'
                             }}>
@@ -580,24 +585,24 @@ const ServiceDetail = () => {
                                     onClick={() => setShowAllServices(!showAllServices)}
                                     style={{
                                         display: 'inline-block',
-                                        color: '#1a73e8',
+                                        color: '#00283A',
                                         textDecoration: 'none',
                                         fontWeight: 'bold',
                                         fontSize: '0.9em',
                                         padding: '8px 20px',
-                                        border: '1px solid #1a73e8',
+                                        border: '1px solid #00283A',
                                         borderRadius: '4px',
                                         transition: 'all 0.3s ease',
                                         cursor: 'pointer',
                                     }}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.backgroundColor = '#1a73e8';
+                                        e.currentTarget.style.backgroundColor = '#00283A';
                                         e.currentTarget.style.color = 'white';
                                         e.currentTarget.style.transform = 'scale(1.05)';
                                     }}
                                     onMouseLeave={(e) => {
                                         e.currentTarget.style.backgroundColor = 'transparent';
-                                        e.currentTarget.style.color = '#1a73e8';
+                                        e.currentTarget.style.color = '#00283A';
                                         e.currentTarget.style.transform = 'scale(1)';
                                     }}
                                 >
@@ -607,264 +612,90 @@ const ServiceDetail = () => {
                         )}
                     </div>
 
-                    {/* Application Form Section */}
-                    <div
-                        style={{
-                            border: '1px solid #ddd',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            marginTop: '30px',
-                            backgroundColor: '#f9f9f9',
-                        }}
-                    >
-                        <h3
+                    {isHideSection ? null
+                        :
+                        <div
                             style={{
-                                marginTop: 0,
-                                marginBottom: '15px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                color: '#333',
+                                border: '1px solid #ddd',
+                                borderRadius: '8px',
+                                padding: '20px',
+                                marginTop: '30px',
+                                backgroundColor: '#f9f9f9',
                             }}
                         >
-                            <Mail size={20} /> Apply for {service.title}
-                        </h3>
-                        <p style={{ fontSize: '0.9em', color: '#666', marginBottom: '15px' }}>
-                            Fill out the form below to apply for this service. Our team will contact you shortly.
-                        </p>
-                        
-                        {/* Success Message */}
-                        {submitSuccess && (
-                            <div style={{
-                                padding: '15px',
-                                backgroundColor: '#d4edda',
-                                border: '1px solid #c3e6cb',
-                                borderRadius: '4px',
-                                color: '#155724',
-                                marginBottom: '15px'
-                            }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px' }}>
-                                    <CheckCircle size={20} />
-                                    <strong>Application Submitted Successfully!</strong>
-                                </div>
-                                <p style={{ margin: 0, fontSize: '0.9em' }}>
-                                    Your application ID: <strong>{applicationId}</strong>
-                                </p>
-                                <p style={{ margin: '5px 0 0 0', fontSize: '0.85em' }}>
-                                    Our team will contact you within 24 hours.
-                                </p>
-                            </div>
-                        )}
+                            <h3
+                                style={{
+                                    marginTop: 0,
+                                    marginBottom: '15px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    color: '#333',
+                                }}
+                            >
+                                <Mail size={20} /> Apply for {service.title}
+                            </h3>
+                            <p style={{ fontSize: '0.9em', color: '#666', marginBottom: '15px' }}>
+                                Fill out the form below to apply for this service. Our team will contact you shortly.
+                            </p>
 
-                        {/* Error Message */}
-                        {submitError && (
-                            <div style={{
-                                padding: '15px',
-                                backgroundColor: '#f8d7da',
-                                border: '1px solid #f5c6cb',
-                                borderRadius: '4px',
-                                color: '#721c24',
-                                marginBottom: '15px'
-                            }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#721c24', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>!</div>
-                                    <strong>Error</strong>
-                                </div>
-                                <p style={{ margin: '5px 0 0 0', fontSize: '0.9em' }}>{submitError}</p>
-                            </div>
-                        )}
-
-                        {/* Application Form */}
-                        {!submitSuccess && (
-                            <form onSubmit={handleSubmitApplication}>
-                                {/* Personal Information */}
-                                <div style={{ marginBottom: '20px' }}>
-                                    <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <User size={16} /> Personal Information
-                                    </h4>
-                                    
-                                    <input
-                                        type="text"
-                                        name="customer_name"
-                                        placeholder="Full Name *"
-                                        value={formData.customer_name}
-                                        onChange={handleInputChange}
-                                        required
-                                        style={{
-                                            width: 'calc(100% - 20px)',
-                                            padding: '10px',
-                                            marginBottom: '10px',
-                                            border: '1px solid #ccc',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box',
-                                        }}
-                                    />
-                                    
-                                    <input
-                                        type="email"
-                                        name="customer_email"
-                                        placeholder="Email Address *"
-                                        value={formData.customer_email}
-                                        onChange={handleInputChange}
-                                        required
-                                        style={{
-                                            width: 'calc(100% - 20px)',
-                                            padding: '10px',
-                                            marginBottom: '10px',
-                                            border: '1px solid #ccc',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box',
-                                        }}
-                                    />
-                                    
-                                    <input
-                                        type="tel"
-                                        name="customer_phone"
-                                        placeholder="Phone Number *"
-                                        value={formData.customer_phone}
-                                        onChange={handleInputChange}
-                                        required
-                                        style={{
-                                            width: 'calc(100% - 20px)',
-                                            padding: '10px',
-                                            marginBottom: '10px',
-                                            border: '1px solid #ccc',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box',
-                                        }}
-                                    />
-                                </div>
-
-                                {/* Address Information */}
-                                <div style={{ marginBottom: '20px' }}>
-                                    <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <MapPin size={16} /> Address Details
-                                    </h4>
-                                    
-                                    <textarea
-                                        name="customer_address"
-                                        placeholder="Full Address"
-                                        value={formData.customer_address}
-                                        onChange={handleInputChange}
-                                        rows={2}
-                                        style={{
-                                            width: 'calc(100% - 20px)',
-                                            padding: '10px',
-                                            marginBottom: '10px',
-                                            border: '1px solid #ccc',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box',
-                                        }}
-                                    />
-                                    
-                                    <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                                        <input
-                                            type="text"
-                                            name="customer_city"
-                                            placeholder="City"
-                                            value={formData.customer_city}
-                                            onChange={handleInputChange}
-                                            style={{
-                                                flex: 1,
-                                                padding: '10px',
-                                                border: '1px solid #ccc',
-                                                borderRadius: '4px',
-                                                boxSizing: 'border-box',
-                                            }}
-                                        />
-                                        
-                                        <input
-                                            type="text"
-                                            name="customer_state"
-                                            placeholder="State"
-                                            value={formData.customer_state}
-                                            onChange={handleInputChange}
-                                            style={{
-                                                flex: 1,
-                                                padding: '10px',
-                                                border: '1px solid #ccc',
-                                                borderRadius: '4px',
-                                                boxSizing: 'border-box',
-                                            }}
-                                        />
+                            {/* Success Message */}
+                            {submitSuccess && (
+                                <div style={{
+                                    padding: '15px',
+                                    backgroundColor: '#d4edda',
+                                    border: '1px solid #c3e6cb',
+                                    borderRadius: '4px',
+                                    color: '#155724',
+                                    marginBottom: '15px'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px' }}>
+                                        <CheckCircle size={20} />
+                                        <strong>Application Submitted Successfully!</strong>
                                     </div>
-                                    
-                                    <input
-                                        type="text"
-                                        name="customer_pincode"
-                                        placeholder="Pincode"
-                                        value={formData.customer_pincode}
-                                        onChange={handleInputChange}
-                                        style={{
-                                            width: 'calc(100% - 20px)',
-                                            padding: '10px',
-                                            marginBottom: '10px',
-                                            border: '1px solid #ccc',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box',
-                                        }}
-                                    />
+                                    <p style={{ margin: 0, fontSize: '0.9em' }}>
+                                        Your application ID: <strong>{applicationId}</strong>
+                                    </p>
+                                    <p style={{ margin: '5px 0 0 0', fontSize: '0.85em' }}>
+                                        Our team will contact you within 24 hours.
+                                    </p>
                                 </div>
+                            )}
 
-                                {/* Business Information */}
-                                <div style={{ marginBottom: '20px' }}>
-                                    <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <Building size={16} /> Business Details
-                                    </h4>
-                                    
-                                    <input
-                                        type="text"
-                                        name="business_name"
-                                        placeholder="Business/Company Name"
-                                        value={formData.business_name}
-                                        onChange={handleInputChange}
-                                        style={{
-                                            width: 'calc(100% - 20px)',
-                                            padding: '10px',
-                                            marginBottom: '10px',
-                                            border: '1px solid #ccc',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box',
-                                        }}
-                                    />
-                                    
-                                    <select
-                                        name="business_type"
-                                        value={formData.business_type}
-                                        onChange={handleInputChange}
-                                        style={{
-                                            width: '100%',
-                                            padding: '10px',
-                                            marginBottom: '10px',
-                                            border: '1px solid #ccc',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box',
-                                            backgroundColor: 'white',
-                                        }}
-                                    >
-                                        <option value="">Select Business Type</option>
-                                        <option value="proprietorship">Proprietorship</option>
-                                        <option value="partnership">Partnership</option>
-                                        <option value="llp">LLP</option>
-                                        <option value="private_limited">Private Limited</option>
-                                        <option value="public_limited">Public Limited</option>
-                                        <option value="trust">Trust</option>
-                                        <option value="society">Society</option>
-                                        <option value="other">Other</option>
-                                    </select>
+                            {/* Error Message */}
+                            {submitError && (
+                                <div style={{
+                                    padding: '15px',
+                                    backgroundColor: '#f8d7da',
+                                    border: '1px solid #f5c6cb',
+                                    borderRadius: '4px',
+                                    color: '#721c24',
+                                    marginBottom: '15px'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#721c24', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>!</div>
+                                        <strong>Error</strong>
+                                    </div>
+                                    <p style={{ margin: '5px 0 0 0', fontSize: '0.9em' }}>{submitError}</p>
                                 </div>
+                            )}
 
-                                {/* Service-Specific Additional Details */}
-                                {service.title === 'GST & Business Registration' && (
+                            {/* Application Form */}
+                            {!submitSuccess && (
+                                <form onSubmit={handleSubmitApplication}>
+                                    {/* Personal Information */}
                                     <div style={{ marginBottom: '20px' }}>
                                         <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <Briefcase size={16} /> GST Registration Details
+                                            <User size={16} /> Personal Information
                                         </h4>
-                                        
+
                                         <input
                                             type="text"
-                                            placeholder="PAN Number"
-                                            onChange={(e) => handleAdditionalDetailChange('pan_number', e.target.value)}
+                                            name="customer_name"
+                                            placeholder="Full Name *"
+                                            value={formData.customer_name}
+                                            onChange={handleInputChange}
+                                            required
                                             style={{
                                                 width: 'calc(100% - 20px)',
                                                 padding: '10px',
@@ -874,11 +705,31 @@ const ServiceDetail = () => {
                                                 boxSizing: 'border-box',
                                             }}
                                         />
-                                        
+
                                         <input
-                                            type="text"
-                                            placeholder="Expected Turnover (₹)"
-                                            onChange={(e) => handleAdditionalDetailChange('expected_turnover', e.target.value)}
+                                            type="email"
+                                            name="customer_email"
+                                            placeholder="Email Address *"
+                                            value={formData.customer_email}
+                                            onChange={handleInputChange}
+                                            required
+                                            style={{
+                                                width: 'calc(100% - 20px)',
+                                                padding: '10px',
+                                                marginBottom: '10px',
+                                                border: '1px solid #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        />
+
+                                        <input
+                                            type="tel"
+                                            name="customer_phone"
+                                            placeholder="Phone Number *"
+                                            value={formData.customer_phone}
+                                            onChange={handleInputChange}
+                                            required
                                             style={{
                                                 width: 'calc(100% - 20px)',
                                                 padding: '10px',
@@ -889,127 +740,288 @@ const ServiceDetail = () => {
                                             }}
                                         />
                                     </div>
-                                )}
 
-                                {/* Document Upload */}
-                                <div style={{ marginBottom: '20px' }}>
-                                    <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <Upload size={16} /> Required Documents
-                                    </h4>
-                                    
-                                    {requiredDocs.length > 0 && (
-                                        <div style={{ marginBottom: '10px', fontSize: '0.85em', color: '#666' }}>
-                                            <p style={{ margin: '0 0 5px 0' }}>Please upload:</p>
-                                            <ul style={{ margin: '0', paddingLeft: '20px' }}>
-                                                {requiredDocs.map((doc, index) => (
-                                                    <li key={index} style={{ marginBottom: '3px' }}>{doc}</li>
-                                                ))}
-                                            </ul>
+                                    {/* Address Information */}
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <MapPin size={16} /> Address Details
+                                        </h4>
+
+                                        <textarea
+                                            name="customer_address"
+                                            placeholder="Full Address"
+                                            value={formData.customer_address}
+                                            onChange={handleInputChange}
+                                            rows={2}
+                                            style={{
+                                                width: 'calc(100% - 20px)',
+                                                padding: '10px',
+                                                marginBottom: '10px',
+                                                border: '1px solid #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        />
+
+                                        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                                            <input
+                                                type="text"
+                                                name="customer_city"
+                                                placeholder="City"
+                                                value={formData.customer_city}
+                                                onChange={handleInputChange}
+                                                style={{
+                                                    flex: 1,
+                                                    padding: '10px',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '4px',
+                                                    boxSizing: 'border-box',
+                                                }}
+                                            />
+
+                                            <input
+                                                type="text"
+                                                name="customer_state"
+                                                placeholder="State"
+                                                value={formData.customer_state}
+                                                onChange={handleInputChange}
+                                                style={{
+                                                    flex: 1,
+                                                    padding: '10px',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '4px',
+                                                    boxSizing: 'border-box',
+                                                }}
+                                            />
+                                        </div>
+
+                                        <input
+                                            type="text"
+                                            name="customer_pincode"
+                                            placeholder="Pincode"
+                                            value={formData.customer_pincode}
+                                            onChange={handleInputChange}
+                                            style={{
+                                                width: 'calc(100% - 20px)',
+                                                padding: '10px',
+                                                marginBottom: '10px',
+                                                border: '1px solid #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        />
+                                    </div>
+
+                                    {/* Business Information */}
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <Building size={16} /> Business Details
+                                        </h4>
+
+                                        <input
+                                            type="text"
+                                            name="business_name"
+                                            placeholder="Business/Company Name"
+                                            value={formData.business_name}
+                                            onChange={handleInputChange}
+                                            style={{
+                                                width: 'calc(100% - 20px)',
+                                                padding: '10px',
+                                                marginBottom: '10px',
+                                                border: '1px solid #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        />
+
+                                        <select
+                                            name="business_type"
+                                            value={formData.business_type}
+                                            onChange={handleInputChange}
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px',
+                                                marginBottom: '10px',
+                                                border: '1px solid #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                                backgroundColor: 'white',
+                                            }}
+                                        >
+                                            <option value="">Select Business Type</option>
+                                            <option value="proprietorship">Proprietorship</option>
+                                            <option value="partnership">Partnership</option>
+                                            <option value="llp">LLP</option>
+                                            <option value="private_limited">Private Limited</option>
+                                            <option value="public_limited">Public Limited</option>
+                                            <option value="trust">Trust</option>
+                                            <option value="society">Society</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+
+                                    {/* Service-Specific Additional Details */}
+                                    {service.title === 'GST & Business Registration' && (
+                                        <div style={{ marginBottom: '20px' }}>
+                                            <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <Briefcase size={16} /> GST Registration Details
+                                            </h4>
+
+                                            <input
+                                                type="text"
+                                                placeholder="PAN Number"
+                                                onChange={(e) => handleAdditionalDetailChange('pan_number', e.target.value)}
+                                                style={{
+                                                    width: 'calc(100% - 20px)',
+                                                    padding: '10px',
+                                                    marginBottom: '10px',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '4px',
+                                                    boxSizing: 'border-box',
+                                                }}
+                                            />
+
+                                            <input
+                                                type="text"
+                                                placeholder="Expected Turnover (₹)"
+                                                onChange={(e) => handleAdditionalDetailChange('expected_turnover', e.target.value)}
+                                                style={{
+                                                    width: 'calc(100% - 20px)',
+                                                    padding: '10px',
+                                                    marginBottom: '10px',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '4px',
+                                                    boxSizing: 'border-box',
+                                                }}
+                                            />
                                         </div>
                                     )}
-                                    
-                                    <input
-                                        type="file"
-                                        multiple
-                                        onChange={handleDocumentChange}
-                                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp"
+
+                                    {/* Document Upload */}
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <h4 style={{ margin: '0 0 10px 0', color: '#555', fontSize: '0.95em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <Upload size={16} /> Required Documents
+                                        </h4>
+
+                                        {requiredDocs.length > 0 && (
+                                            <div style={{ marginBottom: '10px', fontSize: '0.85em', color: '#666' }}>
+                                                <p style={{ margin: '0 0 5px 0' }}>Please upload:</p>
+                                                <ul style={{ margin: '0', paddingLeft: '20px' }}>
+                                                    {requiredDocs.map((doc, index) => (
+                                                        <li key={index} style={{ marginBottom: '3px' }}>{doc}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+
+                                        <input
+                                            type="file"
+                                            multiple
+                                            onChange={handleDocumentChange}
+                                            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp"
+                                            style={{
+                                                width: '100%',
+                                                padding: '8px',
+                                                marginBottom: '10px',
+                                                border: '1px dashed #ccc',
+                                                borderRadius: '4px',
+                                                boxSizing: 'border-box',
+                                                backgroundColor: 'white',
+                                            }}
+                                        />
+
+                                        {/* Uploaded Files List */}
+                                        {documents.length > 0 && (
+                                            <div style={{ fontSize: '0.85em', color: '#555' }}>
+                                                <p style={{ margin: '0 0 5px 0', fontWeight: 'bold' }}>Uploaded files:</p>
+                                                <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                                                    {documents.map((file, index) => (
+                                                        <li key={index} style={{
+                                                            display: 'flex',
+                                                            justifyContent: 'space-between',
+                                                            alignItems: 'center',
+                                                            padding: '5px',
+                                                            backgroundColor: '#f0f0f0',
+                                                            borderRadius: '3px',
+                                                            marginBottom: '3px'
+                                                        }}>
+                                                            <span style={{ fontSize: '0.8em' }}>{file.name}</span>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => removeDocument(index)}
+                                                                style={{
+                                                                    background: 'none',
+                                                                    border: 'none',
+                                                                    color: '#d32f2f',
+                                                                    cursor: 'pointer',
+                                                                    fontSize: '0.9em'
+                                                                }}
+                                                            >
+                                                                ×
+                                                            </button>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Submit Button */}
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
                                         style={{
                                             width: '100%',
-                                            padding: '8px',
-                                            marginBottom: '10px',
-                                            border: '1px dashed #ccc',
+                                            padding: '12px',
+                                            backgroundColor: isSubmitting ? '#ccc' : '#00283A',
+                                            color: 'white',
+                                            border: 'none',
                                             borderRadius: '4px',
-                                            boxSizing: 'border-box',
-                                            backgroundColor: 'white',
+                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                            fontWeight: 'bold',
+                                            fontSize: '1em',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '10px',
+                                            transition: 'all 0.3s ease'
                                         }}
-                                    />
-                                    
-                                    {/* Uploaded Files List */}
-                                    {documents.length > 0 && (
-                                        <div style={{ fontSize: '0.85em', color: '#555' }}>
-                                            <p style={{ margin: '0 0 5px 0', fontWeight: 'bold' }}>Uploaded files:</p>
-                                            <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-                                                {documents.map((file, index) => (
-                                                    <li key={index} style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'space-between',
-                                                        alignItems: 'center',
-                                                        padding: '5px',
-                                                        backgroundColor: '#f0f0f0',
-                                                        borderRadius: '3px',
-                                                        marginBottom: '3px'
-                                                    }}>
-                                                        <span style={{ fontSize: '0.8em' }}>{file.name}</span>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => removeDocument(index)}
-                                                            style={{
-                                                                background: 'none',
-                                                                border: 'none',
-                                                                color: '#d32f2f',
-                                                                cursor: 'pointer',
-                                                                fontSize: '0.9em'
-                                                            }}
-                                                        >
-                                                            ×
-                                                        </button>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
+                                    >
+                                        {isSubmitting ? (
+                                            <>
+                                                <div style={{ width: '16px', height: '16px', border: '2px solid #fff', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                                                Submitting...
+                                            </>
+                                        ) : (
+                                            'Submit Application'
+                                        )}
+                                    </button>
+                                </form>
+                            )}
+                        </div>
 
-                                {/* Submit Button */}
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    style={{
-                                        width: '100%',
-                                        padding: '12px',
-                                        backgroundColor: isSubmitting ? '#ccc' : '#1a73e8',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                                        fontWeight: 'bold',
-                                        fontSize: '1em',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '10px',
-                                        transition: 'all 0.3s ease'
-                                    }}
-                                >
-                                    {isSubmitting ? (
-                                        <>
-                                            <div style={{ width: '16px', height: '16px', border: '2px solid #fff', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-                                            Submitting...
-                                        </>
-                                    ) : (
-                                        'Submit Application'
-                                    )}
-                                </button>
-                            </form>
-                        )}
-                    </div>
+
+                    }
+
+
+
                 </div>
             </div>
 
             {/* 3. Key Points Section (Full Width, below the 70/30 split) */}
-            <section style={{ padding: '30px', backgroundColor: '#dedee4ff', width: '100%' }}>
+            <section style={{ padding: '30px', backgroundColor: '#00283A', width: '100%' }}>
                 <h3
                     style={{
-                        borderBottom: '2px solid #1a73e8',
+                        borderBottom: '2px solid #F2C445',
                         paddingBottom: '5px',
                         marginBottom: '20px',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '10px',
-                        color: '#333',
+                        color: 'white',
                     }}
                 >
-                    <Zap size={24} color="#1a73e8" /> Key Features & Benefits
+                    <Zap size={24} color="white" /> {service.scopeTitle}
                 </h3>
                 <ul
                     style={{
@@ -1028,13 +1040,12 @@ const ServiceDetail = () => {
                                 marginBottom: '10px',
                                 display: 'flex',
                                 alignItems: 'flex-start',
-                                color: '#333',
+                                color: 'white',
                                 width: '45%',
                             }}
                         >
-                            <CheckCircle size={20} color="#00a878" style={{ marginRight: '10px', minWidth: '20px' }} />
-                            {point}
-                        </li>
+                            <CheckCircle size={20} color="#F2C445" style={{ marginRight: '10px', minWidth: '20px' }} />
+                            {service.fullDescription}                        </li>
                     ))}
                 </ul>
             </section>

@@ -114,6 +114,8 @@ const BlogPost = () => {
         
         // Load the current post
         const currentPost = await fetchBlogBySlug(slug);
+
+        console.log ('Current Post:', currentPost); // Debugging log  
         
         if (!currentPost) {
           setNotFound(true);
@@ -322,7 +324,7 @@ const BlogPost = () => {
                 ))
               ) : (
                 <p className="text-muted-foreground leading-relaxed text-lg">
-                  {post.short_description || 'No content available.'}
+                  {post.full_content || 'No content available.'}
                 </p>
               )}
             </div>

@@ -30,25 +30,55 @@ interface DynamicGridService {
   date: string;
 }
 
+// Helper function to strip HTML tags and get plain text
+const stripHtmlTags = (html: string | null): string => {
+  if (!html) return 'No detailed description available.';
+  
+  // Remove HTML tags including <strong>, <p>, etc.
+  const plainText = html.replace(/<[^>]*>/g, ' ');
+  
+  // Replace multiple spaces, newlines, and other whitespace with single space
+  const cleanText = plainText
+    .replace(/\s+/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .trim();
+  
+  return cleanText;
+};
+
 const Services = () => {
   // --- State Management ---
   const [dynamicServices, setDynamicServices] = useState<DynamicGridService[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-useEffect(() => {
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
   // Format date to "Month Day, Year"
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
-    });
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return 'November 20, 2025'; // Fallback if date is invalid
+      }
+      return date.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      });
+    } catch {
+      return 'November 20, 2025'; // Fallback on error
+    }
   };
 
-  // Truncate text to limit words
+  // Truncate text to limit words (now works with clean plain text)
   const truncateText = (text: string, wordLimit: number) => {
     if (!text) return 'No description available';
     const words = text.split(' ');
@@ -75,14 +105,17 @@ useEffect(() => {
 
         // Map backend data to frontend structure
         const mappedServices: DynamicGridService[] = serviceData.map(service => {
+          // Clean HTML from description before storing
+          const cleanDescription = stripHtmlTags(service.service_description_text);
+          
           return {
             id: service.id,
             title: service.name,
             slug: service.slug,
             icon: service.icon_name || 'Zap',
-            shortDescription: service.service_description_text || 'No detailed description available.',
-            imageUrl: `${IMAGE_BASE_URL}${service.image_url}`,
-            date: service.created_at ? formatDate(service.created_at) : 'November 20, 2025' // Fallback date
+            shortDescription: cleanDescription,
+            imageUrl: service.image_url ? `${IMAGE_BASE_URL}${service.image_url}` : '',
+            date: service.created_at ? formatDate(service.created_at) : 'November 20, 2025'
           };
         });
 
@@ -276,25 +309,6 @@ useEffect(() => {
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
-                  {/* Date and Author */}
-                  {/* <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '15px',
-                    marginBottom: '15px',
-                    fontSize: '0.85em',
-                    color: '#666'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <Calendar size={14} />
-                      <span>{service.date}</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <User size={14} />
-                      <span>Geemadhura Team</span>
-                    </div>
-                  </div> */}
-
                   {/* Title */}
                   <h3 style={{ 
                     margin: '0 0 15px 0', 
@@ -313,9 +327,10 @@ useEffect(() => {
                     color: '#555',
                     lineHeight: '1.6',
                     fontSize: '0.95em',
-                    minHeight: '72px', // Fixed height for 3 lines of text
+                    minHeight: '72px',
                     overflow: 'hidden'
                   }}>
+                    {/* Now displaying clean, HTML-free text */}
                     {truncateText(service.shortDescription, 20)}
                   </div>
 

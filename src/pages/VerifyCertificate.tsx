@@ -487,7 +487,8 @@ const VerifyCertificate: React.FC = () => {
                                         <button
                                             type="submit"
                                             disabled={loading || !applicationId.trim()}
-                                            className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition duration-150 font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                                            style={{backgroundColor:'#00283A'}}
+                                            className="w-full py-4  text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition duration-150 font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                                         >
                                             {loading ? (
                                                 <>

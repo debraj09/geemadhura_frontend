@@ -396,10 +396,12 @@ export const Header = () => {
               {/* I noticed your second button was outside the div in your snippet. 
       Move it inside the div so the space-x property applies to it. */}
               <button
-              onClick={navigateHandler}
+              
                 className="hidden md:block px-6 py-2.5 rounded-full font-bold text-sm bg-[#00283A] text-[#F2C445] hover:scale-105 transition-transform active:scale-95"
               >
+                 <Link to="/tracking-application" className="flex-shrink-0">
                 Tracking Application
+            </Link>
               </button>
 
               {/* Mobile Menu Toggle */}

@@ -44,6 +44,7 @@ const Blog = () => {
       }
       
       const data = await response.json();
+      console.log('Fetched blog data:', data);
       
       // Transform the data to include slug
       return data.data.map((blog: any) => ({

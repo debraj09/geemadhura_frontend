@@ -6,13 +6,14 @@ import Mousumi from "@/assets/Mousumi.jpeg";
 import ourstory from "../assets/ourstory.jpeg";
 import aboutus from '@/assets/aboutus.png';
 import aboutusbanner from '@/assets/overlay.png';
+import office from "@/assets/office.png";
 import { useEffect } from 'react';
 
 const stats = [
   { label: 'Years of Excellence', value: '7+' },
   { label: 'Compliance Experts', value: '15+' },
-  { label: 'Successful Cases', value: '10000+' }, // Updated
-  { label: 'Happy Clients', value: '10000+' },   // Updated
+  { label: 'Successful Cases', value: '10000+' },
+  { label: 'Happy Clients', value: '10000+' },
 ];
 
 const directors = [
@@ -22,7 +23,14 @@ const directors = [
     image: Gourab,
     experience: 'Expert knowledge of Indian regulations & compliance',
     speech: 'At Geeemadhura, we believe in simplifying compliance for businesses. Our mission is to bridge the gap between complex regulations and business operations, ensuring seamless compliance and sustainable growth.',
-    expertise: 'FSSAI Compliance, Business Licensing, Government Regulations'
+    expertise: 'FSSAI Compliance, Business Licensing, Government Regulations',
+    additionalContent: `An inspiring professional with over 11 years of expertise in the field of Food Safety, Licensing and certification. 
+
+I take immense pleasure in taking this journey to a next level through in-depth knowledge of FSS Act, food storage, transportation, quality best practices and licensing portal management.
+
+At Geemadhura Innovation, we've made significant progress over all these years and are destined to play an important part in the field of Licensing sector.
+
+I convey my good wishes to all the faculty, board members and entire Geemadhura family for their sincere endeavour in bringing out the best and keeping in tune with the latest trends in the industry.`
   },
   {
     name: 'Mrs. Mousumi Sanyal',
@@ -75,25 +83,30 @@ const About = () => {
   return (
     <main className="min-h-screen">
       {/* Top Banner Image Section */}
-      <section className="w-full h-[400px] md:h-[400px] lg:h-[400px] overflow-hidden relative">
-        <img 
-          src={aboutusbanner} 
-          alt="About Us Banner" 
-          style={{height:'400px'}}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-             <h1 className="text-white text-4xl md:text-6xl font-bold drop-shadow-lg">About Us</h1>
+      <section className="w-full h-[250px] md:h-[300px] flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: '#00283A' }}>
+        <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#F2C445]/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl"></div>
+
+        <div className="relative z-10 text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-white text-4xl md:text-6xl font-bold tracking-tight"
+          >
+            About Us
+          </motion.h1>
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: "80px" }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="h-1.5 bg-[#F2C445] mx-auto mt-4 rounded-full"
+          ></motion.div>
         </div>
       </section>
 
-      {/* Hero Section */}
-    
-
-    
-
       {/* Story Section */}
-      <section  className="py-20 md:py-24">
+      <section className="py-20 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -103,10 +116,9 @@ const About = () => {
               transition={{ duration: 0.8 }}
               className="relative"
             >
-              {/* Image Container - Using aboutus.png here */}
               <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl border-2 border-[#00283A]/20 hover:border-[#F2C445] transition-all duration-300 group">
-                <img 
-                  src={aboutus}  
+                <img
+                  src={office}
                   alt="Our Story - Geeemadhura Innovations Journey"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -114,7 +126,7 @@ const About = () => {
                 <div className="absolute top-0 left-0 w-32 h-32 bg-[#00283A]/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
                 <div className="absolute bottom-0 right-0 w-48 h-48 bg-[#F2C445]/10 rounded-full translate-x-1/3 translate-y-1/3"></div>
               </div>
-              
+
               <motion.div
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
@@ -173,7 +185,7 @@ const About = () => {
         </div>
       </section>
 
-        {/* Stats Section */}
+      {/* Stats Section */}
       <section className="py-16" style={{ backgroundColor: '#00283A' }}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -231,15 +243,15 @@ const About = () => {
                   <div className="relative group">
                     <div className="relative w-full h-[500px] rounded-3xl overflow-hidden shadow-2xl border-2 border-[#00283A]/20 group-hover:border-[#F2C445] transition-all duration-300 bg-gradient-to-br from-[#00283A]/5 to-[#F2C445]/5">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <img 
-                          src={director.image} 
+                        <img
+                          src={director.image}
                           alt={director.name}
                           className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                     </div>
-                    
+
                     <div className="absolute -bottom-6 left-8 bg-white/95 backdrop-blur-sm px-6 py-4 rounded-2xl shadow-xl border-2 border-[#00283A]/10 hover:border-[#F2C445] transition-all duration-300 group-hover:shadow-2xl">
                       <div className="flex items-center gap-3">
                         <motion.div
@@ -265,11 +277,45 @@ const About = () => {
                         <span className="font-medium">{director.designation}</span>
                       </div>
                       <h3 style={{ color: '#00283A' }} className="text-3xl md:text-4xl font-bold mb-4 group-hover:text-[#00283A]/90 transition-colors duration-300">{director.name}</h3>
-                      <div className="relative mb-8">
+                      
+                      {/* Original Speech */}
+                      <div className="relative mb-6">
                         <p className="text-lg text-muted-foreground leading-relaxed italic pl-6 border-l-4 border-[#F2C445] group-hover:text-[#00283A]/80 transition-colors duration-300">
                           "{director.speech}"
                         </p>
                       </div>
+                      
+                      {/* Additional Content for Mr. Gourab Sanyal */}
+                      {director.additionalContent && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          whileInView={{ opacity: 1, height: 'auto' }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.8, delay: 0.2 }}
+                          className="mt-6 pt-6 border-t border-[#00283A]/10"
+                        >
+                          <h4 className="text-sm font-semibold text-[#00283A] mb-3 uppercase tracking-wide">Director's Message:</h4>
+                          <div className="text-muted-foreground text-base leading-relaxed space-y-3">
+                            {director.additionalContent.split('\n\n').map((paragraph, idx) => (
+                              <p key={idx} className="text-justify">
+                                {paragraph}
+                              </p>
+                            ))}
+                          </div>
+                          
+                          {/* Contact Information */}
+                          {/* <div className="mt-6 pt-6 border-t border-[#00283A]/10">
+                            <div className="space-y-2">
+                              <p className="font-bold text-[#00283A] text-lg">GOURAB SANYAL</p>
+                              <p className="text-sm text-muted-foreground">Founder & Director</p>
+                              <p className="text-sm text-muted-foreground">Geemadhura Innovation Private Ltd.</p>
+                              <p className="text-sm font-medium text-[#00283A] mt-2">Contact: 9434969796</p>
+                            </div>
+                          </div> */}
+                        </motion.div>
+                      )}
+                      
+                      {/* Specialization Areas */}
                       <div className="mt-6 pt-6 border-t border-[#00283A]/10">
                         <h4 className="text-sm font-semibold text-[#00283A] mb-3 uppercase tracking-wide">Specialization Areas:</h4>
                         <p className="text-muted-foreground text-base">
@@ -394,7 +440,6 @@ const About = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Vision Card */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -417,7 +462,6 @@ const About = () => {
               </div>
             </motion.div>
 
-            {/* Mission Card */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -440,7 +484,6 @@ const About = () => {
               </div>
             </motion.div>
 
-            {/* Values Card */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

@@ -5,17 +5,10 @@ import { ArrowRight, Zap, Loader2, AlertCircle, Eye } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 
 // --- Configuration ---
-// Set your API endpoint here
 const API_BASE_URL = 'https://geemadhura.braventra.in/api/services';
-
-// --- SERVICE LIMIT CONFIGURATION ---
 const MAX_INITIAL_SERVICES = 6;
 
 // --- Interfaces ---
-
-/**
- * Interface for the data structure returned by the backend API.
- */
 interface ServiceData {
   id: number;
   name: string;
@@ -23,13 +16,9 @@ interface ServiceData {
   image_url: string;
   is_active: 0 | 1;
   created_at: string;
-  // ALIASED field from the SQL query
   service_description_text: string | null;
 }
 
-/**
- * Frontend Structure for the Grid Item.
- */
 interface GridService {
   id: number;
   title: string;
@@ -37,6 +26,27 @@ interface GridService {
   icon: string;
   shortDescription: string;
 }
+
+// Helper function to strip HTML tags and get plain text
+const stripHtmlTags = (html: string | null): string => {
+  if (!html) return 'No description provided.';
+  
+  // Remove HTML tags
+  const plainText = html.replace(/<[^>]*>/g, ' ');
+  
+  // Replace multiple spaces with single space
+  const cleanText = plainText.replace(/\s+/g, ' ').trim();
+  
+  return cleanText;
+};
+
+// Helper function to safely truncate text
+const truncateToChars = (text: string, maxChars: number): string => {
+  if (text.length <= maxChars) {
+    return text;
+  }
+  return text.substring(0, maxChars).trim() + '...';
+};
 
 export const ServicesGrid = () => {
   const ref = useRef(null);
@@ -46,9 +56,7 @@ export const ServicesGrid = () => {
   const [allServices, setAllServices] = useState<GridService[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // The visibleCount is fixed to MAX_INITIAL_SERVICES for this implementation
-  const visibleCount = MAX_INITIAL_SERVICES; 
+  const visibleCount = MAX_INITIAL_SERVICES;
 
   // --- API Fetch Logic ---
   useEffect(() => {
@@ -68,17 +76,18 @@ export const ServicesGrid = () => {
         console.log("data fetched:", serviceData);
 
         const mappedServices: GridService[] = serviceData.map(service => {
-          // NOTE: icon is hardcoded to 'Zap' here, you might want to map it from backend data later.
+          // Convert HTML content to plain text for the short description
+          const plainTextDescription = stripHtmlTags(service.service_description_text);
+          
           return {
             id: service.id,
             title: service.name,
             slug: service.slug,
-            icon: 'Zap',
-            shortDescription: service.service_description_text || 'No description provided.',
+            icon: 'Zap', // Default icon, you can map from backend later
+            shortDescription: plainTextDescription,
           };
         });
 
-        // Store all fetched services
         setAllServices(mappedServices);
 
       } catch (e) {
@@ -90,23 +99,11 @@ export const ServicesGrid = () => {
     };
 
     fetchServices();
-  }, []); // Run only once on mount
+  }, []);
 
-
-  // Function to handle the "View More" button click (redirects to the /services route)
+  // Function to handle the "View More" button click
   const handleViewMore = () => {
     navigate('/services');
-  };
-
-  // Utility function to truncate description text
-  const truncateToChars = (text: string | undefined, maxChars: number): string => {
-    if (!text) return '';
-
-    if (text.length <= maxChars) {
-      return text;
-    }
-
-    return text.substring(0, maxChars).trim() + '...';
   };
 
   // Determine if the View More button should be visible
@@ -118,13 +115,11 @@ export const ServicesGrid = () => {
   // Memoize the rendered list for performance
   const servicesList = useMemo(() => {
     return servicesToDisplay.map((service, index) => {
-      // Safely access Lucide icon component, fall back to Zap
       const IconComponent = (LucideIcons as any)[service.icon] || LucideIcons.Zap;
 
       return (
         <motion.div
           key={service.id}
-          // Initial staggered animation on load/scroll into view
           initial={{ opacity: 0, y: 100, rotate: index % 2 === 0 ? -10 : 10, scale: 0.3 }}
           animate={
             isInView
@@ -145,7 +140,6 @@ export const ServicesGrid = () => {
         >
           <Link to={`/services/${service.slug}`}>
             <motion.div
-              // Hover animations for the card itself
               whileHover={{
                 y: -10,
                 scale: 1.03,
@@ -179,10 +173,7 @@ export const ServicesGrid = () => {
                 }}
                 transition={{ duration: 0.5 }}
               >
-                {/* Icon */}
-                <motion.div
-                  className='group-hover:animate-spin-slow' // Assuming you have a custom animate-spin-slow utility
-                >
+                <motion.div className='group-hover:animate-spin-slow'>
                   <IconComponent
                     className="text-[#00283A] group-hover:text-[#F2C445] transition-colors duration-300"
                     size={32}
@@ -207,7 +198,7 @@ export const ServicesGrid = () => {
                 ))}
               </h3>
 
-              {/* Dynamic Description */}
+              {/* Dynamic Description - Now properly cleaned */}
               <p className="text-muted-foreground leading-relaxed mb-6 relative z-10">
                 {truncateToChars(service.shortDescription, 100)}
               </p>
@@ -246,7 +237,6 @@ export const ServicesGrid = () => {
   // --- Render Component ---
   return (
     <section ref={ref} className="py-16 md:py-24 bg-muted/20 relative overflow-hidden">
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
@@ -308,7 +298,6 @@ export const ServicesGrid = () => {
               >
                 <motion.button
                   onClick={handleViewMore}
-                  // --- STYLED BUTTON CLASS NAMES ---
                   className="inline-flex items-center justify-center rounded-xl text-lg font-semibold px-8 py-3 shadow-xl transition-all duration-300 transform hover:scale-[1.02] border-2"
                   style={{
                     backgroundColor: '#00283A',

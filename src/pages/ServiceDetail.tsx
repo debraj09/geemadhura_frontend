@@ -76,6 +76,26 @@ const HARDCODED_KEY_FEATURES: string[] = [
     'Flexible pricing models to fit any size business operation.',
 ];
 
+// Helper function to sanitize and render HTML
+const sanitizeHTML = (html: string) => {
+    // Basic sanitization - in production, use a library like DOMPurify
+    return { __html: html };
+};
+
+// Component to render HTML content with proper styling
+const HTMLContent: React.FC<{ content: string }> = ({ content }) => {
+    return (
+        <div 
+            style={{
+                fontFamily: 'Arial, sans-serif',
+                lineHeight: 1.6,
+                color: '#333',
+            }}
+            dangerouslySetInnerHTML={sanitizeHTML(content)}
+        />
+    );
+};
+
 const ServiceDetail = () => {
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
@@ -121,8 +141,6 @@ const ServiceDetail = () => {
         window.scrollTo(0, 0);
     }, []);
 
-
-
     // --- Fetch Service Detail ---
     useEffect(() => {
         if (!slug) return;
@@ -154,7 +172,7 @@ const ServiceDetail = () => {
                     slug: serviceData.slug,
                     icon: serviceData.icon_name || 'Zap',
                     shortDescription: serviceData.description || 'No summary provided.',
-                    fullDescription: serviceData.scope_content || 'The detailed scope of work is not yet defined for this service.',
+                    fullDescription: serviceData.scope_content || '<p>The detailed scope of work is not yet defined for this service.</p>',
                     scopeTitle: serviceData.scope_title || 'Service Details',
                     features: HARDCODED_KEY_FEATURES,
                     bannerImageUrl: fullBannerUrl,
@@ -283,10 +301,9 @@ const ServiceDetail = () => {
             // Append all text data as JSON
             formDataToSend.append('applicationData', JSON.stringify(completeFormData));
 
-            // FIXED: Append each document with field name 'documents' (Multer expects this)
-            // Changed from: formDataToSend.append(`documents[${index}]`, file);
+            // Append each document with field name 'documents'
             documents.forEach((file) => {
-                formDataToSend.append('documents', file); // JUST 'documents', not 'documents[0]'
+                formDataToSend.append('documents', file);
             });
 
             // Submit to backend API using Fetch
@@ -443,19 +460,27 @@ const ServiceDetail = () => {
                             {service.title}
                         </h1>
 
-                        <div style={{ lineHeight: '1.6', color: '#333', textAlign: 'justify', justifyContent: "center" }}>
-                            <p>{service.shortDescription}</p>
-
-
-                            {/* <h2 style={{ fontSize: '1.8em', margin: '30px 0 15px 0', color: '#333', fontWeight: 'bold' }}>
-                                {service.scopeTitle}
-                            </h2>
-                            <p style={{ whiteSpace: 'pre-wrap' }}>
-                                {service.fullDescription}
-                            </p> */}
+                        <div style={{ lineHeight: '1.6', color: '#333', textAlign: 'justify', marginBottom: '30px' }}>
+                            <HTMLContent content={service.shortDescription} />
                         </div>
 
-                        
+                        {/* Scope Title and Content Section */}
+                        {service.scopeTitle && (
+                            <>
+                                <h2 style={{ fontSize: '1.8em', margin: '30px 0 15px 0', color: '#333', fontWeight: 'bold' }}>
+                                    {service.scopeTitle}
+                                </h2>
+                                <div style={{ 
+                                    marginBottom: '30px',
+                                    padding: '20px',
+                                    backgroundColor: '#f8f9fa',
+                                    borderRadius: '8px',
+                                    border: '1px solid #e9ecef'
+                                }}>
+                                    <HTMLContent content={service.fullDescription} />
+                                </div>
+                            </>
+                        )}
                     </section>
                 </div>
 
@@ -589,36 +614,36 @@ const ServiceDetail = () => {
                     </div>
 
                     {/* Apply Now Button */}
-                        <div style={{ marginTop: '30px' }}>
-                            <button
-                                onClick={clickFunction}
-                                style={{
-                                    padding: '12px 30px',
-                                    backgroundColor: '#00283A',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    fontWeight: 'bold',
-                                    fontSize: '1rem',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '10px',
-                                    transition: 'all 0.3s ease'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#0c455fff';
-                                    e.currentTarget.style.transform = 'translateY(-2px)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#00283A';
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                }}
-                            >
-                                <FileText size={20} />
-                                Apply Now for {service.title}
-                            </button>
-                        </div>
+                    <div style={{ marginTop: '30px' }}>
+                        <button
+                            onClick={clickFunction}
+                            style={{
+                                padding: '12px 30px',
+                                backgroundColor: '#00283A',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                fontSize: '1rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = '#0c455fff';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = '#00283A';
+                                e.currentTarget.style.transform = 'translateY(0)';
+                            }}
+                        >
+                            <FileText size={20} />
+                            Apply Now for {service.title}
+                        </button>
+                    </div>
 
                     {isHideSection ? null
                         :
@@ -1007,12 +1032,7 @@ const ServiceDetail = () => {
                                 </form>
                             )}
                         </div>
-
-
                     }
-
-
-
                 </div>
             </div>
 
@@ -1029,7 +1049,7 @@ const ServiceDetail = () => {
                         color: 'white',
                     }}
                 >
-                    <Zap size={24} color="white" /> {service.scopeTitle}
+                    <Zap size={24} color="white" /> Key Features & Benefits
                 </h3>
                 <ul
                     style={{
@@ -1053,10 +1073,79 @@ const ServiceDetail = () => {
                             }}
                         >
                             <CheckCircle size={20} color="#F2C445" style={{ marginRight: '10px', minWidth: '20px' }} />
-                            {service.fullDescription}                        </li>
+                            {point}
+                        </li>
                     ))}
                 </ul>
             </section>
+
+            {/* Optional: Add CSS for proper HTML rendering */}
+            <style>{`
+                .service-content h1,
+                .service-content h2,
+                .service-content h3,
+                .service-content h4,
+                .service-content h5,
+                .service-content h6 {
+                    color: #333;
+                    margin-top: 1.5em;
+                    margin-bottom: 0.5em;
+                    font-weight: bold;
+                }
+                
+                .service-content h1 { font-size: 2em; }
+                .service-content h2 { font-size: 1.8em; }
+                .service-content h3 { font-size: 1.6em; }
+                .service-content h4 { font-size: 1.4em; }
+                .service-content h5 { font-size: 1.2em; }
+                .service-content h6 { font-size: 1em; }
+                
+                .service-content p {
+                    margin-bottom: 1em;
+                    line-height: 1.6;
+                }
+                
+                .service-content ul,
+                .service-content ol {
+                    margin-left: 1.5em;
+                    margin-bottom: 1em;
+                }
+                
+                .service-content li {
+                    margin-bottom: 0.5em;
+                }
+                
+                .service-content strong,
+                .service-content b {
+                    font-weight: bold;
+                }
+                
+                .service-content em,
+                .service-content i {
+                    font-style: italic;
+                }
+                
+                .service-content u {
+                    text-decoration: underline;
+                }
+                
+                .service-content a {
+                    color: #00283A;
+                    text-decoration: none;
+                }
+                
+                .service-content a:hover {
+                    text-decoration: underline;
+                }
+                
+                .service-content blockquote {
+                    border-left: 4px solid #00283A;
+                    padding-left: 1em;
+                    margin-left: 0;
+                    font-style: italic;
+                    color: #666;
+                }
+            `}</style>
         </div>
     );
 };

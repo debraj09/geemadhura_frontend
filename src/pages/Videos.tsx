@@ -46,6 +46,7 @@ export default function VideosGallery() {
         
         if (data.status === 200 && Array.isArray(data.data)) {
           setVideos(data.data);
+          console.log ("data is", data.data)
         } else {
           setError("Invalid data format received");
         }

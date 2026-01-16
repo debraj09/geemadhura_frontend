@@ -1,8 +1,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Zap, Loader2, AlertCircle, Eye } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { ArrowRight, Zap, Loader2, AlertCircle, Eye, Image as ImageIcon } from 'lucide-react';
 
 // --- Configuration ---
 const API_BASE_URL = 'https://geemadhura.braventra.in/api/services';
@@ -23,7 +22,7 @@ interface GridService {
   id: number;
   title: string;
   slug: string;
-  icon: string;
+  imageUrl: string;
   shortDescription: string;
 }
 
@@ -46,6 +45,15 @@ const truncateToChars = (text: string, maxChars: number): string => {
     return text;
   }
   return text.substring(0, maxChars).trim() + '...';
+};
+
+// Helper function to get full image URL
+const getFullImageUrl = (imageUrl: string) => {
+  if (imageUrl.startsWith('http')) {
+    return imageUrl;
+  }
+  // Assuming the base URL for your images
+  return `https://geemadhura.braventra.in${imageUrl}`;
 };
 
 export const ServicesGrid = () => {
@@ -83,7 +91,7 @@ export const ServicesGrid = () => {
             id: service.id,
             title: service.name,
             slug: service.slug,
-            icon: 'Zap', // Default icon, you can map from backend later
+            imageUrl: service.image_url,
             shortDescription: plainTextDescription,
           };
         });
@@ -115,7 +123,7 @@ export const ServicesGrid = () => {
   // Memoize the rendered list for performance
   const servicesList = useMemo(() => {
     return servicesToDisplay.map((service, index) => {
-      const IconComponent = (LucideIcons as any)[service.icon] || LucideIcons.Zap;
+      const fullImageUrl = getFullImageUrl(service.imageUrl);
 
       return (
         <motion.div
@@ -165,18 +173,85 @@ export const ServicesGrid = () => {
                 transition={{ duration: 0.8 }}
               />
 
-              {/* Icon Container with hover animation */}
+              {/* Icon Container with Small Thumbnail Image */}
               <motion.div
-                className="bg-[#00283A]/10 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#00283A] transition-colors duration-300 relative z-10"
+                className="bg-[#00283A]/10 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#00283A] transition-colors duration-300 relative z-10 overflow-hidden"
                 whileHover={{
                   scale: [1, 1.1, 1],
                 }}
                 transition={{ duration: 0.5 }}
               >
-                <motion.div className='group-hover:animate-spin-slow'>
-                  <IconComponent
-                    className="text-[#00283A] group-hover:text-[#F2C445] transition-colors duration-300"
-                    size={32}
+                <motion.div className='group-hover:animate-spin-slow relative w-full h-full'>
+                  {/* Small thumbnail image */}
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    {/* Background shimmer effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200"
+                      animate={{
+                        backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'linear'
+                      }}
+                    />
+                    
+                    {/* Service Thumbnail Image */}
+                    <motion.img
+                      src={fullImageUrl}
+                      alt={service.title}
+                      className="w-10 h-10 object-contain relative z-10"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5 }}
+                      onError={(e) => {
+                        // If image fails to load, show fallback icon
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                    
+                    {/* Fallback icon if image fails to load */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <ImageIcon 
+                        className="text-[#00283A] group-hover:text-[#F2C445] transition-colors"
+                        size={24}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Small thumbnail badge overlay */}
+                  <motion.div
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-[#F2C445] rounded-full flex items-center justify-center shadow-md border border-white"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <motion.div
+                      className="w-2 h-2 bg-[#00283A] rounded-full"
+                      animate={{
+                        scale: [1, 1.2, 1],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  </motion.div>
+                  
+                  {/* Glow effect on hover */}
+                  <motion.div
+                    className="absolute inset-0 bg-[#F2C445]/20 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    animate={{
+                      scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
                   />
                 </motion.div>
               </motion.div>
@@ -226,6 +301,14 @@ export const ServicesGrid = () => {
                   rotate: [0, 180, 360],
                 }}
                 transition={{ duration: 8, repeat: Infinity }}
+              />
+              
+              {/* Bottom accent line */}
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00283A] to-transparent"
+                initial={{ scaleX: 0 }}
+                whileHover={{ scaleX: 1 }}
+                transition={{ duration: 0.3 }}
               />
             </motion.div>
           </Link>

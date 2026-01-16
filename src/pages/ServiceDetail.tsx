@@ -468,14 +468,14 @@ const ServiceDetail = () => {
                         </div>
 
                         {/* Scope Title and Content Section */}
-                        {service.scopeTitle && (
+                        {/* {service.scopeTitle && (
                             <div className="scope-section">
                                 <h2 className="scope-title">{service.scopeTitle}</h2>
                                 <div className="scope-content">
                                     <HTMLContent content={service.fullDescription} />
                                 </div>
                             </div>
-                        )}
+                        )} */}
                     </section>
                 </div>
 
@@ -846,19 +846,19 @@ const ServiceDetail = () => {
             </div>
 
             {/* 3. Key Points Section */}
-            <section className="key-features-section">
-                <h3 className="key-features-title">
-                    <Zap size={24} /> Key Features & Benefits
-                </h3>
-                <ul className="key-features-list">
-                    {service.features.map((point, index) => (
-                        <li key={index} className="key-feature-item">
-                            <CheckCircle size={20} className="feature-icon" />
-                            <span>{point}</span>
-                        </li>
-                    ))}
-                </ul>
-            </section>
+            {service.scopeTitle && (
+                <section className="key-features-section">
+                    <h3 className="key-features-title">
+                        <Zap size={24} /> {service.scopeTitle}
+                    </h3>
+                    <div className="key-features-content">
+                        <CheckCircle size={20} className="feature-icon" />
+                        <span style={{ color: 'white', fontWeight: 'normal',marginTop:'2px'  }} className="feature-description">
+                            <HTMLContent content={service.fullDescription} />
+                        </span>
+                    </div>
+                </section>
+            )}
 
             {/* CSS Styles */}
             <style>{`

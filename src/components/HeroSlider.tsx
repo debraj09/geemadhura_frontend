@@ -1,8 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import gsap from 'gsap';
-import { Button } from '@/components/ui/button';
 
 // --- Configuration ---
 const API_BASE_URL = 'https://geemadhura.braventra.in/api/banners';
@@ -51,10 +48,6 @@ export const HeroSlider = () => {
     if (slides.length > 0) setCurrentSlide((prev) => (prev + 1) % slides.length);
   }, [slides.length]);
 
-  const prevSlide = useCallback(() => {
-    if (slides.length > 0) setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  }, [slides.length]);
-
   useEffect(() => {
     if (!isPaused && slides.length > 1) {
       const interval = setInterval(nextSlide, SLIDE_DURATION);
@@ -62,7 +55,7 @@ export const HeroSlider = () => {
     }
   }, [isPaused, nextSlide, slides.length]);
 
-  if (isLoading) return <div className="h-[60vh] flex items-center justify-center bg-gray-100">Loading...</div>;
+  if (isLoading) return <div className="h-[60vh] flex items-center justify-center bg-gray-100 text-gray-500 font-medium">Loading...</div>;
   if (error || slides.length === 0) return null;
 
   return (
@@ -78,23 +71,19 @@ export const HeroSlider = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7 }}
-          /* ASPECT RATIO TRICK: 
-             The container will now grow/shrink based on the image's natural width.
-             Change aspect-video (16:9) to aspect-[21/9] for a wider cinematic look.
-          */
           className="relative w-full aspect-[16/9] md:aspect-[21/9] lg:h-[85vh]"
         >
-          {/* Background Image - Changed to 'bg-full' logic */}
+          {/* Background Image - Overlay (bg-black/20) removed below */}
           <div
             className="absolute inset-0 bg-no-repeat bg-center transition-transform duration-1000"
             style={{ 
               backgroundImage: `url(${slides[currentSlide].image})`,
-              backgroundSize: '100% 100%', // Forces the image to exactly fill the width and height
+              backgroundSize: '100% 100%', 
             }}
           />
 
-          {/* Text Content Overlay */}
-          <div className="absolute inset-0 bg-black/20"> {/* Subtle overlay to make text readable */}
+          {/* Text Content Container (Removed bg-black/20) */}
+          <div className="absolute inset-0"> 
             <div className="h-full container mx-auto px-4 flex items-center">
               <motion.div
                 initial={{ y: 30, opacity: 0 }}
@@ -105,27 +94,22 @@ export const HeroSlider = () => {
                 <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 drop-shadow-lg">
                   {slides[currentSlide].heading}
                 </h1>
-                {/* <p className="text-sm md:text-xl text-gray-100 mb-6 drop-shadow-md">
-                  {slides[currentSlide].subheading}
-                </p> */}
-                {/* <Button asChild className="rounded-full px-8 py-6 text-lg">
-                  <a href={slides[currentSlide].ctaLink}>{slides[currentSlide].cta}</a>
-                </Button> */}
               </motion.div>
             </div>
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigation Arrows */}
-   
-
       {/* Indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
         {slides.map((_, i) => (
-          <div 
+          <button 
             key={i} 
-            className={`h-1 transition-all duration-300 ${i === currentSlide ? 'w-8 bg-white' : 'w-2 bg-white/50'}`} 
+            onClick={() => setCurrentSlide(i)}
+            className={`h-1.5 transition-all duration-300 rounded-full ${
+              i === currentSlide ? 'w-10 bg-white' : 'w-3 bg-white/40'
+            }`}
+            aria-label={`Go to slide ${i + 1}`}
           />
         ))}
       </div>

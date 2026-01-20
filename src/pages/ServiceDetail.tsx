@@ -172,6 +172,8 @@ const ServiceDetail = () => {
             try {
                 const response = await fetch(`${API_BASE_URL}/by-slug/${slug}`);
 
+                console.log("all services", response);
+
                 if (response.status === 404) {
                     setService(null);
                     return;
@@ -199,6 +201,8 @@ const ServiceDetail = () => {
                     bannerImageUrl: fullBannerUrl,
                     mainImageUrl: fullMainImageUrl,
                 };
+
+                console.log("mapped service detail", mappedDetail);
 
                 setService(mappedDetail);
 
@@ -844,18 +848,37 @@ const ServiceDetail = () => {
                     )}
                 </div>
             </div>
-
-            {/* 3. Key Points Section */}
+            {/* 3. Key Points Section (How We Help) */}
             {service.scopeTitle && (
                 <section className="key-features-section">
                     <h3 className="key-features-title">
                         <Zap size={24} /> {service.scopeTitle}
                     </h3>
+
                     <div className="key-features-content">
-                        <CheckCircle size={20} className="feature-icon" />
-                        <span style={{ color: 'white', fontWeight: 'normal',marginTop:'2px'  }} className="feature-description">
-                            <HTMLContent content={service.fullDescription} />
-                        </span>
+                        {(() => {
+                            // The data is: "Document verification<br>Application filing<br>Authority follow-up<br>License approval &amp; renewal support"
+                            // Split by <br> tags
+                            const points = service.fullDescription.split(/<br\s*\/?>/gi);
+
+                            // Filter out empty points and decode HTML entities
+                            const filteredPoints = points
+                                .map(point => point.trim())
+                                .filter(point => point.length > 0)
+                                .map(point => point.replace(/&amp;/g, '&'));
+
+                            // Render each point with its own icon
+                            return filteredPoints.map((point, index) => (
+                                <div key={index} className="key-feature-item">
+                                    <CheckCircle size={20} className="feature-icon" />
+                                    <span
+                                        className="feature-description"
+                                        style={{ color: 'white', fontWeight: 'normal' }}
+                                        dangerouslySetInnerHTML={{ __html: point }}
+                                    />
+                                </div>
+                            ));
+                        })()}
                     </div>
                 </section>
             )}
@@ -1493,19 +1516,29 @@ const ServiceDetail = () => {
                     justify-content: space-between;
                 }
 
-                .key-feature-item {
-                    margin-bottom: 10px;
-                    display: flex;
-                    align-items: flex-start;
-                    color: white;
-                    width: 100%;
-                }
+           .key-features-content {
+    /* This container holds all the key-feature-item divs */
+}
 
-                .feature-icon {
-                    margin-right: 10px;
-                    min-width: 20px;
-                    color: #F2C445;
-                }
+.key-feature-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.feature-icon {
+    margin-right: 15px;
+    min-width: 20px;
+    color: #F2C445;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.feature-description {
+    color: white;
+    font-weight: normal;
+    line-height: 1.5;
+}
 
                 /* HTML Content Styling */
                 .html-content h1,

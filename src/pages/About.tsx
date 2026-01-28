@@ -1,13 +1,12 @@
 import { motion } from 'framer-motion';
-import { Award, Users, CheckCircle, Shield, Briefcase, HeadphonesIcon, BookOpen, TargetIcon, Eye, Heart } from 'lucide-react';
+import { Award, Users, CheckCircle, Shield, Briefcase, ArrowRight, HeadphonesIcon, BookOpen, TargetIcon, Eye, Heart, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Gourab from "@/assets/Gourab.jpeg";
 import Mousumi from "@/assets/Mousumi.jpeg";
-import ourstory from "../assets/ourstory.jpeg";
-import aboutus from '@/assets/aboutus.png';
-import aboutusbanner from '@/assets/overlay.png';
+import Shibani from "@/assets/Shibani.jpeg";
+import Ashunta from "@/assets/Ashunta.jpeg";
 import office from "@/assets/office.png";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const stats = [
   { label: 'Years of Excellence', value: '7+' },
@@ -19,18 +18,40 @@ const stats = [
 const directors = [
   {
     name: 'Mr. Gourab Sanyal',
-    designation: 'Founder & CEO',
+    designation: 'Founder & Director',
     image: Gourab,
     experience: 'Expert knowledge of Indian regulations & compliance',
     speech: 'At Geeemadhura, we believe in simplifying compliance for businesses. Our mission is to bridge the gap between complex regulations and business operations, ensuring seamless compliance and sustainable growth.',
     expertise: 'FSSAI Compliance, Business Licensing, Government Regulations',
-    additionalContent: `An inspiring professional with over 11 years of expertise in the field of Food Safety, Licensing and certification. 
+    additionalContent: `Director's Desk
+Mr. Gourab Sanyal
+Founder & Director | Geemadhura Innovation Pvt. Ltd.
 
-I take immense pleasure in taking this journey to a next level through in-depth knowledge of FSS Act, food storage, transportation, quality best practices and licensing portal management.
+Professional Overview
+With 11+ years of expertise in Food Safety, Licensing, and Certification, Mr. Gourab Sanyal founded Geemadhura Innovation in 2018 with a vision to make business compliance simple, fast, and affordable for entrepreneurs across India. His deep knowledge of FSS Act, food storage, transportation, and licensing portal management drives the company's mission.
 
-At Geemadhura Innovation, we've made significant progress over all these years and are destined to play an important part in the field of Licensing sector.
+Core Expertise
+Food Safety & Compliance
+FSS Act and food safety regulations
+Food storage and transportation best practices
+Quality assurance and standards
+Business Licensing & Certification
+Licensing portal management
+Statutory compliance and approvals
+Certification guidance and support
+Entrepreneurial Vision
+Simplifying compliance for Indian businesses
+Building scalable solutions for 15,000+ clients
+Staying aligned with industry trends
 
-I convey my good wishes to all the faculty, board members and entire Geemadhura family for their sincere endeavour in bringing out the best and keeping in tune with the latest trends in the industry.`
+Professional Strengths
+11+ years of industry expertise
+Deep regulatory knowledge and practical execution
+Visionary leadership and client-focused approach
+Proven track record serving 15,000+ satisfied clients
+
+Contact
+📞 +91 9434969796 | Geemadhura Innovation Pvt. Ltd.`
   },
   {
     name: 'Mrs. Mousumi Sanyal',
@@ -38,7 +59,99 @@ I convey my good wishes to all the faculty, board members and entire Geemadhura 
     image: Mousumi,
     experience: 'Strong government relationships & strategic partnerships',
     speech: 'We focus on building strong relationships and creating robust compliance solutions that empower businesses to operate confidently within regulatory frameworks.',
-    expertise: 'Government Liaison, Strategic Planning, Corporate Compliance'
+    expertise: 'Government Liaison, Strategic Planning, Corporate Compliance',
+    additionalContent: `CMD's Desk
+Mrs. Mousumi Sanyal
+Co-Founder & CMD | Geemadhura Innovation Pvt. Ltd.
+
+Professional Overview
+As Co-Founder and CMD of Geemadhura Innovation, Mrs. Mousumi Sanyal plays a pivotal role in shaping the company's strategic direction and operational excellence. Together with Founder Mr. Gourab Sanyal, she recognized the critical gap in India's business compliance ecosystem and co-founded Geemadhura Innovation in 2018 to make compliance simple, fast, and affordable for entrepreneurs.
+
+Core Expertise
+Business Strategy & Operations
+Strategic planning and business development
+Operational excellence and process management
+Client relationship management
+Compliance Solutions
+Business licensing and regulatory guidance
+Statutory compliance support
+Certification and approval processes
+Entrepreneurial Leadership
+Co-founding and scaling Geemadhura Innovation
+Building client-centric solutions
+Driving growth to 15,000+ satisfied clients
+
+Professional Strengths
+Visionary co-founder with strategic business acumen
+Client-focused approach to compliance solutions
+Strong operational and leadership capabilities
+Committed to simplifying business processes for entrepreneurs
+
+Contact
+📞 +91 9609030792 | Geemadhura Innovation Pvt. Ltd.`
+  }
+];
+
+const expertiseDesk = [
+  {
+    name: 'Ms. Shibani Kundu',
+    designation: 'Execution Manager',
+    image: Shibani,
+    experience: 'Legal & Compliance Expert',
+    speech: 'Expertise in end-to-end compliance processes with focus on hospitality, land compliance, and regulatory approvals.',
+    expertise: 'Hospitality Compliance, Land & Property, Trade & Establishment',
+    detailedContent: `Expertise Desk – Legal & Compliance
+Ms. Shibani Kundu
+Execution Manager | Geemadhura Innovation Pvt. Ltd.
+
+Professional Overview
+4+ years managing end-to-end compliance processes. Expertise in hospitality, land compliance, and regulatory approvals.
+
+Core Expertise
+Hospitality Compliance
+Fire NOC, Pollution Control License, Factory & Bar Licenses
+Hotel, resort, homestay approvals
+Land & Property
+Statutory compliance and documentation
+Land conversion and classification support
+Trade & Establishment
+SWID License, Sarai Registration, operational licenses
+Regulatory Management
+Government liaison and approval tracking
+
+Contact
+📞 +91 9609030927 | Geemadhura Innovation Pvt. Ltd.`
+  },
+  {
+    name: 'Ms. Ashunta Kujur',
+    designation: 'Accountant & Management Executive',
+    image: Ashunta,
+    experience: 'Accounts, Finance & HR Expert',
+    speech: 'Ensuring financial accuracy, statutory compliance, and smooth operations through expert accounting and HR management.',
+    expertise: 'Accounting & Finance, Human Resource Management, ISO Services',
+    detailedContent: `Expertise Desk – Accounts, Finance & HR
+Ms. Ashunta Kujur
+Accountant & Management Executive | Geemadhura Innovation Pvt. Ltd.
+
+Professional Overview
+With 5+ years of experience, Ms. Ashunta Kujur oversees accounting, finance, and HR functions. Her expertise ensures financial accuracy, statutory compliance, and smooth operations.
+
+Core Expertise
+Accounting & Finance
+Financial reporting and budgeting
+Statutory compliance and tax documentation
+Audit coordination
+Human Resource Management
+Payroll and salary management
+HR compliance and employee records
+Recruitment support
+ISO Services
+ISO certification documentation
+Internal audit coordination
+Process implementation
+
+Contact
+📞 +91 7477788991 | Geemadhura Innovation Pvt. Ltd.`
   }
 ];
 
@@ -79,6 +192,123 @@ const About = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const [selectedExpert, setSelectedExpert] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openExpertModal = (expert) => {
+    setSelectedExpert(expert);
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeExpertModal = () => {
+    setIsModalOpen(false);
+    setSelectedExpert(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  const ExpertModal = () => {
+    if (!selectedExpert) return null;
+
+    return (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden my-auto"
+        >
+          {/* Close Button - Fixed in top-right corner */}
+          <button
+            onClick={closeExpertModal}
+            className="absolute top-6 right-6 z-50 w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-red-50 hover:text-red-600 transition-colors duration-200 shadow-lg border border-slate-300"
+            style={{ zIndex: 9999 }}
+          >
+            <X size={20} />
+          </button>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+            {/* Image Section */}
+            <div className="relative lg:h-full bg-gradient-to-br from-[#00283A]/5 to-[#F2C445]/5">
+              <div className="h-64 lg:h-full flex items-center justify-center p-8">
+                <img
+                  src={selectedExpert.image}
+                  alt={selectedExpert.name}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent lg:bg-none" />
+              
+              {/* Experience Badge */}
+              <div className="absolute top-4 left-4">
+                <span className="bg-[#F2C445] text-[#00283A] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  {selectedExpert.experience}
+                </span>
+              </div>
+            </div>
+
+            {/* Content Section */}
+            <div className="p-8 lg:p-10 overflow-y-auto max-h-[calc(85vh)]">
+              <div className="space-y-6">
+                <div>
+                  <span className="inline-block px-4 py-2 bg-[#00283A] text-white rounded-lg mb-4 border-2 border-[#00283A]">
+                    <span className="font-medium">{selectedExpert.designation}</span>
+                  </span>
+                  <h3 style={{ color: '#00283A' }} className="text-3xl md:text-4xl font-bold mb-4">
+                    {selectedExpert.name}
+                  </h3>
+                  <p className="text-slate-600 italic text-lg leading-relaxed border-l-4 border-[#F2C445] pl-4 py-2">
+                    "{selectedExpert.speech}"
+                  </p>
+                </div>
+
+                {/* Detailed Content */}
+                <div className="pt-6 border-t border-slate-200">
+                  <div className="text-slate-700 space-y-6">
+                    {selectedExpert.detailedContent.split('\n\n').map((paragraph, idx) => {
+                      if (paragraph.includes('Expertise Desk') || paragraph.includes('Professional Overview') || paragraph.includes('Core Expertise') || paragraph.includes('Contact')) {
+                        return (
+                          <div key={idx} className="space-y-3">
+                            <h4 className="text-lg font-bold text-[#00283A] uppercase tracking-wide border-b border-slate-200 pb-2">
+                              {paragraph.split('\n')[0]}
+                            </h4>
+                            {paragraph.split('\n').slice(1).map((line, lineIdx) => (
+                              <p key={lineIdx} className="text-slate-600 leading-relaxed pl-4">
+                                {line}
+                              </p>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return (
+                        <p key={idx} className="text-slate-600 leading-relaxed">
+                          {paragraph}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Specialization Areas */}
+                <div className="pt-6 border-t border-slate-200">
+                  <h4 className="text-lg font-bold text-[#00283A] uppercase tracking-wide mb-4">
+                    Specialization Areas
+                  </h4>
+                  <p className="text-slate-600 text-base">
+                    {selectedExpert.expertise}
+                  </p>
+                </div>
+
+                {/* Contact Button */}
+              
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  };
 
   return (
     <main className="min-h-screen">
@@ -278,14 +508,12 @@ const About = () => {
                       </div>
                       <h3 style={{ color: '#00283A' }} className="text-3xl md:text-4xl font-bold mb-4 group-hover:text-[#00283A]/90 transition-colors duration-300">{director.name}</h3>
                       
-                      {/* Original Speech */}
                       <div className="relative mb-6">
                         <p className="text-lg text-muted-foreground leading-relaxed italic pl-6 border-l-4 border-[#F2C445] group-hover:text-[#00283A]/80 transition-colors duration-300">
                           "{director.speech}"
                         </p>
                       </div>
                       
-                      {/* Additional Content for Mr. Gourab Sanyal */}
                       {director.additionalContent && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
@@ -294,28 +522,32 @@ const About = () => {
                           transition={{ duration: 0.8, delay: 0.2 }}
                           className="mt-6 pt-6 border-t border-[#00283A]/10"
                         >
-                          <h4 className="text-sm font-semibold text-[#00283A] mb-3 uppercase tracking-wide">Director's Message:</h4>
                           <div className="text-muted-foreground text-base leading-relaxed space-y-3">
-                            {director.additionalContent.split('\n\n').map((paragraph, idx) => (
-                              <p key={idx} className="text-justify">
-                                {paragraph}
-                              </p>
-                            ))}
+                            {director.additionalContent.split('\n\n').map((paragraph, idx) => {
+                              if (paragraph.includes('Desk') || paragraph.includes('Overview') || paragraph.includes('Expertise') || paragraph.includes('Strengths') || paragraph.includes('Contact')) {
+                                return (
+                                  <div key={idx} className="mt-4">
+                                    <h4 className="text-sm font-semibold text-[#00283A] mb-2 uppercase tracking-wide">
+                                      {paragraph.split('\n')[0]}
+                                    </h4>
+                                    {paragraph.split('\n').slice(1).map((line, lineIdx) => (
+                                      <p key={lineIdx} className="text-justify text-sm mt-1">
+                                        {line}
+                                      </p>
+                                    ))}
+                                  </div>
+                                );
+                              }
+                              return (
+                                <p key={idx} className="text-justify">
+                                  {paragraph}
+                                </p>
+                              );
+                            })}
                           </div>
-                          
-                          {/* Contact Information */}
-                          {/* <div className="mt-6 pt-6 border-t border-[#00283A]/10">
-                            <div className="space-y-2">
-                              <p className="font-bold text-[#00283A] text-lg">GOURAB SANYAL</p>
-                              <p className="text-sm text-muted-foreground">Founder & Director</p>
-                              <p className="text-sm text-muted-foreground">Geemadhura Innovation Private Ltd.</p>
-                              <p className="text-sm font-medium text-[#00283A] mt-2">Contact: 9434969796</p>
-                            </div>
-                          </div> */}
                         </motion.div>
                       )}
                       
-                      {/* Specialization Areas */}
                       <div className="mt-6 pt-6 border-t border-[#00283A]/10">
                         <h4 className="text-sm font-semibold text-[#00283A] mb-3 uppercase tracking-wide">Specialization Areas:</h4>
                         <p className="text-muted-foreground text-base">
@@ -331,8 +563,103 @@ const About = () => {
         </div>
       </section>
 
+      {/* Expertise Desk Section - Side by Side */}
+      <section className="py-24 bg-slate-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            {/* <span className="text-[#F2C445] font-bold uppercase tracking-[0.2em] text-xs mb-4 block">
+              Expertise Desk
+            </span> */}
+            <h2 className="text-[#00283A] text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
+              Expertise Desk
+            </h2>
+            <div className="w-20 h-1.5 bg-[#F2C445] mx-auto rounded-full mb-6"></div>
+            <p className="text-slate-600 text-lg max-w-2xl mx-auto leading-relaxed">
+              Highly specialized professionals delivering precision-led compliance and domain mastery.
+            </p>
+          </motion.div>
+
+          {/* Experts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {expertiseDesk.map((expert, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="flex flex-col md:flex-row bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 border border-slate-200 group cursor-pointer"
+                onClick={() => openExpertModal(expert)}
+              >
+                {/* Image Column - Fixed Aspect Ratio */}
+                <div className="md:w-2/5 relative bg-slate-100 overflow-hidden">
+                  <img
+                    src={expert.image}
+                    alt={expert.name}
+                    className="w-full h-64 md:h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#00283A]/60 to-transparent md:bg-none" />
+                  <div className="absolute bottom-4 left-4 md:bottom-auto md:top-4">
+                    <span className="bg-[#F2C445] text-[#00283A] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                      {expert.experience}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content Column - No Scroll, Structured Layout */}
+                <div className="md:w-3/5 p-8 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-[#00283A] text-2xl font-bold leading-tight">
+                          {expert.name}
+                        </h3>
+                        <p className="text-[#F2C445] font-semibold text-sm uppercase tracking-wide mt-1">
+                          {expert.designation}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="text-slate-600 italic text-sm mb-6 leading-relaxed relative">
+                      <span className="text-3xl text-[#F2C445] absolute -top-4 -left-2 opacity-50 font-serif">"</span>
+                      {expert.speech}
+                    </p>
+
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="text-[#00283A] mt-1 shrink-0" size={18} />
+                        <div>
+                          <p className="text-[#00283A] font-bold text-xs uppercase mb-1">Core Focus</p>
+                          <p className="text-slate-600 text-sm leading-snug">
+                            {expert.expertise}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Professional Footer CTA */}
+                  <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-[#00283A] font-bold text-xs uppercase">View Full Profile</span>
+                    <div className="w-8 h-8 rounded-full bg-[#00283A] text-white flex items-center justify-center group-hover:bg-[#F2C445] group-hover:text-[#00283A] transition-colors duration-300">
+                      <ArrowRight size={14} />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Team Expertise Section */}
-      <section className="py-20 md:py-28">
+      <section className="py-20 md:py-28 bg-gradient-to-b from-white to-muted/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -524,6 +851,9 @@ const About = () => {
           </div>
         </div>
       </section>
+
+      {/* Expert Modal */}
+      {isModalOpen && <ExpertModal />}
     </main>
   );
 };
